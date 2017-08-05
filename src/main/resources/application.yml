@@ -1,0 +1,188 @@
+spring:
+  #resources.static-locations: classpath:/dist/
+  profiles:
+    active: dev
+  data:
+    jpa:
+      repositories:
+        enabled: true
+  session:
+    store-type : redis
+  http:
+    encoding:
+      charset: UTF-8
+    multipart:
+      enabled:  true
+      file-size-threshold: 1MB
+      max-file-size:  2MB
+      max-request-size:  10MB
+  jpa:
+    properties:
+      hibernate:
+        generate_statistics: true
+        cache:
+          use_second_level_cache: true
+          use_query_cache: true
+          region:
+            factory_class: org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory
+      javax:
+        persistence:
+          sharedCache:
+            mode: ENABLE_SELECTIVE
+security:
+  enable-csrf: false
+  basic:
+    enabled: false
+server:
+  tomcat:
+    uri-encoding: UTF-8
+  session:
+    timeout: 3600
+---
+server:
+  port: 8080
+spring:
+  devtools:
+    livereload:
+      enabled: true
+  profiles: dev
+  jpa:
+    show-sql: true
+    hibernate:
+      dialect: org.hibernate.dialect.MySQL5Dialect
+  datasource:
+    url : jdbc:log4jdbc:mysql://10.250.33.222:3306/mktj_st?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: Qwert,12345
+    driverClassName : net.sf.log4jdbc.DriverSpy
+  http:
+    multipart:
+      location: c:/upload_temp
+  redis:
+     database: 0
+     host: 127.0.0.1
+     port: 6379
+     password:
+     timeout: 0
+     pool:
+         max-active: 8
+         max-wait: -1
+         max-idle: 8
+         min-idle: 0
+management:
+  port: 54001
+  health:
+    sensitive:
+      enabled: false
+web:
+  maximumSessions: 100
+---
+server:
+  port: 8888
+spring:
+  profiles: uat
+  jpa:
+    show-sql: false
+    hibernate:
+      dialect: org.hibernate.dialect.MySQL5Dialect
+  datasource:
+    url: jdbc:mysql://10.250.33.222:3306/mktj?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: Qwert,12345
+    driverClassName: com.mysql.jdbc.Driver
+  http:
+    multipart:
+      location: /GC-App-Dev/project/mktj/temp
+web:
+  maximumSessions: 100
+---
+server:
+  port: 9999
+spring:
+  profiles: st
+  jpa:
+    show-sql: true
+    hibernate:
+      dialect: org.hibernate.dialect.MySQL5Dialect
+  datasource:
+      url: jdbc:mysql://10.250.33.222:3306/mktj_st?useUnicode=true&characterEncoding=utf-8&useSSL=false
+      username: root
+      password: Qwert,12345
+      driverClassName: com.mysql.jdbc.Driver
+  http:
+    multipart:
+      location: /GC-App-Dev/project/mktj/temp
+  redis:
+     database: 0
+     host: 10.250.33.222
+     port: 6379
+     password: 123456
+     timeout: 0
+     pool:
+         max-active: 8
+         max-wait: -1
+         max-idle: 8
+         min-idle: 0
+web:
+  maximumSessions: 1
+---
+server:
+  port: 7777
+spring:
+  profiles: unitTest
+  jpa:
+    show-sql: false
+    hibernate:
+      dialect: org.hibernate.dialect.MySQL5Dialect
+  datasource:
+    url: jdbc:mysql://10.250.33.222:3306/mktj_unit_test?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: Qwert,12345
+    driverClassName: com.mysql.jdbc.Driver
+  http:
+    multipart:
+      location: /GC-App-Dev/project/mktj/temp
+  redis:
+       database: 0
+       host: 10.250.33.222
+       port: 6379
+       password: 123456
+       timeout: 0
+       pool:
+           max-active: 8
+           max-wait: -1
+           max-idle: 8
+           min-idle: 0
+web:
+  maximumSessions: 1
+---
+server:
+  port: 80
+spring:
+  profiles: prd
+  jpa:
+    show-sql: true  
+    hibernate:
+      dialect: org.hibernate.dialect.MySQL5Dialect
+  datasource:
+      url : jdbc:mysql://10.250.36.22:3306/mktj?useUnicode=true&characterEncoding=utf-8&useSSL=false
+      username : root
+      password : ~!@Nielsen1
+      driverClassName: com.mysql.jdbc.Driver
+  http:
+    multipart:
+      location: /Mars/projects/mktj/temp
+  redis:
+       database: 0
+       host: 10.250.33.222
+       port: 6379
+       password: 123456
+       timeout: 0
+       pool:
+           max-active: 8
+           max-wait: -1
+           max-idle: 8
+           min-idle: 0
+web:
+  maximumSessions: 1
+
