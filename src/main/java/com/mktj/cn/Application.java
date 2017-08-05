@@ -16,6 +16,7 @@ public class Application extends SpringBootServletInitializer {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
     public static void main(String[] args) throws Exception {
+        logger.error("msg");
         SpringApplication.run(Application.class, args);
     }
 
