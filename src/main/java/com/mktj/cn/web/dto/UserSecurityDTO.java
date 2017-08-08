@@ -31,6 +31,7 @@ public class UserSecurityDTO extends org.springframework.security.core.userdetai
     public void setId(long id) {
         this.id = id;
     }
+
     public String getEmail() {
         return email;
     }
