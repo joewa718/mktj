@@ -6,26 +6,24 @@ public class LoginDTO {
     private long id;
     private String clientName;
     private String username;
-    private String name;
+    private String phone;
     private String role = "1";
 
     public LoginDTO(User user) throws IllegalArgumentException {
         super();
         if (user != null) {
             this.id = user.getId();
-            this.name = user.getName();
+            this.phone = user.getPhone();
             this.username = user.getUsername();
         }
     }
-
-    public String getName() {
-        return name;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
-
 
     public String getClientName() {
         return clientName;

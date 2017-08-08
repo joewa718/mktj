@@ -1,76 +1,35 @@
 package com.mktj.cn.web.po;
 
-import com.mktj.cn.util.DateUtil;
+import com.mktj.cn.web.util.RoleType;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "t_user")
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE, region = "entityCache")
-@NamedEntityGraph(name = "UserAll",
-        attributeNodes ={@NamedAttributeNode("client"),@NamedAttributeNode("userRoleSet")}
-)
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-
-    @NotEmpty
     @Column(name = "username", nullable = false, unique = true)
     private String username;
-
-
-    @Column(name = "name", nullable = false)
-    private String name;
-
-    @NotEmpty
+    @Column(name = "phone")
+    private String phone;
     @Column(name = "password", nullable = false)
     private String password;
-
-    @Column(name = "opat")
-    private Date opat;
-
     @Column(name = "email")
     private String email;
-
     @Column(name = "disable", nullable = false)
     private Boolean disable;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<UserRole> userRoleSet;
-
-
-    public User() {
-        super();
-    }
-
-    public User(long id) {
-        super();
-        this.id = id;
-    }
-
-    public User(String username, String name, String password) {
-        super();
-        this.username = username;
-        this.name = name;
-        this.password = password;
-    }
-
-    public Set<UserRole> getUserRoleSet() {
-        return userRoleSet;
-    }
-
-    public void setUserRoleSet(Set<UserRole> userRoleSet) {
-        this.userRoleSet = userRoleSet;
-    }
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "roleType")
+    private RoleType roleType;
+    @Column(name = "authorizationCode")
+    private String authorizationCode;
 
     public long getId() {
         return id;
@@ -88,28 +47,12 @@ public class User implements Serializable {
         this.username = username;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getOpat() {
-        return DateUtil.toFullDatetimeString(opat);
-    }
-
-    public void setOpat(Date opat) {
-        this.opat = opat;
     }
 
     public String getEmail() {
@@ -129,5 +72,28 @@ public class User implements Serializable {
         this.disable = disable;
     }
 
+    public String getPhone() {
+        return phone;
+    }
 
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public RoleType getRoleType() {
+        return roleType;
+    }
+
+    public void setRoleType(RoleType roleType) {
+        this.roleType = roleType;
+    }
+
+
+    public String getAuthorizationCode() {
+        return authorizationCode;
+    }
+
+    public void setAuthorizationCode(String authorizationCode) {
+        this.authorizationCode = authorizationCode;
+    }
 }

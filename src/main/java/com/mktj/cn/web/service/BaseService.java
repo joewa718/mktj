@@ -42,36 +42,5 @@ public abstract class BaseService {
         return new PageRequest(pageNumber - 1, pageSize, sort);
     }
 
-    protected PageRequest getPageRequest(com.mktj.cn.web.request.PageRequest request) {
-        PageRequest pageRequest;
-        if (request.getSort() != null) {
-            if (request.getSort().startsWith(SORT_PREFIX)) {
-                Sort sort = buildSort(request);
-                pageRequest = this.buildPageRequest(request.getPage(), request.getSize(), sort);
-            } else {
-                Sort sort = buildSort(request);
-                pageRequest = this.buildPageRequest(request.getPage(), request.getSize(), sort);
-            }
-        } else {
-            Sort sort = buildSort(request);
-            pageRequest = this.buildPageRequest(request.getPage(), request.getSize(), sort);
-        }
-        return pageRequest;
-    }
-
-    protected Sort buildSort(com.mktj.cn.web.request.PageRequest request) {
-        Sort sort = null;
-        if (request.getSort() != null) {
-            if (request.getSort().startsWith(SORT_PREFIX)) {
-                sort = new Sort(Sort.Direction.ASC, request.getSort().substring(1, request.getSort().length()));
-            } else {
-                sort = new Sort(Sort.Direction.DESC, request.getSort().substring(1, request.getSort().length()));
-            }
-        } else {
-            sort = new Sort(Sort.Direction.ASC, "id");
-        }
-        return sort;
-    }
-
 
 }
