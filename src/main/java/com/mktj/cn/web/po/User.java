@@ -26,9 +26,9 @@ public class User implements Serializable {
     @Column(name = "disable", nullable = false)
     private Boolean disable;
     @Enumerated(EnumType.ORDINAL)
-    @Column(name = "roleType")
+    @Column(name = "role_type")
     private RoleType roleType;
-    @Column(name = "authorizationCode")
+    @Column(name = "authorization_code")
     private String authorizationCode;
 
     public long getId() {
