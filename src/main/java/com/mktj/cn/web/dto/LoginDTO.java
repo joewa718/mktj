@@ -14,7 +14,7 @@ public class LoginDTO {
         if (user != null) {
             this.id = user.getId();
             this.phone = user.getPhone();
-            this.username = user.getUsername();
+            this.username = user.getNickname();
         }
     }
     public String getPhone() {

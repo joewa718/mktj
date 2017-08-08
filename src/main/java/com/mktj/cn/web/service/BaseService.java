@@ -19,7 +19,7 @@ public abstract class BaseService {
         for (Object userDetail : sessionRegistry.getAllPrincipals()) {
             String userName = ((org.springframework.security.core.userdetails.User) userDetail)
                     .getUsername();
-            if (userName.equals(user.getUsername())) {
+            if (userName.equals(user.getNickname())) {
                 removeSession(userDetail);
             }
         }
