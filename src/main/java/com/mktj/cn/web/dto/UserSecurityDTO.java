@@ -7,16 +7,16 @@ import java.util.Collection;
 
 public class UserSecurityDTO extends org.springframework.security.core.userdetails.User {
     private long id;
-    private String phone;
+    private String nickname;
     private String email;
     private Boolean disable;
     private String clientName;
 
-    public UserSecurityDTO(String username, String password, Collection<? extends GrantedAuthority> authorities, User user)
+    public UserSecurityDTO(String phone, String password, Collection<? extends GrantedAuthority> authorities, User user)
             throws IllegalArgumentException {
-        super(username, password, authorities);
+        super(phone, password, authorities);
         if (user != null) {
-            this.phone = user.getPhone();
+            this.nickname = user.getNickname();
             this.id = user.getId();
             this.email = user.getEmail();
             this.disable = user.getDisable();
@@ -59,13 +59,12 @@ public class UserSecurityDTO extends org.springframework.security.core.userdetai
         this.clientName = clientName;
     }
 
-
-    public String getPhone() {
-        return phone;
+    public String getNickname() {
+        return nickname;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
 }

@@ -13,7 +13,7 @@ import java.io.IOException;
 @RequestMapping("/session")
 @Scope("prototype")
 public class HttpSessionController extends BaseController {
-    @RequestMapping(value = "/expire", method = RequestMethod.GET)
+    @RequestMapping(value = "/expire", method = RequestMethod.POST)
     public void expire(HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (request.getHeader("x-requested-with") != null
                 && request.getHeader("x-requested-with").equalsIgnoreCase(

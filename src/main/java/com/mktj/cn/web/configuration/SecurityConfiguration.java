@@ -23,6 +23,7 @@ import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
+import org.springframework.web.cors.CorsUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -89,10 +90,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         });
         http.logout().invalidateHttpSession(true).logoutSuccessHandler(logoutSuccessHandler);
         http.authorizeRequests()
-                .antMatchers("/css/**", "/js/**", "/tpl/**", "/img/**", "/vendor/**", "/*.html", "/", "/fonts/**", "/l10n/**", "/**/favicon.ico", "/session/expire", "/api/O2O/executeCacheBaseData", "/webjars/springfox-swagger-ui/**", "/swagger-resources/**", "/v2/**","/api/user/**","/api/product/**").permitAll()
-                .antMatchers("/api/O2OCode/**", "/api/O2O/**", "/api/O2OExport/**", "/api/user/me").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/api/taskInfos/**").hasAnyRole("ADMIN")
+                .antMatchers("/css/**", "/js/**", "/tpl/**", "/img/**", "/vendor/**", "/*.html", "/", "/fonts/**", "/l10n/**", "/**/favicon.ico", "/session/expire", "/api/O2O/executeCacheBaseData", "/webjars/springfox-swagger-ui/**", "/swagger-resources/**", "/v2/**","/api/user/**","/api/product/**","/login").permitAll()
                 .anyRequest().authenticated()
+                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()//就是这一行啦
                 .and()
                 .formLogin();
         http.addFilterAfter(new CSRFHeaderFilter(), CsrfFilter.class);
