@@ -17,6 +17,8 @@ public class User implements Serializable {
     private long id;
     @Column(name = "nickname")
     private String nickname;
+    @Column(name = "head_Portrait")
+    private String headPortrait;
     @Column(name = "phone", nullable = false, unique = true)
     private String phone;
     @Column(name = "password", nullable = false)
@@ -30,6 +32,9 @@ public class User implements Serializable {
     private RoleType roleType;
     @Column(name = "authorization_code")
     private String authorizationCode;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private RealInfo realInfo;
 
     public long getId() {
         return id;
@@ -95,5 +100,21 @@ public class User implements Serializable {
 
     public void setAuthorizationCode(String authorizationCode) {
         this.authorizationCode = authorizationCode;
+    }
+
+    public String getHeadPortrait() {
+        return headPortrait;
+    }
+
+    public void setHeadPortrait(String headPortrait) {
+        this.headPortrait = headPortrait;
+    }
+
+    public RealInfo getRealInfo() {
+        return realInfo;
+    }
+
+    public void setRealInfo(RealInfo realInfo) {
+        this.realInfo = realInfo;
     }
 }
