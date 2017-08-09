@@ -2,9 +2,9 @@
 <configuration>
     <springProfile name="st">
         <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <File>/GC-App-Dev/project/o2o_st/log/o2o_application.log</File>
+            <File>/opt/projects/mktj/log/application.log</File>
             <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-                <FileNamePattern>/GC-App-Dev/project/o2o_st/log/o2o_application.log_%d{yyyy-MM-dd}-%i.log
+                <FileNamePattern>/opt/projects/mktj/log/o2o_application.log_%d{yyyy-MM-dd}-%i.log
                 </FileNamePattern>
                 <MaxHistory>30</MaxHistory>
                 <TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">

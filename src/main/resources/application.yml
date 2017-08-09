@@ -1,7 +1,7 @@
 spring:
   #resources.static-locations: classpath:/dist/
   profiles:
-    active: dev
+    active: st
   data:
     jpa:
       repositories:
@@ -107,9 +107,9 @@ spring:
       ddl-auto: update
       dialect: org.hibernate.dialect.MySQL5Dialect
   datasource:
-      url: jdbc:mysql://10.250.33.222:3306/mktj_st?useUnicode=true&characterEncoding=utf-8&useSSL=false
+      url: jdbc:mysql://10.66.245.8:3306/mktj?useUnicode=true&characterEncoding=utf-8&useSSL=false
       username: root
-      password: Qwert,12345
+      password: wz718718
       driverClassName: com.mysql.jdbc.Driver
   http:
     multipart:
