@@ -89,9 +89,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         });
         http.logout().invalidateHttpSession(true).logoutSuccessHandler(logoutSuccessHandler);
         http.authorizeRequests()
-                .antMatchers("/css/**", "/js/**", "/tpl/**", "/img/**", "/vendor/**", "/*.html", "/", "/fonts/**", "/l10n/**", "/**/favicon.ico", "/session/expire", "/api/O2O/executeCacheBaseData", "/webjars/springfox-swagger-ui/**", "/swagger-resources/**", "/v2/**").permitAll()
+                .antMatchers("/css/**", "/js/**", "/tpl/**", "/img/**", "/vendor/**", "/*.html", "/", "/fonts/**", "/l10n/**", "/**/favicon.ico", "/session/expire", "/api/O2O/executeCacheBaseData", "/webjars/springfox-swagger-ui/**", "/swagger-resources/**", "/v2/**","/api/user/**").permitAll()
                 .antMatchers("/api/O2OCode/**", "/api/O2O/**", "/api/O2OExport/**", "/api/user/me").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/api/user/**", "/api/taskInfos/**").hasAnyRole("ADMIN")
+                .antMatchers("/api/taskInfos/**").hasAnyRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin();

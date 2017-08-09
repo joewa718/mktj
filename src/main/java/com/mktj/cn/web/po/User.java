@@ -25,8 +25,8 @@ public class User implements Serializable {
     private String password;
     @Column(name = "email")
     private String email;
-    @Column(name = "disable", nullable = false)
-    private Boolean disable;
+    @Column(name = "disable")
+    private Boolean disable = false;
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "role_type")
     private RoleType roleType;
