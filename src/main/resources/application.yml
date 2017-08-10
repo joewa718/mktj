@@ -77,6 +77,8 @@ management:
       enabled: false
 web:
   maximumSessions: 100
+photo:
+  path: c:/project/mktj/photo
 ---
 server:
   port: 8888
@@ -93,9 +95,11 @@ spring:
     driverClassName: com.mysql.jdbc.Driver
   http:
     multipart:
-      location: /GC-App-Dev/project/mktj/temp
+      location: c:/project/mktj/temp
 web:
   maximumSessions: 100
+photo:
+  path: c:/project/mktj/photo
 ---
 server:
   port: 9999
@@ -113,7 +117,7 @@ spring:
       driverClassName: com.mysql.jdbc.Driver
   http:
     multipart:
-      location: /GC-App-Dev/project/mktj/temp
+      location: /opt/projects/mktj/temp
   redis:
      database: 0
      host: 10.250.33.222
@@ -127,6 +131,8 @@ spring:
          min-idle: 0
 web:
   maximumSessions: 1
+photo:
+  path: /opt/projects/mktj/photo
 ---
 server:
   port: 80
