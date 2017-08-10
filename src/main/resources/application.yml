@@ -1,7 +1,7 @@
 spring:
   #resources.static-locations: classpath:/dist/
   profiles:
-    active: dev
+    active: st
   data:
     jpa:
       repositories:
@@ -78,28 +78,7 @@ management:
 web:
   maximumSessions: 100
 photo:
-  path: c:/project/mktj/photo
----
-server:
-  port: 8888
-spring:
-  profiles: uat
-  jpa:
-    show-sql: false
-    hibernate:
-      dialect: org.hibernate.dialect.MySQL5Dialect
-  datasource:
-    url: jdbc:mysql://10.250.33.222:3306/mktj?useUnicode=true&characterEncoding=utf-8&useSSL=false
-    username: root
-    password: Qwert,12345
-    driverClassName: com.mysql.jdbc.Driver
-  http:
-    multipart:
-      location: c:/project/mktj/temp
-web:
-  maximumSessions: 100
-photo:
-  path: c:/project/mktj/photo
+  path: c:/project/mktj/photo/
 ---
 server:
   port: 9999
@@ -132,36 +111,5 @@ spring:
 web:
   maximumSessions: 1
 photo:
-  path: /opt/projects/mktj/photo
----
-server:
-  port: 80
-spring:
-  profiles: prd
-  jpa:
-    show-sql: true  
-    hibernate:
-      ddl-auto: update
-      dialect: org.hibernate.dialect.MySQL5Dialect
-  datasource:
-      url : jdbc:mysql://10.250.36.22:3306/mktj?useUnicode=true&characterEncoding=utf-8&useSSL=false
-      username : root
-      password : ~!@Nielsen1
-      driverClassName: com.mysql.jdbc.Driver
-  http:
-    multipart:
-      location: /Mars/projects/mktj/temp
-  redis:
-       database: 0
-       host: 10.250.33.222
-       port: 6379
-       password: 123456
-       timeout: 0
-       pool:
-           max-active: 8
-           max-wait: -1
-           max-idle: 8
-           min-idle: 0
-web:
-  maximumSessions: 1
+  path: /opt/projects/mktj/photo/
 
