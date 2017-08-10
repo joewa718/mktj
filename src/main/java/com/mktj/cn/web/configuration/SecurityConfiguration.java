@@ -92,7 +92,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/css/**", "/js/**", "/tpl/**", "/img/**", "/vendor/**", "/*.html", "/", "/fonts/**", "/l10n/**", "/**/favicon.ico", "/session/expire", "/api/O2O/executeCacheBaseData", "/webjars/springfox-swagger-ui/**", "/swagger-resources/**", "/v2/**","/api/user/**","/api/product/**","/login").permitAll()
                 .anyRequest().authenticated()
-                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()//就是这一行啦
+                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .and()
                 .formLogin();
         http.addFilterAfter(new CSRFHeaderFilter(), CsrfFilter.class);
