@@ -20,7 +20,7 @@ public class RESTAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         clearAuthenticationAttributes(request);
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/api/user/getLoginUser");
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/api/user/loginSuccessCallBack");
         requestDispatcher.forward(request,response);
     }
 }

@@ -13,7 +13,7 @@ public class BaseController {
         if (principal instanceof UserDetails) {
             return ((UserSecurityDTO) principal);
         }
-        return null;
+        return new UserSecurityDTO();
     }
 
 }

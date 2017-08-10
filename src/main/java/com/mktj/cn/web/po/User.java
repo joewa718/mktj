@@ -6,6 +6,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name = "t_user")
@@ -35,6 +36,9 @@ public class User implements Serializable {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private RealInfo realInfo;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DeliveryAddress> deliveryAddressList;
 
     public long getId() {
         return id;
@@ -116,5 +120,13 @@ public class User implements Serializable {
 
     public void setRealInfo(RealInfo realInfo) {
         this.realInfo = realInfo;
+    }
+
+    public List<DeliveryAddress> getDeliveryAddressList() {
+        return deliveryAddressList;
+    }
+
+    public void setDeliveryAddressList(List<DeliveryAddress> deliveryAddressList) {
+        this.deliveryAddressList = deliveryAddressList;
     }
 }
