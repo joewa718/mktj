@@ -7,6 +7,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
@@ -27,6 +28,8 @@ public class User implements Serializable {
     private String password;
     @Column(name = "email")
     private String email;
+    @Column(name = "score")
+    private BigDecimal score = BigDecimal.valueOf(0);
     @Column(name = "disable")
     private Boolean disable = false;
     @Convert( converter = RoleTypeConverter.class )
@@ -99,7 +102,6 @@ public class User implements Serializable {
         this.roleType = roleType;
     }
 
-
     public String getAuthorizationCode() {
         return authorizationCode;
     }
@@ -138,5 +140,13 @@ public class User implements Serializable {
 
     public void setOrderList(List<Order> orderList) {
         this.orderList = orderList;
+    }
+
+    public BigDecimal getScore() {
+        return score;
+    }
+
+    public void setScore(BigDecimal score) {
+        this.score = score;
     }
 }
