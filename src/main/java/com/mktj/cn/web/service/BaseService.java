@@ -1,6 +1,8 @@
 package com.mktj.cn.web.service;
 
 import com.mktj.cn.web.po.User;
+import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -8,39 +10,15 @@ import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
 
 import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 public abstract class BaseService {
 
-    public static final String SORT_PREFIX = "+";
-    @Autowired
-    private SessionRegistry sessionRegistry;
-
-    protected void removeSession(User user) {
-        for (Object userDetail : sessionRegistry.getAllPrincipals()) {
-            String userName = ((org.springframework.security.core.userdetails.User) userDetail)
-                    .getUsername();
-            if (userName.equals(user.getNickname())) {
-                removeSession(userDetail);
-            }
-        }
+    protected String generateRandomCode(String phone) {
+        String uuid = UUID.randomUUID().toString().replaceAll("-", "") + new Random().nextLong() + phone;
+        String authorizationCode = new String(Hex.encodeHex(DigestUtils.md5(uuid)));
+        return authorizationCode.toUpperCase();
     }
-
-
-    protected void removeSession(Object principal) {
-        List<SessionInformation> sessionInformationList = sessionRegistry
-                .getAllSessions(principal, false);
-        for (SessionInformation sessionInformation : sessionInformationList) {
-            sessionInformation.expireNow();
-        }
-    }
-
-    private PageRequest buildPageRequest(int pageNumber, int pageSize) {
-        return new PageRequest(pageNumber - 1, pageSize);
-    }
-
-    private PageRequest buildPageRequest(int pageNumber, int pageSize, Sort sort) {
-        return new PageRequest(pageNumber - 1, pageSize, sort);
-    }
-
 
 }

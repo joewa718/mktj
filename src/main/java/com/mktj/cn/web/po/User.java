@@ -1,5 +1,6 @@
 package com.mktj.cn.web.po;
 
+import com.mktj.cn.web.converter.RoleTypeConverter;
 import com.mktj.cn.web.util.RoleType;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -28,7 +29,7 @@ public class User implements Serializable {
     private String email;
     @Column(name = "disable")
     private Boolean disable = false;
-    @Enumerated(EnumType.ORDINAL)
+    @Convert( converter = RoleTypeConverter.class )
     @Column(name = "role_type")
     private RoleType roleType;
     @Column(name = "authorization_code")
@@ -36,9 +37,10 @@ public class User implements Serializable {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private RealInfo realInfo;
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DeliveryAddress> deliveryAddressList;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Order> orderList;
 
     public long getId() {
         return id;
@@ -128,5 +130,13 @@ public class User implements Serializable {
 
     public void setDeliveryAddressList(List<DeliveryAddress> deliveryAddressList) {
         this.deliveryAddressList = deliveryAddressList;
+    }
+
+    public List<Order> getOrderList() {
+        return orderList;
+    }
+
+    public void setOrderList(List<Order> orderList) {
+        this.orderList = orderList;
     }
 }
