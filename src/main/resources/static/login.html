@@ -1,0 +1,29 @@
+<html>  
+<head>  
+    <title>Title</title>  
+    <script src="lib/jquery.min.js" type="text/javascript"></script>
+</head>  
+<body>  
+<input type="button" value="login" onclick="testJsonp()" />
+<script type="text/javascript">  
+    function testJsonp() {  
+        $.ajax({
+            type:'post',
+            /*url:'http://122.152.208.113:9999/api/user/login',*/
+             url:'http://122.152.208.113:9999/api/user/getLoginUser',
+            data:{
+                username:'18930983718',
+                password:'111111'
+            },
+            xhrFields:{
+                withCredentials:true
+            },
+            success:function (data) {
+                alert(data.nickname+"  "+data.username);
+            },
+        });  
+    }
+
+</script>  
+</body>  
+</html>  
