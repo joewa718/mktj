@@ -1,0 +1,426 @@
+Index: src/main/java/com/mktj/cn/web/dto/RoleDTO.java
+===================================================================
+--- src/main/java/com/mktj/cn/web/dto/RoleDTO.java	(revision 417996c1adf61451ed505921ecd33556dd622db0)
++++ src/main/java/com/mktj/cn/web/dto/RoleDTO.java	(revision 417996c1adf61451ed505921ecd33556dd622db0)
+@@ -1,50 +0,0 @@
+-package com.mktj.cn.web.dto;
+-
+-import com.mktj.cn.web.po.Role;
+-
+-public class RoleDTO {
+-    private long id;
+-    private long roleCode;
+-    private String roleDesc;
+-
+-    public RoleDTO() {
+-    }
+-
+-    public RoleDTO(Role r) {
+-        this.id = r.getId();
+-        this.roleCode = r.getRoleCode();
+-        this.roleDesc = r.getRoleDesc();
+-    }
+-
+-    public static Role toRole(RoleDTO dto) {
+-        Role r = new Role();
+-        r.setId(dto.getId());
+-        r.setRoleCode(dto.getRoleCode());
+-        r.setRoleDesc(dto.getRoleDesc());
+-        return r;
+-    }
+-
+-    public long getId() {
+-        return id;
+-    }
+-
+-    public void setId(long id) {
+-        this.id = id;
+-    }
+-
+-    public long getRoleCode() {
+-        return roleCode;
+-    }
+-
+-    public void setRoleCode(long roleCode) {
+-        this.roleCode = roleCode;
+-    }
+-
+-    public String getRoleDesc() {
+-        return roleDesc;
+-    }
+-
+-    public void setRoleDesc(String roleDesc) {
+-        this.roleDesc = roleDesc;
+-    }
+-}
+Index: src/main/java/com/mktj/cn/web/repositories/UserRoleRepository.java
+===================================================================
+--- src/main/java/com/mktj/cn/web/repositories/UserRoleRepository.java	(revision 417996c1adf61451ed505921ecd33556dd622db0)
++++ src/main/java/com/mktj/cn/web/repositories/UserRoleRepository.java	(revision 417996c1adf61451ed505921ecd33556dd622db0)
+@@ -1,25 +0,0 @@
+-package com.mktj.cn.web.repositories;
+-
+-import com.mktj.cn.web.po.User;
+-import com.mktj.cn.web.po.UserRole;
+-import org.springframework.data.jpa.repository.Modifying;
+-import org.springframework.data.jpa.repository.Query;
+-import org.springframework.data.repository.CrudRepository;
+-import org.springframework.stereotype.Repository;
+-import org.springframework.transaction.annotation.Transactional;
+-
+-import java.util.List;
+-
+-
+-@Repository
+-public interface UserRoleRepository extends CrudRepository<UserRole, Long> {
+-    public UserRole findOne(Long id);
+-
+-    @Query("select ur from UserRole ur where ur.user = ?1")
+-    List<UserRole> findAllByUser(User user);
+-
+-    @Modifying(clearAutomatically = true)
+-    @Transactional
+-    @Query("delete from UserRole ur where ur.user = ?1")
+-    public int deleteByUser(User user);
+-}
+Index: src/main/java/com/mktj/cn/web/service/FactorService.java
+===================================================================
+--- src/main/java/com/mktj/cn/web/service/FactorService.java	(revision 417996c1adf61451ed505921ecd33556dd622db0)
++++ src/main/java/com/mktj/cn/web/service/FactorService.java	(revision 417996c1adf61451ed505921ecd33556dd622db0)
+@@ -1,7 +0,0 @@
+-package com.mktj.cn.web.service;
+-
+-/**
+- * Created by zhanwa01 on 2017/6/30.
+- */
+-public interface FactorService {
+-}
+Index: src/main/java/com/mktj/cn/web/po/User.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/mktj/cn/web/po/User.java	(revision 417996c1adf61451ed505921ecd33556dd622db0)
++++ src/main/java/com/mktj/cn/web/po/User.java	(revision )
+@@ -15,9 +15,9 @@
+     @Id
+     @GeneratedValue(strategy = GenerationType.AUTO)
+     private long id;
+-    @Column(name = "username", nullable = false, unique = true)
++    @Column(name = "username")
+     private String username;
+-    @Column(name = "phone")
++    @Column(name = "phone", nullable = false, unique = true)
+     private String phone;
+     @Column(name = "password", nullable = false)
+     private String password;
+Index: src/main/java/com/mktj/cn/web/dto/UserSecurityDTO.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/com/mktj/cn/web/dto/UserSecurityDTO.java	(revision 417996c1adf61451ed505921ecd33556dd622db0)
++++ src/main/java/com/mktj/cn/web/dto/UserSecurityDTO.java	(revision )
+@@ -31,6 +31,7 @@
+     public void setId(long id) {
+         this.id = id;
+     }
++
+     public String getEmail() {
+         return email;
+     }
+Index: src/main/java/com/mktj/cn/web/repositories/RoleRepository.java
+===================================================================
+--- src/main/java/com/mktj/cn/web/repositories/RoleRepository.java	(revision 417996c1adf61451ed505921ecd33556dd622db0)
++++ src/main/java/com/mktj/cn/web/repositories/RoleRepository.java	(revision 417996c1adf61451ed505921ecd33556dd622db0)
+@@ -1,13 +0,0 @@
+-package com.mktj.cn.web.repositories;
+-
+-import com.mktj.cn.web.po.Role;
+-import org.springframework.data.repository.CrudRepository;
+-import org.springframework.stereotype.Repository;
+-
+-
+-@Repository
+-public interface RoleRepository extends CrudRepository<Role, Long> {
+-    public Role findOne(Long id);
+-
+-    public Role save(Role role);
+-}
+Index: src/main/java/com/mktj/cn/web/service/RoleService.java
+===================================================================
+--- src/main/java/com/mktj/cn/web/service/RoleService.java	(revision 417996c1adf61451ed505921ecd33556dd622db0)
++++ src/main/java/com/mktj/cn/web/service/RoleService.java	(revision 417996c1adf61451ed505921ecd33556dd622db0)
+@@ -1,12 +0,0 @@
+-package com.mktj.cn.web.service;
+-
+-import com.mktj.cn.web.dto.RoleDTO;
+-
+-import java.util.List;
+-
+-/**
+- * Created by zhanwa01 on 2017/6/30.
+- */
+-public interface RoleService {
+-    List<RoleDTO> getAllRoles();
+-}
+Index: src/main/java/com/mktj/cn/web/service/imp/UserRoleServiceImp.java
+===================================================================
+--- src/main/java/com/mktj/cn/web/service/imp/UserRoleServiceImp.java	(revision 417996c1adf61451ed505921ecd33556dd622db0)
++++ src/main/java/com/mktj/cn/web/service/imp/UserRoleServiceImp.java	(revision 417996c1adf61451ed505921ecd33556dd622db0)
+@@ -1,27 +0,0 @@
+-package com.mktj.cn.web.service.imp;
+-
+-
+-import com.mktj.cn.web.po.User;
+-import com.mktj.cn.web.service.UserRoleService;
+-import com.mktj.cn.web.dto.UserRoleDTO;
+-import com.mktj.cn.web.po.UserRole;
+-import com.mktj.cn.web.repositories.UserRoleRepository;
+-import org.springframework.beans.factory.annotation.Autowired;
+-import org.springframework.stereotype.Service;
+-
+-import java.util.List;
+-
+-@Service
+-public class UserRoleServiceImp implements UserRoleService {
+-    @Autowired
+-    private UserRoleRepository userRoleRepository;
+-
+-    @Override
+-    public List<UserRoleDTO> getRolesByUser(long userid) {
+-        User user = new User();
+-        user.setId(userid);
+-        List<UserRole> userRoles = userRoleRepository.findAllByUser(user);
+-        List<UserRoleDTO> listUserRoleDTO = UserRoleDTO.convertList(userRoles);
+-        return listUserRoleDTO;
+-    }
+-}
+Index: src/main/java/com/mktj/cn/web/po/UserRole.java
+===================================================================
+--- src/main/java/com/mktj/cn/web/po/UserRole.java	(revision 417996c1adf61451ed505921ecd33556dd622db0)
++++ src/main/java/com/mktj/cn/web/po/UserRole.java	(revision 417996c1adf61451ed505921ecd33556dd622db0)
+@@ -1,52 +0,0 @@
+-package com.mktj.cn.web.po;
+-
+-import org.hibernate.annotations.CacheConcurrencyStrategy;
+-
+-import javax.persistence.*;
+-import java.io.Serializable;
+-
+-@Entity
+-@Table(name = "t_user_role")
+-@Cacheable
+-@org.hibernate.annotations.Cache(region = "entityCache", usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+-public class UserRole implements Serializable {
+-    @Id
+-    @GeneratedValue(strategy = GenerationType.AUTO)
+-    private long id;
+-
+-    @Column(name = "role_code", nullable = false)
+-    private long role_code;
+-
+-    @ManyToOne(cascade = CascadeType.ALL)
+-    @JoinColumn(name = "user_id")
+-    private User user;
+-
+-    public UserRole() {
+-        super();
+-    }
+-
+-    public User getUser() {
+-        return user;
+-    }
+-
+-    public void setUser(User user) {
+-        this.user = user;
+-    }
+-
+-    public long getId() {
+-        return id;
+-    }
+-
+-    public void setId(long id) {
+-        this.id = id;
+-    }
+-
+-    public long getRole_code() {
+-        return role_code;
+-    }
+-
+-    public void setRole_code(long role_code) {
+-        this.role_code = role_code;
+-    }
+-
+-}
+Index: src/main/java/com/mktj/cn/web/service/imp/RoleServiceImp.java
+===================================================================
+--- src/main/java/com/mktj/cn/web/service/imp/RoleServiceImp.java	(revision 417996c1adf61451ed505921ecd33556dd622db0)
++++ src/main/java/com/mktj/cn/web/service/imp/RoleServiceImp.java	(revision 417996c1adf61451ed505921ecd33556dd622db0)
+@@ -1,34 +0,0 @@
+-package com.mktj.cn.web.service.imp;
+-
+-import com.mktj.cn.web.dto.RoleDTO;
+-import com.mktj.cn.web.service.RoleService;
+-import com.mktj.cn.web.po.Role;
+-import com.mktj.cn.web.repositories.RoleRepository;
+-import org.springframework.beans.factory.annotation.Autowired;
+-import org.springframework.stereotype.Service;
+-
+-import java.util.ArrayList;
+-import java.util.List;
+-
+-@Service
+-public class RoleServiceImp implements RoleService {
+-
+-    private RoleRepository roleRepository;
+-
+-    public RoleServiceImp(@Autowired RoleRepository roleRepository) {
+-        this.roleRepository = roleRepository;
+-    }
+-
+-    @Override
+-    public List<RoleDTO> getAllRoles() {
+-        Iterable<Role> roles = roleRepository.findAll();
+-        List<RoleDTO> list = new ArrayList<>();
+-        if (roles != null) {
+-            for (Role r : roles) {
+-                RoleDTO roleDTO = new RoleDTO(r);
+-                list.add(roleDTO);
+-            }
+-        }
+-        return list;
+-    }
+-}
+Index: src/main/java/com/mktj/cn/web/service/UserRoleService.java
+===================================================================
+--- src/main/java/com/mktj/cn/web/service/UserRoleService.java	(revision 417996c1adf61451ed505921ecd33556dd622db0)
++++ src/main/java/com/mktj/cn/web/service/UserRoleService.java	(revision 417996c1adf61451ed505921ecd33556dd622db0)
+@@ -1,12 +0,0 @@
+-package com.mktj.cn.web.service;
+-
+-import com.mktj.cn.web.dto.UserRoleDTO;
+-
+-import java.util.List;
+-
+-/**
+- * Created by zhanwa01 on 2017/6/30.
+- */
+-public interface UserRoleService {
+-    List<UserRoleDTO> getRolesByUser(long userid);
+-}
+Index: src/main/java/com/mktj/cn/web/dto/UserRoleDTO.java
+===================================================================
+--- src/main/java/com/mktj/cn/web/dto/UserRoleDTO.java	(revision 417996c1adf61451ed505921ecd33556dd622db0)
++++ src/main/java/com/mktj/cn/web/dto/UserRoleDTO.java	(revision 417996c1adf61451ed505921ecd33556dd622db0)
+@@ -1,57 +0,0 @@
+-package com.mktj.cn.web.dto;
+-
+-import com.mktj.cn.web.po.UserRole;
+-
+-import java.util.ArrayList;
+-import java.util.List;
+-
+-public class UserRoleDTO {
+-    private long id;
+-
+-    private long userid;
+-
+-    private long role_code;
+-
+-    public UserRoleDTO(UserRole todoIterator) {
+-        this.id = todoIterator.getId();
+-        this.userid = todoIterator.getUser().getId();
+-        this.role_code = todoIterator.getRole_code();
+-    }
+-
+-    public static List<UserRoleDTO> convertList(List<UserRole> todo) {
+-        List<UserRoleDTO> listTodoDTO = new ArrayList<>();
+-        if (!todo.isEmpty()) {
+-            for (UserRole todoIterator : todo) {
+-                UserRoleDTO todoDTO = new UserRoleDTO(todoIterator);
+-                listTodoDTO.add(todoDTO);
+-            }
+-        }
+-        return listTodoDTO;
+-    }
+-
+-
+-    public long getId() {
+-        return id;
+-    }
+-
+-    public void setId(long id) {
+-        this.id = id;
+-    }
+-
+-    public long getUserid() {
+-        return userid;
+-    }
+-
+-    public void setUserid(long userid) {
+-        this.userid = userid;
+-    }
+-
+-    public long getRole_code() {
+-        return role_code;
+-    }
+-
+-    public void setRole_code(long role_code) {
+-        this.role_code = role_code;
+-    }
+-
+-}
+Index: src/main/java/com/mktj/cn/web/po/Role.java
+===================================================================
+--- src/main/java/com/mktj/cn/web/po/Role.java	(revision 417996c1adf61451ed505921ecd33556dd622db0)
++++ src/main/java/com/mktj/cn/web/po/Role.java	(revision 417996c1adf61451ed505921ecd33556dd622db0)
+@@ -1,48 +0,0 @@
+-package com.mktj.cn.web.po;
+-
+-import org.hibernate.annotations.CacheConcurrencyStrategy;
+-import org.hibernate.validator.constraints.NotEmpty;
+-
+-import javax.persistence.*;
+-import java.io.Serializable;
+-
+-@Entity
+-@Table(name = "t_role")
+-@Cacheable
+-@org.hibernate.annotations.Cache(region = "entityCache", usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+-public class Role implements Serializable {
+-    @Id
+-    @GeneratedValue(strategy = GenerationType.AUTO)
+-    private long id;
+-
+-    @Column(name = "role_code", nullable = false, length = 10)
+-    private long roleCode;
+-
+-    @NotEmpty
+-    @Column(name = "role_desc", nullable = false)
+-    private String roleDesc;
+-
+-    public long getId() {
+-        return id;
+-    }
+-
+-    public void setId(long id) {
+-        this.id = id;
+-    }
+-
+-    public long getRoleCode() {
+-        return roleCode;
+-    }
+-
+-    public void setRoleCode(long roleCode) {
+-        this.roleCode = roleCode;
+-    }
+-
+-    public String getRoleDesc() {
+-        return roleDesc;
+-    }
+-
+-    public void setRoleDesc(String roleDesc) {
+-        this.roleDesc = roleDesc;
+-    }
+-}
