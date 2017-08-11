@@ -1,5 +1,4 @@
 # Created by .ignore support plugin (hsz.mobi)
-.idea/
 target/classes/com/mktj/cn/web/configuration/HttpSessionConfig.class
 target/classes/com/mktj/cn/web/configuration/TransactionManagementConfig.class
 target/classes/com/mktj/cn/web/controller/CodeController.class
@@ -36,3 +35,14 @@ target/generated-sources/
 target/maven-status/maven-compiler-plugin/compile/default-cli/
 target/mktj-0.0.1-SNAPSHOT.jar.original
 target/mktj.jar
+/.idea/
+/cache/
+/target/
+/.idea/libraries/
+/.idea/compiler.xml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/vcs.xml
+/.idea/uiDesigner.xml
+/.idea/workspace.xml
+/.idea/encodings.xml
