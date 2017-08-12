@@ -16,10 +16,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProductController extends BaseController {
     @Autowired
     ProductService productService;
-    @ApiOperation(value = "获取所有产品列表")
-    @RequestMapping(value = "/getProductList", method = RequestMethod.POST)
-    public ResponseEntity<Iterable<ProductDTO>> getProductList() {
-        Iterable<ProductDTO> productDTOList = productService.getProductList();
+    @ApiOperation(value = "获取普通产品列表")
+    @RequestMapping(value = "/getProductOrdinaryList", method = RequestMethod.POST)
+    public ResponseEntity<Iterable<ProductDTO>> getProductOrdinaryList() {
+        Iterable<ProductDTO> productDTOList = productService.getProductOrdinaryList();
+        return new ResponseEntity<>(productDTOList, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "获取套餐产品列表")
+    @RequestMapping(value = "/getProductPackageList", method = RequestMethod.POST)
+    public ResponseEntity<Iterable<ProductDTO>> getProductPackageList() {
+        Iterable<ProductDTO> productDTOList = productService.getProductPackageList();
         return new ResponseEntity<>(productDTOList, HttpStatus.OK);
     }
 }

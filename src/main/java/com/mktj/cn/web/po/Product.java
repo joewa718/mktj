@@ -1,9 +1,10 @@
 package com.mktj.cn.web.po;
+import com.mktj.cn.web.util.ProductType;
+import com.mktj.cn.web.util.RoleType;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import javax.persistence.*;
 import java.math.BigDecimal;
-
 /**
  * @author zhanwang
  * @create 2017-08-08 13:34
@@ -13,6 +14,7 @@ import java.math.BigDecimal;
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE, region = "entityCache")
 public class Product {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -30,6 +32,8 @@ public class Product {
     private String description ;
     @Column(name = "retail_Price")
     private BigDecimal retailPrice;
+    @Column(name = "piece")
+    private int piece;
     @Column(name = "price1")
     private BigDecimal price1;
     @Column(name = "price2")
@@ -44,6 +48,26 @@ public class Product {
     private String releaseTime;
     @Column(name = "is_off_shelf")
     private Boolean isOffShelf ;
+    @Column(name = "role_type")
+    private RoleType roleType;
+    @Column(name = "product_type")
+    private ProductType productType;
+
+    public ProductType getProductType() {
+        return productType;
+    }
+
+    public void setProductType(ProductType productType) {
+        this.productType = productType;
+    }
+
+    public RoleType getRoleType() {
+        return roleType;
+    }
+
+    public void setRoleType(RoleType roleType) {
+        this.roleType = roleType;
+    }
 
     public BigDecimal getRetailPrice() {
         return retailPrice;
@@ -52,6 +76,7 @@ public class Product {
     public void setRetailPrice(BigDecimal retailPrice) {
         this.retailPrice = retailPrice;
     }
+
     public Boolean getOffShelf() {
         return isOffShelf;
     }
@@ -148,7 +173,13 @@ public class Product {
         this.productCode = productCode;
     }
 
+    public int getPiece() {
+        return piece;
+    }
 
+    public void setPiece(int piece) {
+        this.piece = piece;
+    }
 
     public String getSendMan() {
         return sendMan;

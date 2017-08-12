@@ -18,7 +18,12 @@ public class ProductServiceImp implements ProductService{
     @Autowired
     ProductMapper productMapper;
     @Override
-    public Iterable<ProductDTO> getProductList() {
-        return productMapper.productToProductDTOList(productRepository.findAll());
+    public Iterable<ProductDTO> getProductOrdinaryList() {
+        return productMapper.productToProductDTOList(productRepository.getProductOrdinaryList());
+    }
+
+    @Override
+    public Iterable<ProductDTO> getProductPackageList() {
+        return productMapper.productToProductDTOList(productRepository.getProductPackageList());
     }
 }

@@ -45,8 +45,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
     @Autowired
     OrderMapper orderMapper;
 
-
-    @Transactional(value="transactionManager")
+    @Transactional(value = "transactionManager")
     @Override
     public void transactionOrder(String username, OrderVo orderVo) {
         User user = userRepository.findByPhone(username);
@@ -58,19 +57,45 @@ public class OrderServiceImp extends BaseService implements OrderService {
         if (deliveryAddress == null) {
             throw new RuntimeException("无法找到对应的收货地址");
         }
-        BigDecimal price = getProductPrice(user.getRoleType(),product);
-        BigDecimal totalCost =price.multiply(BigDecimal.valueOf(orderVo.getProductNum()));
-        if(orderVo.getPayType() == PayType.余额支付){
-            if(totalCost.compareTo(user.getScore()) == 1){
+        if (product.getRoleType().getCode() > 0){
+            transactionPackageOrder(user, orderVo, deliveryAddress, product);
+        }else{
+            transactionOrdinaryOrder(user, orderVo, deliveryAddress, product);
+        }
+    }
+
+    @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
+    private void transactionPackageOrder(User user, OrderVo orderVo, DeliveryAddress deliveryAddress, Product product) {
+        int piece = orderVo.getProductNum();
+        BigDecimal price = getProductPrice(user.getRoleType(), product);
+        BigDecimal totalCost = price.multiply(BigDecimal.valueOf(piece));
+        if (orderVo.getPayType() == PayType.余额支付) {
+            if (totalCost.compareTo(user.getScore()) == 1) {
                 throw new RuntimeException("对不起，您的积分不足，无法购买");
             }
             user.setScore(user.getScore().subtract(totalCost));
         }
-        saveOrder(username, orderVo, user, product, deliveryAddress, price, totalCost);
+        saveOrder(user.getPhone(), orderVo, user, product, deliveryAddress, price, totalCost);
+        user.setRoleType(product.getRoleType());
         userRepository.save(user);
     }
 
-    @Transactional(value="transactionManager",propagation = Propagation.REQUIRED)
+    @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
+    private void transactionOrdinaryOrder(User user, OrderVo orderVo, DeliveryAddress deliveryAddress, Product product) {
+        int piece = product.getPiece();
+        BigDecimal price = product.getRetailPrice();
+        BigDecimal totalCost = price.multiply(BigDecimal.valueOf(piece));
+        if (orderVo.getPayType() == PayType.余额支付) {
+            if (totalCost.compareTo(user.getScore()) == 1) {
+                throw new RuntimeException("对不起，您的积分不足，无法购买");
+            }
+            user.setScore(user.getScore().subtract(totalCost));
+        }
+        saveOrder(user.getPhone(), orderVo, user, product, deliveryAddress, price, totalCost);
+        userRepository.save(user);
+    }
+
+    @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
     private void saveOrder(String username, OrderVo orderVo, User user, Product product, DeliveryAddress deliveryAddress, BigDecimal price, BigDecimal totalCost) {
         Order order = new Order();
         order.setOrderCode(generateRandomCode(username));
@@ -135,7 +160,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
     }
 
     @Override
-    public Long countByOrderTypeAndUser(String username,OrderType orderType) {
+    public Long countByOrderTypeAndUser(String username, OrderType orderType) {
         User user = userRepository.findByPhone(username);
         Long count = orderRepository.countByOrderTypeAndUser(orderType, user);
         return count;

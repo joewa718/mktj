@@ -11,5 +11,8 @@ import java.util.List;
  * Created by zhanwa01 on 2017/4/12.
  */
 public interface ProductService {
-    Iterable<ProductDTO> getProductList();
+
+    Iterable<ProductDTO> getProductOrdinaryList();
+
+    Iterable<ProductDTO> getProductPackageList();
 }

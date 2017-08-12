@@ -1,5 +1,7 @@
 package com.mktj.cn.web.dto;
 
+import com.mktj.cn.web.util.RoleType;
+
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,17 +13,30 @@ import java.math.BigDecimal;
  * @create 2017-08-09 13:26
  **/
 public class ProductDTO {
+
     private long id;
     private String product_code;
     private String productName;
     private String productImage;
     private String description ;
     private BigDecimal retailPrice;
+    private int piece;
     private BigDecimal price1;
     private BigDecimal price2;
     private BigDecimal price3;
     private BigDecimal price4;
     private BigDecimal price5;
+    private String releaseTime;
+    private Boolean isOffShelf;
+    private String roleType;
+
+    public String getRoleType() {
+        return roleType;
+    }
+
+    public void setRoleType(String roleType) {
+        this.roleType = roleType;
+    }
 
     public long getId() {
         return id;
@@ -127,6 +142,11 @@ public class ProductDTO {
         isOffShelf = offShelf;
     }
 
-    private String releaseTime;
-    private Boolean isOffShelf ;
+    public int getPiece() {
+        return piece;
+    }
+
+    public void setPiece(int piece) {
+        this.piece = piece;
+    }
 }
