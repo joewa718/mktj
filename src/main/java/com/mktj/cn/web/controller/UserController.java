@@ -1,6 +1,7 @@
 package com.mktj.cn.web.controller;
 
 import com.mktj.cn.web.dto.DeliveryAddressDTO;
+import com.mktj.cn.web.dto.ImageDTO;
 import com.mktj.cn.web.dto.RealInfoDTO;
 import com.mktj.cn.web.dto.UserDTO;
 import com.mktj.cn.web.exception.DuplicateAccountException;
@@ -42,30 +43,40 @@ public class UserController extends BaseController {
 
     @ApiOperation(value = "上传文件")
     @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
-    public ResponseEntity<String> uploadFile( @RequestParam(value = "file") MultipartFile file) throws ServletException, IOException {
-        String photo = null;
+    public ResponseEntity<ImageDTO> uploadFile( @RequestParam(value = "file") MultipartFile file) throws ServletException, IOException {
+        ImageDTO imageDTO =new ImageDTO();
+        String fileName = null;
         try {
-            photo = userService.updateFile(file, filePath);
+            fileName = userService.updateFile(file, filePath);
         } catch (Exception e) {
             log.error(e.getMessage(),e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            imageDTO.setCode(500);
+            imageDTO.setData(e.getMessage());
+            return new ResponseEntity<>(imageDTO,HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>(photo, HttpStatus.OK);
+        imageDTO.setCode(0);
+        imageDTO.setData(fileName);
+        return new ResponseEntity<ImageDTO>(imageDTO, HttpStatus.OK);
     }
 
     @ApiOperation(value = "上传头像专用，注册后才能上传头像")
     @RequestMapping(value = "/uploadPhoto", method = RequestMethod.POST)
-    public ResponseEntity<String> uploadPhoto( @RequestParam(value = "file") MultipartFile file) throws ServletException, IOException {
+    public ResponseEntity<ImageDTO> uploadPhoto( @RequestParam(value = "file") MultipartFile file) throws ServletException, IOException {
+        ImageDTO imageDTO =new ImageDTO();
         String phone = super.getCurrentUser().getUsername();
         String photo = null;
         try {
             photo = userService.updateFile(file, filePath);
         } catch (Exception e) {
             log.error(e.getMessage(),e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            imageDTO.setCode(500);
+            imageDTO.setData(e.getMessage());
+            return new ResponseEntity<ImageDTO>(imageDTO,HttpStatus.INTERNAL_SERVER_ERROR);
         }
         userService.editPhoto(phone,photo);
-        return new ResponseEntity<>(photo, HttpStatus.OK);
+        imageDTO.setCode(0);
+        imageDTO.setData(photo);
+        return new ResponseEntity<>(imageDTO, HttpStatus.OK);
     }
 
     @ApiOperation(value = "注册用户")

@@ -13,4 +13,6 @@ import org.springframework.stereotype.Repository;
 public interface DeliveryAddressRepository extends CrudRepository<DeliveryAddress, Long>, JpaSpecificationExecutor<DeliveryAddress> {
 
     DeliveryAddress findOneByIdAndUser(long id, User user);
+
+    void deleteAllByIdAndUser(long id, User user);
 }
