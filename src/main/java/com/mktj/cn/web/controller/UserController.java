@@ -99,8 +99,6 @@ public class UserController extends BaseController {
         return new ResponseEntity<>("", HttpStatus.OK);
     }
 
-
-
     @ApiOperation(value = "用户登录")
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public void login(@RequestParam String username, @RequestParam String password, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -183,5 +181,13 @@ public class UserController extends BaseController {
         String phone = super.getCurrentUser().getUsername();
         userService.editNickname(phone,nickname);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "获得默认收货地址")
+    @RequestMapping(value = "/getDefaultDeliveryAddress", method = RequestMethod.POST)
+    public ResponseEntity<DeliveryAddressDTO> getDefaultDeliveryAddress() {
+        String phone = super.getCurrentUser().getUsername();
+        DeliveryAddressDTO deliveryAddressDTO = userService.getDefaultAddressByUser(phone);
+        return new ResponseEntity<>(deliveryAddressDTO,HttpStatus.OK);
     }
 }

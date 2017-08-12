@@ -44,4 +44,6 @@ public interface UserService {
     void editReceiveMessage(String phone,boolean isReceiveMessage);
 
     void editNickname(String phone,String nickname);
+
+    DeliveryAddressDTO getDefaultAddressByUser(String phone);
 }

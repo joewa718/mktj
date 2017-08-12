@@ -201,4 +201,11 @@ public class UserServiceImp extends BaseService implements UserService {
         user.setNickname(nickname);
         userRepository.save(user);
     }
+
+    @Override
+    public DeliveryAddressDTO getDefaultAddressByUser(String phone){
+        User user =userRepository.findByPhone(phone);
+        DeliveryAddress deliveryAddress =deliveryAddressRepository.findOneByIsDefaultAndUser(true,user);
+        return deliveryAddressMapper.deliveryAddressToDeliveryAddressDTO(deliveryAddress);
+    }
 }

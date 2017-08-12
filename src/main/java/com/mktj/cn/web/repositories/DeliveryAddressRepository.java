@@ -13,4 +13,7 @@ public interface DeliveryAddressRepository extends CrudRepository<DeliveryAddres
     DeliveryAddress findOneByIdAndUser(long id, User user);
 
     void deleteAllByIdAndUser(long id, User user);
+
+    DeliveryAddress findOneByIsDefaultAndUser(Boolean isDefault, User user);
+
 }

@@ -85,11 +85,8 @@ public class WechatController {
             if (outMessage == null) {
                 return "";
             }
-
-            out = outMessage
-                    .toEncryptedXml(this.wxService.getWxMpConfigStorage());
+            out = outMessage.toEncryptedXml(this.wxService.getWxMpConfigStorage());
         }
-
         this.logger.debug("\n组装回复信息：{}", out);
 
         return out;
