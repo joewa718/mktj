@@ -48,7 +48,7 @@ public class OrderController extends BaseController {
     }
 
     @ApiOperation(value = "根据订单类型获取订单总量")
-    @RequestMapping(value = "/getOrderListByOrderStatus", method = RequestMethod.POST)
+    @RequestMapping(value = "/countByOrderTypeAndUser", method = RequestMethod.POST)
     public ResponseEntity<Long> countByOrderTypeAndUser(@RequestParam OrderType orderType) {
         String phone = super.getCurrentUser().getUsername();
         Long count = orderService.countByOrderTypeAndUser(phone,orderType);

@@ -1,12 +1,8 @@
-package com.mktj.cn.web.dto;/**
+package com.mktj.cn.web.dto;
+
+/**
  * Created by zhanwa01 on 2017/8/9.
  */
-
-import com.mktj.cn.web.util.RoleType;
-
-import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import java.math.BigDecimal;
 
 /**
@@ -20,7 +16,7 @@ public class UserDTO {
     private String password;
     private String email;
     private String roleType;
-    private boolean isReceiveMessage;
+    private Boolean isReceiveMessage;
     private String authorizationCode;
     private BigDecimal score;
 
@@ -89,11 +85,11 @@ public class UserDTO {
         this.username = username;
     }
 
-    public boolean isReceiveMessage() {
+    public Boolean isReceiveMessage() {
         return isReceiveMessage;
     }
 
-    public void setReceiveMessage(boolean receiveMessage) {
+    public void setReceiveMessage(Boolean receiveMessage) {
         isReceiveMessage = receiveMessage;
     }
 }
