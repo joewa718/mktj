@@ -64,7 +64,7 @@ public class UserServiceImp extends BaseService implements UserService {
 
     @Override
     public UserDTO regUser(UserVo userVo) throws DuplicateAccountException {
-        User user =userRepository.findByPhone(userVo.getUsername());
+        User user =userRepository.findByPhone(userVo.getPhone());
         if(user != null){
             throw new DuplicateAccountException("duplicate account phone.");
         }
@@ -77,8 +77,8 @@ public class UserServiceImp extends BaseService implements UserService {
     }
 
     @Override
-    public void regRealInfo(String username, RealInfoVo realInfoVo) {
-        User user =userRepository.findByPhone(username);
+    public void regRealInfo(String phone, RealInfoVo realInfoVo) {
+        User user =userRepository.findByPhone(phone);
         RealInfo realInfo = realInfoMapper.realInfoToVoRealInfo(realInfoVo);
         if(user.getRealInfo() == null){
             user.setRealInfo(realInfo);
@@ -100,8 +100,8 @@ public class UserServiceImp extends BaseService implements UserService {
     }
 
     @Override
-    public void editPassword(String username,String oldPassword,String password) {
-        User user =userRepository.findByPhone(username);
+    public void editPassword(String phone,String oldPassword,String password) {
+        User user =userRepository.findByPhone(phone);
         if(!AESCryptUtil.encrypt(oldPassword).equals(user.getPassword())){
             throw new RuntimeException("原密码不正确");
         }
@@ -110,41 +110,41 @@ public class UserServiceImp extends BaseService implements UserService {
     }
 
     @Override
-    public void editPhoto(String username, String photo) {
-        User user =userRepository.findByPhone(username);
+    public void editPhoto(String phone, String photo) {
+        User user =userRepository.findByPhone(phone);
         user.setHeadPortrait(photo);
         userRepository.save(user);
     }
 
     @Override
-     public void editReceiveMessage(String username,boolean isReceiveMessage){
-        User user =userRepository.findByPhone(username);
+     public void editReceiveMessage(String phone,boolean isReceiveMessage){
+        User user =userRepository.findByPhone(phone);
         user.setReceiveMessage(isReceiveMessage);
         userRepository.save(user);
     }
 
 
     @Override
-    public UserDTO findUserByPhone(String username) {
-        User user = userRepository.findByPhone(username);
+    public UserDTO findUserByPhone(String phone) {
+        User user = userRepository.findByPhone(phone);
         return userMapper.userToUserDTO(user);
     }
 
     @Override
-    public RealInfoDTO findRealInfoByPhone(String username) {
-        User user = userRepository.findByPhone(username);
+    public RealInfoDTO findRealInfoByPhone(String phone) {
+        User user = userRepository.findByPhone(phone);
         return realInfoMapper.realInfoToRealInfoDTO(user.getRealInfo());
     }
 
     @Override
-    public List<DeliveryAddressDTO> findDeliveryAddressByPhone(String username) {
-        User user = userRepository.findByPhone(username);
+    public List<DeliveryAddressDTO> findDeliveryAddressByPhone(String phone) {
+        User user = userRepository.findByPhone(phone);
         return deliveryAddressMapper.deliveryAddressToDeliveryAddressDTOList(user.getDeliveryAddressList());
     }
 
     @Override
-    public void saveDeliveryAddress(String username,DeliveryAddressVo deliveryAddressVo) {
-        User user = userRepository.findByPhone(username);
+    public void saveDeliveryAddress(String phone,DeliveryAddressVo deliveryAddressVo) {
+        User user = userRepository.findByPhone(phone);
         Optional<List> deliveryAddressList =Optional.ofNullable(user.getDeliveryAddressList());
         deliveryAddressList.orElse(new ArrayList<>());
         DeliveryAddress deliveryAddress =deliveryAddressMapper.deliveryAddressVoToDeliveryAddress(deliveryAddressVo);
@@ -154,8 +154,8 @@ public class UserServiceImp extends BaseService implements UserService {
     }
 
     @Override
-    public void editDeliveryAddress(String username,DeliveryAddressVo deliveryAddressVo) {
-        User user = userRepository.findByPhone(username);
+    public void editDeliveryAddress(String phone,DeliveryAddressVo deliveryAddressVo) {
+        User user = userRepository.findByPhone(phone);
         for(DeliveryAddress deliveryAddress : user.getDeliveryAddressList()){
             if(deliveryAddressVo.getIsDefault()){
                 deliveryAddress.setIsDefault(false);
@@ -175,8 +175,8 @@ public class UserServiceImp extends BaseService implements UserService {
     }
 
     @Override
-    public void setDeliveryAddressDefault(String username,long deliveryAddressId, boolean isDefault) {
-        User user = userRepository.findByPhone(username);
+    public void setDeliveryAddressDefault(String phone,long deliveryAddressId, boolean isDefault) {
+        User user = userRepository.findByPhone(phone);
         for(DeliveryAddress deliveryAddress : user.getDeliveryAddressList()){
             if(isDefault){
                 deliveryAddress.setIsDefault(false);
@@ -189,14 +189,14 @@ public class UserServiceImp extends BaseService implements UserService {
     }
 
     @Override
-    public void editRoleType(String username, RoleType roleType ) {
-        User user = userRepository.findByPhone(username);
+    public void editRoleType(String phone, RoleType roleType ) {
+        User user = userRepository.findByPhone(phone);
         user.setRoleType(roleType);
         userRepository.save(user);
     }
     @Override
-    public void editNickname(String username,String nickname){
-        User user = userRepository.findByPhone(username);
+    public void editNickname(String phone,String nickname){
+        User user = userRepository.findByPhone(phone);
         user.setNickname(nickname);
         userRepository.save(user);
     }

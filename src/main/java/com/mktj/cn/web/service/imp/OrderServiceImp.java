@@ -47,8 +47,8 @@ public class OrderServiceImp extends BaseService implements OrderService {
 
     @Transactional(value = "transactionManager")
     @Override
-    public void transactionOrder(String username, OrderVo orderVo) {
-        User user = userRepository.findByPhone(username);
+    public void transactionOrder(String phone, OrderVo orderVo) {
+        User user = userRepository.findByPhone(phone);
         Product product = productRepository.findOne(orderVo.getProductId());
         if (product == null) {
             throw new RuntimeException("无法找到对应的商品");
@@ -96,9 +96,9 @@ public class OrderServiceImp extends BaseService implements OrderService {
     }
 
     @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
-    private void saveOrder(String username, OrderVo orderVo, User user, Product product, DeliveryAddress deliveryAddress, BigDecimal price, BigDecimal totalCost) {
+    private void saveOrder(String phone, OrderVo orderVo, User user, Product product, DeliveryAddress deliveryAddress, BigDecimal price, BigDecimal totalCost) {
         Order order = new Order();
-        order.setOrderCode(generateRandomCode(username));
+        order.setOrderCode(generateRandomCode(phone));
         order.setUser(user);
         order.setOrderStatus(OrderStatus.待确认);
         order.setOrderTime(new Date());
@@ -139,29 +139,29 @@ public class OrderServiceImp extends BaseService implements OrderService {
     }
 
     @Override
-    public OrderDTO getOrder(String username, long orderId) {
-        User user = userRepository.findByPhone(username);
+    public OrderDTO getOrder(String phone, long orderId) {
+        User user = userRepository.findByPhone(phone);
         Order order = orderRepository.findOneByIdAndUser(orderId, user);
         return orderMapper.orderToOrderDTO(order);
     }
 
 
     @Override
-    public void updateOrderStatusByIdAndUser(OrderStatus status, long id, String username) {
-        User user = userRepository.findByPhone(username);
+    public void updateOrderStatusByIdAndUser(OrderStatus status, long id, String phone) {
+        User user = userRepository.findByPhone(phone);
         orderRepository.updateOrderStatusByIdAndUser(status, id, user);
     }
 
     @Override
-    public List<OrderDTO> findByOrderStatusAndUser(OrderStatus status, String username) {
-        User user = userRepository.findByPhone(username);
+    public List<OrderDTO> findByOrderStatusAndUser(OrderStatus status, String phone) {
+        User user = userRepository.findByPhone(phone);
         List<Order> orderList = orderRepository.findByOrderStatusAndUser(status, user);
         return orderMapper.orderToOrderDTOList(orderList);
     }
 
     @Override
-    public Long countByOrderTypeAndUser(String username, OrderType orderType) {
-        User user = userRepository.findByPhone(username);
+    public Long countByOrderTypeAndUser(String phone, OrderType orderType) {
+        User user = userRepository.findByPhone(phone);
         Long count = orderRepository.countByOrderTypeAndUser(orderType, user);
         return count;
     }

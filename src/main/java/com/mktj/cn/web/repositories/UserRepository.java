@@ -11,5 +11,5 @@ public interface UserRepository extends CrudRepository<User, Long>, JpaSpecifica
     User save(User user);
 
     @Query("select u from User u where u.phone = ?1 and u.disable=0")
-    public User findByPhone(String username);
+    public User findByPhone(String phone);
 }

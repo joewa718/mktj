@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 public class UserDTO {
     private String nickname;
     private String headPortrait;
-    private String username;
+    private String phone;
     private String password;
     private String email;
     private String roleType;
@@ -77,13 +77,14 @@ public class UserDTO {
         this.authorizationCode = authorizationCode;
     }
 
-    public String getUsername() {
-        return username;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
+
 
     public Boolean isReceiveMessage() {
         return isReceiveMessage;

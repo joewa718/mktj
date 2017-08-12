@@ -21,27 +21,27 @@ public interface UserService {
 
     UserDTO regUser(UserVo user) throws DuplicateAccountException;
 
-    void regRealInfo(String username,RealInfoVo vo);
+    void regRealInfo(String phone,RealInfoVo vo);
 
-    UserDTO findUserByPhone(String username);
+    UserDTO findUserByPhone(String phone);
 
-    RealInfoDTO findRealInfoByPhone(String username);
+    RealInfoDTO findRealInfoByPhone(String phone);
 
-    List<DeliveryAddressDTO> findDeliveryAddressByPhone(String username);
+    List<DeliveryAddressDTO> findDeliveryAddressByPhone(String phone);
 
-    void saveDeliveryAddress(String username,DeliveryAddressVo deliveryAddressVo);
+    void saveDeliveryAddress(String phone,DeliveryAddressVo deliveryAddressVo);
 
-    void editDeliveryAddress(String username,DeliveryAddressVo deliveryAddressVo);
+    void editDeliveryAddress(String phone,DeliveryAddressVo deliveryAddressVo);
 
-    void setDeliveryAddressDefault(String username,long deliveryAddressId,boolean isDefault);
+    void setDeliveryAddressDefault(String phone,long deliveryAddressId,boolean isDefault);
 
-    void editPassword(String username,String oldPassword,String password);
+    void editPassword(String phone,String oldPassword,String password);
 
-    void editPhoto(String username,String photo);
+    void editPhoto(String phone,String photo);
 
-    void editRoleType(String username,RoleType roleType);
+    void editRoleType(String phone,RoleType roleType);
 
-    void editReceiveMessage(String username,boolean isReceiveMessage);
+    void editReceiveMessage(String phone,boolean isReceiveMessage);
 
-    void editNickname(String username,String nickname);
+    void editNickname(String phone,String nickname);
 }

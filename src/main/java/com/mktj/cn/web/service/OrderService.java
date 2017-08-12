@@ -12,14 +12,14 @@ import java.util.List;
  */
 public interface OrderService {
 
-    void transactionOrder(String username,OrderVo orderVo);
+    void transactionOrder(String phone,OrderVo orderVo);
 
-    OrderDTO getOrder(String username, long orderId);
+    OrderDTO getOrder(String phone, long orderId);
 
-    void updateOrderStatusByIdAndUser(OrderStatus status, long id,  String username);
+    void updateOrderStatusByIdAndUser(OrderStatus status, long id,  String phone);
 
-    List<OrderDTO> findByOrderStatusAndUser(OrderStatus status, String username);
+    List<OrderDTO> findByOrderStatusAndUser(OrderStatus status, String phone);
 
-    Long countByOrderTypeAndUser(String username,OrderType orderType);
+    Long countByOrderTypeAndUser(String phone,OrderType orderType);
 
 }

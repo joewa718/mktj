@@ -10,7 +10,7 @@ import com.mktj.cn.web.util.RoleType;
  **/
 public class UserVo {
     private String nickname;
-    private String username;
+    private String phone;
     private String password;
     private String email;
     private RoleType roleType = RoleType.天使;
@@ -47,12 +47,13 @@ public class UserVo {
         this.roleType = roleType;
     }
 
-
-    public String getUsername() {
-        return username;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
+
+
 }

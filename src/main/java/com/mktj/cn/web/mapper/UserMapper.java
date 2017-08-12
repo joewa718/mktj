@@ -11,9 +11,7 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
-    @Mappings( @Mapping(source = "phone", target = "username"))
     UserDTO userToUserDTO(User user);
-    @Mappings(@Mapping(source = "username", target = "phone"))
     User userToUserVo(UserVo userVo);
 
     List<UserDTO> userToUserDTOList(List<User> userList);
