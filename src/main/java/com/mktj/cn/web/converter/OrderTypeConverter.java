@@ -1,6 +1,5 @@
 package com.mktj.cn.web.converter;
 
-import com.mktj.cn.web.util.OrderStatus;
 import com.mktj.cn.web.util.OrderType;
 
 import javax.persistence.AttributeConverter;

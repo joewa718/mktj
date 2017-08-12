@@ -1,7 +1,5 @@
 package com.mktj.cn.web.converter;
 
-import com.mktj.cn.web.util.OrderStatus;
-import com.mktj.cn.web.util.OrderType;
 import com.mktj.cn.web.util.PayType;
 
 import javax.persistence.AttributeConverter;

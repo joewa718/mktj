@@ -3,20 +3,14 @@ package com.mktj.cn.web.po;
 import com.mktj.cn.web.converter.OrderStatusConverter;
 import com.mktj.cn.web.converter.OrderTypeConverter;
 import com.mktj.cn.web.converter.PayTypeConverter;
-import com.mktj.cn.web.converter.RoleTypeConverter;
 import com.mktj.cn.web.util.OrderStatus;
 import com.mktj.cn.web.util.OrderType;
 import com.mktj.cn.web.util.PayType;
-import org.hibernate.annotations.*;
-import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author zhanwang

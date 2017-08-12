@@ -1,7 +1,5 @@
 package com.mktj.cn.web.dto;
 
-import javax.persistence.Column;
-
 /**
  * @author zhanwang
  * @create 2017-08-09 11:19

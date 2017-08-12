@@ -1,10 +1,5 @@
 package com.mktj.cn.web.vo;
 
-import com.mktj.cn.web.po.User;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
 import java.io.Serializable;
 
 public class RealInfoVo implements Serializable {

@@ -1,17 +1,12 @@
 package com.mktj.cn.web.controller;
 
 import com.mktj.cn.web.dto.OrderDTO;
-import com.mktj.cn.web.dto.ProductDTO;
-import com.mktj.cn.web.dto.RealInfoDTO;
 import com.mktj.cn.web.service.OrderService;
-import com.mktj.cn.web.service.ProductService;
 import com.mktj.cn.web.util.OrderStatus;
 import com.mktj.cn.web.util.OrderType;
 import com.mktj.cn.web.vo.OrderVo;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

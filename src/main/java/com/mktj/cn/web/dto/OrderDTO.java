@@ -1,13 +1,5 @@
 package com.mktj.cn.web.dto;
 
-import com.mktj.cn.web.po.User;
-import com.mktj.cn.web.util.OrderStatus;
-import com.mktj.cn.web.util.OrderType;
-import com.mktj.cn.web.util.PayType;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
 

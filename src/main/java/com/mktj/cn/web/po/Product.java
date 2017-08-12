@@ -1,8 +1,10 @@
 package com.mktj.cn.web.po;
+
 import com.mktj.cn.web.util.ProductType;
 import com.mktj.cn.web.util.RoleType;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 /**

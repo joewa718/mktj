@@ -1,11 +1,6 @@
 package com.mktj.cn.web.repositories;
 
-import com.mktj.cn.web.dto.ProductDTO;
 import com.mktj.cn.web.po.Product;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -16,9 +11,9 @@ import java.util.List;
 
 @Repository
 public interface ProductRepository extends CrudRepository<Product, Long>, JpaSpecificationExecutor<Product> {
-    @Query("select Product from Product p where p.isOffShelf = false and p.productType = ProductType.普通产品")
+    @Query("select p from Product p where isOffShelf = false and productType = 1")
     List<Product> getProductOrdinaryList();
-    @Query("select Product from Product p where p.isOffShelf = false and p.productType = ProductType.套餐产品")
+    @Query("select p from Product p where isOffShelf = false and productType = 2")
     List<Product> getProductPackageList();
 
 }
