@@ -7,12 +7,12 @@ package com.mktj.cn.web.dto;/**
  * @create 2017-08-09 11:18
  **/
 public class RealInfoDTO {
-
     private String idCard;
     private String realName;
     private String sex;
     private String birthday;
     private String province;
+    private String region;
     private String city;
     private String occupation;
     private String idCardPhotoFront;
@@ -100,4 +100,13 @@ public class RealInfoDTO {
         this.city = city;
     }
 
+
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
+    }
 }
