@@ -42,8 +42,8 @@ wechat:
   mp:
     appId: wxd45ea849e28c0d42
     secret: 6b14f343294929d96ff1be2f720d130b
-    token:
-    aesKey:
+    token: hlwerbv123nsf
+    aesKey: zzvljqwer
 ---
 server:
   port: 8080
