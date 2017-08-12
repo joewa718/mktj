@@ -52,6 +52,7 @@ public class UserServiceImp extends BaseService implements UserService {
             String fileName = file.getOriginalFilename();
             String suffixName = fileName.substring(fileName.lastIndexOf("."));
             fileName = UUID.randomUUID() + suffixName;
+            fileName = fileName.toLowerCase();
             File dest = new File(filePath + fileName);
             if (!dest.getParentFile().exists()) {
                 dest.getParentFile().mkdirs();

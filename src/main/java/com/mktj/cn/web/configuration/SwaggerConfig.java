@@ -27,7 +27,7 @@ public class SwaggerConfig {
                 .forCodeGeneration(true)
                 .pathMapping("/")
                 .select()
-                .paths(or(regex("/api/.*")))//过滤的接口
+                .paths(or(regex("/api/.*")))
                 .build()
                 .apiInfo(testApiInfo());
     }
