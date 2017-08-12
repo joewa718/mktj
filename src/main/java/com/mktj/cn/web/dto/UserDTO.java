@@ -20,6 +20,7 @@ public class UserDTO {
     private String password;
     private String email;
     private String roleType;
+    private boolean isReceiveMessage;
     private String authorizationCode;
     private BigDecimal score;
 
@@ -80,13 +81,19 @@ public class UserDTO {
         this.authorizationCode = authorizationCode;
     }
 
-
-
     public String getUsername() {
         return username;
     }
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public boolean isReceiveMessage() {
+        return isReceiveMessage;
+    }
+
+    public void setReceiveMessage(boolean receiveMessage) {
+        isReceiveMessage = receiveMessage;
     }
 }

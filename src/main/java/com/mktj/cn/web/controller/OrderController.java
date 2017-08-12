@@ -6,6 +6,7 @@ import com.mktj.cn.web.dto.RealInfoDTO;
 import com.mktj.cn.web.service.OrderService;
 import com.mktj.cn.web.service.ProductService;
 import com.mktj.cn.web.util.OrderStatus;
+import com.mktj.cn.web.util.OrderType;
 import com.mktj.cn.web.vo.OrderVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -44,5 +45,13 @@ public class OrderController extends BaseController {
         String phone = super.getCurrentUser().getUsername();
         List<OrderDTO> orderDTOList = orderService.findByOrderStatusAndUser(orderStatus,phone);
         return new ResponseEntity<>(orderDTOList,HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "根据订单类型获取订单总量")
+    @RequestMapping(value = "/getOrderListByOrderStatus", method = RequestMethod.POST)
+    public ResponseEntity<Long> countByOrderTypeAndUser(@RequestParam OrderType orderType) {
+        String phone = super.getCurrentUser().getUsername();
+        Long count = orderService.countByOrderTypeAndUser(phone,orderType);
+        return new ResponseEntity<>(count,HttpStatus.OK);
     }
 }

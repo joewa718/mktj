@@ -37,6 +37,8 @@ public class User implements Serializable {
     private RoleType roleType;
     @Column(name = "authorization_code")
     private String authorizationCode;
+    @Column(name = "isReceiveMessage")
+    private boolean isReceiveMessage = false;
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private RealInfo realInfo;
@@ -149,4 +151,13 @@ public class User implements Serializable {
     public void setScore(BigDecimal score) {
         this.score = score;
     }
+
+    public boolean isReceiveMessage() {
+        return isReceiveMessage;
+    }
+
+    public void setReceiveMessage(boolean receiveMessage) {
+        isReceiveMessage = receiveMessage;
+    }
+
 }

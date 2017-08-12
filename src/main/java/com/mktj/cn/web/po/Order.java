@@ -72,6 +72,8 @@ public class Order {
     @Convert( converter = OrderStatusConverter.class )
     @Column(name = "order_status")
     private OrderStatus orderStatus;
+    @Column(name = "recommend_phone")
+    private String recommendPhone;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -243,5 +245,13 @@ public class Order {
 
     public void setReceiverDetailed(String receiverDetailed) {
         this.receiverDetailed = receiverDetailed;
+    }
+    
+    public String getRecommendPhone() {
+        return recommendPhone;
+    }
+
+    public void setRecommendPhone(String recommendPhone) {
+        this.recommendPhone = recommendPhone;
     }
 }

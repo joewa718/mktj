@@ -102,7 +102,7 @@ public class UserServiceImp extends BaseService implements UserService {
     @Override
     public void editPassword(String username,String oldPassword,String password) {
         User user =userRepository.findByPhone(username);
-        if(!oldPassword.equals(user.getPassword())){
+        if(!AESCryptUtil.encrypt(oldPassword).equals(user.getPassword())){
             throw new RuntimeException("原密码不正确");
         }
         user.setPassword(AESCryptUtil.encrypt(password));
@@ -115,6 +115,14 @@ public class UserServiceImp extends BaseService implements UserService {
         user.setHeadPortrait(photo);
         userRepository.save(user);
     }
+
+    @Override
+     public void editReceiveMessage(String username,boolean isReceiveMessage){
+        User user =userRepository.findByPhone(username);
+        user.setReceiveMessage(isReceiveMessage);
+        userRepository.save(user);
+    }
+
 
     @Override
     public UserDTO findUserByPhone(String username) {
@@ -186,5 +194,10 @@ public class UserServiceImp extends BaseService implements UserService {
         user.setRoleType(roleType);
         userRepository.save(user);
     }
-
+    @Override
+    public void editNickname(String username,String nickname){
+        User user = userRepository.findByPhone(username);
+        user.setNickname(nickname);
+        userRepository.save(user);
+    }
 }

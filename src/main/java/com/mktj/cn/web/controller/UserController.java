@@ -165,11 +165,29 @@ public class UserController extends BaseController {
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
     @ApiOperation(value = "设置默认收货地址")
     @RequestMapping(value = "/setDeliveryIsDefault", method = RequestMethod.POST)
     public ResponseEntity setDeliveryIsDefault(@RequestParam("deliveryAddressId") long deliveryAddressId, @RequestParam("isDefault") boolean isDefault) {
         String phone = super.getCurrentUser().getUsername();
         userService.setDeliveryAddressDefault(phone, deliveryAddressId, isDefault);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "设置是否接收短信")
+    @RequestMapping(value = "/setReceiveMessage", method = RequestMethod.POST)
+    public ResponseEntity setReceiveMessage(@RequestParam("isReceiveMessage") boolean isReceiveMessage) {
+        String phone = super.getCurrentUser().getUsername();
+        userService.editReceiveMessage(phone, isReceiveMessage);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+    @ApiOperation(value = "修改用户昵称")
+    @RequestMapping(value = "/setNickname", method = RequestMethod.POST)
+    public ResponseEntity setNickname(@RequestParam("nickname") String nickname) {
+        String phone = super.getCurrentUser().getUsername();
+        userService.editNickname(phone,nickname);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

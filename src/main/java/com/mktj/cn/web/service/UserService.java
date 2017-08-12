@@ -43,4 +43,8 @@ public interface UserService {
     void editPhoto(String username,String photo);
 
     void editRoleType(String username,RoleType roleType);
+
+    void editReceiveMessage(String username,boolean isReceiveMessage);
+
+    void editNickname(String username,String nickname);
 }

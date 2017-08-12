@@ -12,6 +12,7 @@ public class OrderVo {
     private long deliverAddressId;
     private PayType payType;
     private String orderComment;
+    private String recommendPhone;
 
     public PayType getPayType() {
         return payType;
@@ -51,5 +52,13 @@ public class OrderVo {
 
     public void setProductNum(int productNum) {
         this.productNum = productNum;
+    }
+
+    public String getRecommendPhone() {
+        return recommendPhone;
+    }
+
+    public void setRecommendPhone(String recommendPhone) {
+        this.recommendPhone = recommendPhone;
     }
 }

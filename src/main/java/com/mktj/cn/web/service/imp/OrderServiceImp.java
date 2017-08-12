@@ -133,4 +133,11 @@ public class OrderServiceImp extends BaseService implements OrderService {
         List<Order> orderList = orderRepository.findByOrderStatusAndUser(status, user);
         return orderMapper.orderToOrderDTOList(orderList);
     }
+
+    @Override
+    public Long countByOrderTypeAndUser(String username,OrderType orderType) {
+        User user = userRepository.findByPhone(username);
+        Long count = orderRepository.countByOrderTypeAndUser(orderType, user);
+        return count;
+    }
 }

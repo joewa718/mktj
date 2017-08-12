@@ -3,6 +3,7 @@ package com.mktj.cn.web.repositories;
 import com.mktj.cn.web.po.Order;
 import com.mktj.cn.web.po.User;
 import com.mktj.cn.web.util.OrderStatus;
+import com.mktj.cn.web.util.OrderType;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -21,4 +22,6 @@ public interface OrderRepository extends CrudRepository<Order, Long>, JpaSpecifi
     List<Order> findByOrderStatusAndUser(OrderStatus orderStatus, User user);
 
     Order findOneByIdAndUser(long id,User user);
+
+    Long countByOrderTypeAndUser(OrderType orderType, User user);
 }

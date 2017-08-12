@@ -1,7 +1,9 @@
 package com.mktj.cn.web.service;
 
 import com.mktj.cn.web.dto.OrderDTO;
+import com.mktj.cn.web.po.User;
 import com.mktj.cn.web.util.OrderStatus;
+import com.mktj.cn.web.util.OrderType;
 import com.mktj.cn.web.vo.OrderVo;
 
 import java.util.List;
@@ -18,5 +20,7 @@ public interface OrderService {
     void updateOrderStatusByIdAndUser(OrderStatus status, long id,  String username);
 
     List<OrderDTO> findByOrderStatusAndUser(OrderStatus status, String username);
+
+    Long countByOrderTypeAndUser(String username,OrderType orderType);
 
 }

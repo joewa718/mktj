@@ -36,6 +36,7 @@ public class OrderDTO {
     private String orderType;
     private Date orderTime;
     private String orderStatus;
+    private String recommendPhone;
 
     public String getProductName() {
         return productName;
@@ -197,5 +198,14 @@ public class OrderDTO {
 
     public void setReceiverDetailed(String receiverDetailed) {
         this.receiverDetailed = receiverDetailed;
+    }
+
+
+    public String getRecommendPhone() {
+        return recommendPhone;
+    }
+
+    public void setRecommendPhone(String recommendPhone) {
+        this.recommendPhone = recommendPhone;
     }
 }
