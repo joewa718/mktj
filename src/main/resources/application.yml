@@ -1,13 +1,11 @@
 spring:
   #resources.static-locations: classpath:/dist/
   profiles:
-    active: dev
+    active: st
   data:
     jpa:
       repositories:
         enabled: true
-  session:
-    store-type : redis
   http:
     encoding:
       charset: UTF-8

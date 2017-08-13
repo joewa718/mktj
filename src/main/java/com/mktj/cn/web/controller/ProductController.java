@@ -8,13 +8,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/product")
 public class ProductController extends BaseController {
+
     @Autowired
     ProductService productService;
+
     @ApiOperation(value = "获取普通产品列表")
     @RequestMapping(value = "/getProductOrdinaryList", method = RequestMethod.POST)
     public ResponseEntity<Iterable<ProductDTO>> getProductOrdinaryList() {
@@ -27,5 +30,12 @@ public class ProductController extends BaseController {
     public ResponseEntity<Iterable<ProductDTO>> getProductPackageList() {
         Iterable<ProductDTO> productDTOList = productService.getProductPackageList();
         return new ResponseEntity<>(productDTOList, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "获取产品详细信息")
+    @RequestMapping(value = "/getProductById", method = RequestMethod.POST)
+    public ResponseEntity<ProductDTO> getProductById(@RequestParam("id") long id) {
+        ProductDTO productDTO = productService.getProductById(id);
+        return new ResponseEntity<>(productDTO, HttpStatus.OK);
     }
 }

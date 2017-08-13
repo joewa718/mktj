@@ -10,4 +10,6 @@ public interface ProductService {
     Iterable<ProductDTO> getProductOrdinaryList();
 
     Iterable<ProductDTO> getProductPackageList();
+
+    ProductDTO getProductById(long id);
 }

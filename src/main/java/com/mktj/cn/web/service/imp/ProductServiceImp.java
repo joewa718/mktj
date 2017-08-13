@@ -27,4 +27,9 @@ public class ProductServiceImp implements ProductService{
     public Iterable<ProductDTO> getProductPackageList() {
         return productMapper.productToProductDTOList(productRepository.getProductListByProductType(ProductType.套餐产品));
     }
+
+    @Override
+    public ProductDTO getProductById(long id) {
+        return productMapper.productToProductDTO(productRepository.findOne(id));
+    }
 }
