@@ -1,29 +1,161 @@
-<html>  
-<head>  
-    <title>Title</title>  
-    <script src="lib/jquery.min.js" type="text/javascript"></script>
-</head>  
-<body>  
-<input type="button" value="login" onclick="testJsonp()" />
-<script type="text/javascript">  
-    function testJsonp() {  
-        $.ajax({
-            type:'post',
-            /*url:'http://122.152.208.113:9999/api/user/login',*/
-             url:'http://122.152.208.113:9999/api/user/getLoginUser',
-            data:{
-                username:'18930983718',
-                password:'111111'
-            },
-            xhrFields:{
-                withCredentials:true
-            },
-            success:function (data) {
-                alert(data.nickname+"  "+data.username);
-            },
-        });  
-    }
 
-</script>  
-</body>  
-</html>  
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Cache-Control" content="no-store" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>民康优检- 登陆</title>
+
+<link rel="shortcut icon" href="http://state.zhi-you.net/favicon.ico" />
+<link rel="stylesheet" href="http://state.zhi-you.net/css/common.css" />
+<link rel="stylesheet" href="http://state.zhi-you.net/css/components.css" />
+<link rel="stylesheet" href="http://state.zhi-you.net/css/custom.css" />
+<link rel="stylesheet" href="http://state.zhi-you.net/css/icon.css" />
+<link rel="stylesheet" href="http://state.zhi-you.net/plugin/font-awesome-4.6.3/css/font-awesome.min.css" />
+<link rel="stylesheet" href="http://state.zhi-you.net/plugin/miui-1.0/jquery.miui.css" />
+<script src="http://state.zhi-you.net/plugin/jquery-1.11.0/jquery.min.js"></script>
+<script src="http://state.zhi-you.net/plugin/layer-mobile-2.0/layer.js"></script>
+<script src="http://state.zhi-you.net/plugin/miui-1.0/jquery.miui.js"></script>
+<script src="http://state.zhi-you.net/plugin/fastclick-1.0/fastclick.js "></script>
+<script src="js/common.js"></script>
+<script src="http://state.zhi-you.net/js/util.js"></script>
+<script src="./js/layer/layer.js"></script>
+<script>
+  var Config = {
+    stc : '',
+    ctx : '',
+    stccdn : 'http://state.zhi-you.net'
+  }
+</script>
+
+
+
+<script type="text/javascript">
+  $(function() {
+    $('.valid-form').submit(function() {
+      var phone = $('#phone').val();
+      var password = $('#password').val();
+      if (!phone) {
+        messageFlash('请输入手机号');
+        return false;
+      }
+      if (!password) {
+        messageFlash('请输入密码');
+        return false;
+      }
+    });
+  });
+</script>
+</head>
+<body>
+  <header class="header">
+    <h1>登陆</h1>
+    <a onclick="history.go(-1);" class="button-left"><i class="fa fa-angle-left"></i></a>
+  </header>
+
+  <form class="valid-form" action="" method="get">
+    <div class="list-group mt-15">
+      <div class="list-item">
+        <i class="list-icon fa fa-mobile fs-20"></i>
+        <div class="list-text">
+          <input type="text" id="phone" name="phone" class="form-input" value="" placeholder="输入登陆手机号">
+        </div>
+      </div>
+      <div class="list-item">
+        <i class="list-icon fa fa-key"></i>
+        <div class="list-text">
+          <input type="password" id="password" name="password" class="form-input" value="" placeholder="输入登陆密码">
+        </div>
+      </div>
+    </div>
+
+    <div class="form-btn">
+      <input class="btn green btn-block round-2 login" type="button" value="登 陆">
+    </div>
+    
+<!--     <div class="form-btn">
+      <input class="btn green btn-block round-2" type="button" value="注 册">
+    </div> -->
+
+  </form>
+
+  <div class="form-btn">
+    <a class="btn btn-block default round-2" href="http://122.152.208.113/api/wechat/user/login"><i class="icon icon-weixin"></i> 微信授权登陆</a>
+  </div>
+
+  <div class="form-btn">
+    <a class="btn btn-block default round-2 orange" href="./register.html"></i> 注 册</a>
+  </div>
+    
+  <a href="./findPassword.html" class="abs-mb block p-10 mb-10 font-999 fs-13 text-center"><i class="fa fa-question-circle"></i> 忘记密码</a>
+  <script type="text/javascript">
+
+    $('.login').click(function(){
+
+      var phone = $('#phone').val();
+      var password = $('#password').val();
+      if (!phone) {
+        messageFlash('请输入手机号');
+        return false;
+      }
+      if (!password) {
+        messageFlash('请输入密码');
+        return false;
+      }
+
+      $.ajax({
+        url: serviceUrl+'/api/user/login',
+        // url: serviceUrl+'/api/user/getLoginUser',
+        // url: serviceUrl+'/login?username=18930983718&password=123456&callback=callback',
+        // url: serviceUrl+'/login?username=18930983718&password=123456',
+        type: 'POST',
+        // dataType: 'json',
+        xhrFields:{
+          withCredentials:true
+        },
+        // jsonp: 'callback',
+        // jsonpCallback: 'callback',
+        data: {
+          username: $('#phone').val(),
+          password: $('#password').val(),
+          // username: '18930983718',
+          // password: '123456',
+        },
+      })
+      // http://122.152.208.113:9999/login?username=18930983718&password=123456&callback=callback
+      .done(function(data) {
+        console.log("success");
+        console.log(data);
+        sessionStorage.setItem('user',JSON.stringify(data));
+        sessionStorage.setItem('isLogin',1);
+        location.href='./u.html';
+        // alert(11);
+      })
+      .fail(function(data) {
+        console.log("error");
+        if(data.status==401){
+          messageFlash('帐号或密码不正确');
+        }
+      })
+      .always(function(data) {
+        console.log("complete");
+      });
+    })
+
+  </script>
+</body>
+</html>
