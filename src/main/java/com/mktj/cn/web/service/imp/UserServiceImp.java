@@ -74,7 +74,7 @@ public class UserServiceImp extends BaseService implements UserService {
         user.setPassword(AESCryptUtil.encrypt("123456"));
         user.setHeadPortrait(wxMpUser.getHeadImgUrl());
         user.setDisable(false);
-        user.setAuthorizationCode(generateRandomCode(wxMpUser.getOpenId()));
+        user.setAuthorizationCode(generateAuthCode(wxMpUser.getOpenId()));
         user = userRepository.save(user);
         return userMapper.userToUserDTO(user);
     }
@@ -88,7 +88,7 @@ public class UserServiceImp extends BaseService implements UserService {
         user = userMapper.userToUserVo(userVo);
         user.setPassword(AESCryptUtil.encrypt(user.getPassword()));
         user.setDisable(false);
-        user.setAuthorizationCode(generateRandomCode(user.getPhone()));
+        user.setAuthorizationCode(generateAuthCode(String.valueOf(user.getId())));
         user = userRepository.save(user);
         return userMapper.userToUserDTO(user);
     }

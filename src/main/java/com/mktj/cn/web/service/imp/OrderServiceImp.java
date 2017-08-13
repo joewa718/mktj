@@ -102,7 +102,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
     @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
     private void saveOrder(String phone, OrderVo orderVo, User user, Product product,OrderType orderType, DeliveryAddress deliveryAddress, int piece, BigDecimal price, BigDecimal totalCost) {
         Order order = new Order();
-        order.setOrderCode(generateRandomCode(phone));
+        order.setOrderCode(generateOrderCode(String.valueOf(user.getId())));
         order.setUser(user);
         order.setOrderStatus(OrderStatus.待确认);
         order.setOrderTime(new Date());
