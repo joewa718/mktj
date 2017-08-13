@@ -90,18 +90,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         });
         http.logout().invalidateHttpSession(true).logoutSuccessHandler(logoutSuccessHandler);
         http.authorizeRequests()
-                .antMatchers("/css/**", "/js/**", "/tpl/**", "/img/**", "/vendor/**", "/*.html", "/", "/fonts/**", "/l10n/**", "/**/favicon.ico", "/session/expire", "/api/O2O/executeCacheBaseData", "/webjars/springfox-swagger-ui/**", "/swagger-resources/**", "/v2/**","/api/user/login","/api/user/regUser","/api/product/**","/api/wechat/portal/**","/api/wechat/user/**").permitAll()
-                .antMatchers("/api/user/**", "/api/product/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/css/**", "/js/**", "/tpl/**", "/img/**", "/vendor/**", "/*.html", "/", "/fonts/**", "/l10n/**", "/**/favicon.ico", "/session/expire", "/webjars/springfox-swagger-ui/**", "/swagger-resources/**", "/v2/**","/api/user/login","/api/user/regUser","/api/wechat/portal/**","/api/wechat/user/**").permitAll()
+                .antMatchers("/api/user/**", "/api/product/**", "/api/order/**").hasAnyRole("USER", "ADMIN")
                 .anyRequest().authenticated()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .and()
                 .formLogin();
         http.addFilterAfter(new CSRFHeaderFilter(), CsrfFilter.class);
-        http.sessionManagement().invalidSessionUrl("/session/expire")
+        http.sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 .sessionFixation().changeSessionId()
                 .maximumSessions(maximumSessions)
-                .expiredUrl("/session/expire")
                 .sessionRegistry(sessionRegistry());
         http.csrf().csrfTokenRepository(csrfTokenRepository()).disable();
         http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint).accessDeniedHandler(accessDeniedHandler);
