@@ -5,7 +5,7 @@ import com.qcloud.sms.SmsSingleSenderResult;
 
 import java.util.ArrayList;
 public class SmsSDKDemo {
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
     	try {
     		int appId = 1400038379;
     		String appKey = "1b9e33d5acd98689763038c5c347db41";
@@ -21,5 +21,5 @@ public class SmsSDKDemo {
     	} catch (Exception e) {
 			e.printStackTrace();
 		}
-    }
+    }*/
 }

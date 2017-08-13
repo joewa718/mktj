@@ -1,7 +1,7 @@
 spring:
   #resources.static-locations: classpath:/dist/
   profiles:
-    active: dev
+    active: st
   data:
     jpa:
       repositories:
@@ -12,7 +12,7 @@ spring:
     multipart:
       enabled:  true
       file-size-threshold: 1MB
-      max-file-size:  2MB
+      max-file-size:  10MB
       max-request-size:  10MB
   jpa:
     properties:
@@ -56,7 +56,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: ''
       dialect: org.hibernate.dialect.MySQL5Dialect
   datasource:
       url: jdbc:mysql://598af1f083b62.sh.cdb.myqcloud.com:5428/mktj?useUnicode=true&characterEncoding=utf-8&useSSL=false
