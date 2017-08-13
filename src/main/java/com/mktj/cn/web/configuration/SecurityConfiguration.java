@@ -91,7 +91,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.logout().invalidateHttpSession(true).logoutSuccessHandler(logoutSuccessHandler);
         http.authorizeRequests()
                 .antMatchers("/css/**", "/js/**", "/tpl/**", "/img/**", "/vendor/**", "/*.html", "/", "/fonts/**", "/l10n/**", "/**/favicon.ico", "/session/expire", "/webjars/springfox-swagger-ui/**", "/swagger-resources/**", "/v2/**","/api/user/login","/api/user/regUser","/api/wechat/portal/**","/api/wechat/user/**").permitAll()
-                .antMatchers("/api/user/**", "/api/product/**", "/api/order/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/api/user/**", "/api/product/**", "/api/order/**").hasAnyRole("USER")
                 .anyRequest().authenticated()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .and()
