@@ -8,6 +8,7 @@ import com.mktj.cn.web.util.RoleType;
 import com.mktj.cn.web.vo.DeliveryAddressVo;
 import com.mktj.cn.web.vo.RealInfoVo;
 import com.mktj.cn.web.vo.UserVo;
+import me.chanjar.weixin.mp.bean.result.WxMpUser;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -18,6 +19,8 @@ import java.util.List;
 public interface UserService {
 
     String updateFile(MultipartFile file, String filePath) throws Exception;
+
+    UserDTO regWxUser(WxMpUser user);
 
     UserDTO regUser(UserVo user) throws DuplicateAccountException;
 

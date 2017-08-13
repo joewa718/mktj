@@ -14,7 +14,7 @@ public class ProductDTO {
     private String productImage;
     private String description ;
     private BigDecimal retailPrice;
-    private int piece;
+    private Integer piece;
     private BigDecimal price1;
     private BigDecimal price2;
     private BigDecimal price3;
@@ -136,11 +136,11 @@ public class ProductDTO {
         isOffShelf = offShelf;
     }
 
-    public int getPiece() {
+    public Integer getPiece() {
         return piece;
     }
 
-    public void setPiece(int piece) {
+    public void setPiece(Integer piece) {
         this.piece = piece;
     }
 }

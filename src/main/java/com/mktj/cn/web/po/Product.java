@@ -35,7 +35,7 @@ public class Product {
     @Column(name = "retail_Price")
     private BigDecimal retailPrice;
     @Column(name = "piece")
-    private int piece;
+    private Integer piece;
     @Column(name = "price1")
     private BigDecimal price1;
     @Column(name = "price2")
@@ -175,11 +175,11 @@ public class Product {
         this.productCode = productCode;
     }
 
-    public int getPiece() {
+    public Integer getPiece() {
         return piece;
     }
 
-    public void setPiece(int piece) {
+    public void setPiece(Integer piece) {
         this.piece = piece;
     }
 
