@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.naming.OperationNotSupportedException;
 import java.util.List;
 
 @RestController
@@ -22,7 +23,11 @@ public class OrderController extends BaseController {
     @RequestMapping(value = "/applyOrder", method = RequestMethod.POST)
     public ResponseEntity applyOrder(@ModelAttribute OrderVo orderVo) {
         String phone = super.getCurrentUser().getUsername();
-        orderService.transactionOrder(phone,orderVo);
+        try {
+            orderService.transactionOrder(phone,orderVo);
+        } catch (OperationNotSupportedException e) {
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
     @ApiOperation(value = "获取订单明细")
@@ -35,9 +40,9 @@ public class OrderController extends BaseController {
 
     @ApiOperation(value = "根据订单状态查询订单")
     @RequestMapping(value = "/getOrderListByOrderStatus", method = RequestMethod.POST)
-    public ResponseEntity<List<OrderDTO>> getOrderListByOrderStatus(@RequestParam OrderStatus orderStatus) {
+    public ResponseEntity<List<OrderDTO>> getOrderListByOrderStatus(@RequestParam OrderType orderType,@RequestParam OrderStatus orderStatus) {
         String phone = super.getCurrentUser().getUsername();
-        List<OrderDTO> orderDTOList = orderService.findByOrderStatusAndUser(orderStatus,phone);
+        List<OrderDTO> orderDTOList = orderService.findByOrderTypeAndOrderStatusAndUser(orderType,orderStatus,phone);
         return new ResponseEntity<>(orderDTOList,HttpStatus.OK);
     }
 

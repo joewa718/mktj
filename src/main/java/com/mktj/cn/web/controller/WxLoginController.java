@@ -21,6 +21,7 @@ import org.apache.http.HttpRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.RequestDispatcher;
@@ -38,7 +39,7 @@ import java.io.IOException;
  *
  * @author Binary Wang(https://github.com/binarywang)
  */
-@RestController
+@Controller
 @RequestMapping("/api/wechat/user/")
 public class WxLoginController extends WxMpUserQuery {
     private final static Logger log = LoggerFactory.getLogger(WxLoginController.class);
@@ -50,14 +51,14 @@ public class WxLoginController extends WxMpUserQuery {
     private UserService userServiceImp;
 
     @ApiOperation(value = "用户登录")
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
     public void login(HttpServletResponse response) throws IOException {
         String authorizationUrl = wxService.oauth2buildAuthorizationUrl("http://122.152.208.113/api/wechat/user/login_callback", "snsapi_userinfo", "123456");
         response.sendRedirect(authorizationUrl);
     }
 
     @ApiOperation(value = "用户登录回调")
-    @RequestMapping(value = "/login_callback", method = RequestMethod.POST)
+    @RequestMapping(value = "/login_callback", method = RequestMethod.GET)
     public void callback(@RequestParam("code") String code, @RequestParam("state") String state, HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             WxMpOAuth2AccessToken wxMpOAuth2AccessToken = wxService.oauth2getAccessToken(code);

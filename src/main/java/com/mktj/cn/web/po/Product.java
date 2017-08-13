@@ -1,5 +1,7 @@
 package com.mktj.cn.web.po;
 
+import com.mktj.cn.web.converter.PayTypeConverter;
+import com.mktj.cn.web.converter.ProductTypeConverter;
 import com.mktj.cn.web.util.ProductType;
 import com.mktj.cn.web.util.RoleType;
 import org.hibernate.annotations.Cache;
@@ -52,6 +54,7 @@ public class Product {
     private Boolean isOffShelf ;
     @Column(name = "role_type")
     private RoleType roleType;
+    @Convert( converter = ProductTypeConverter.class )
     @Column(name = "product_type")
     private ProductType productType;
 

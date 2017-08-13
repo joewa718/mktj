@@ -72,6 +72,7 @@ public class UserServiceImp extends BaseService implements UserService {
         }
         user.setNickname(wxMpUser.getNickname());
         user.setPassword(AESCryptUtil.encrypt("123456"));
+        user.setHeadPortrait(wxMpUser.getHeadImgUrl());
         user.setDisable(false);
         user.setAuthorizationCode(generateRandomCode(wxMpUser.getOpenId()));
         user = userRepository.save(user);

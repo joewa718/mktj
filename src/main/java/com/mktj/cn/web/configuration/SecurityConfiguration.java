@@ -90,7 +90,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         });
         http.logout().invalidateHttpSession(true).logoutSuccessHandler(logoutSuccessHandler);
         http.authorizeRequests()
-                .antMatchers("/css/**", "/js/**", "/tpl/**", "/img/**", "/vendor/**", "/*.html", "/", "/fonts/**", "/l10n/**", "/**/favicon.ico", "/session/expire", "/api/O2O/executeCacheBaseData", "/webjars/springfox-swagger-ui/**", "/swagger-resources/**", "/v2/**","/api/user/login","/api/user/regUser","/api/product/**","/api/wechat/portal/**").permitAll()
+                .antMatchers("/css/**", "/js/**", "/tpl/**", "/img/**", "/vendor/**", "/*.html", "/", "/fonts/**", "/l10n/**", "/**/favicon.ico", "/session/expire", "/api/O2O/executeCacheBaseData", "/webjars/springfox-swagger-ui/**", "/swagger-resources/**", "/v2/**","/api/user/login","/api/user/regUser","/api/product/**","/api/wechat/portal/**","/api/wechat/user/**").permitAll()
                 .antMatchers("/api/user/**", "/api/product/**").hasAnyRole("USER", "ADMIN")
                 .anyRequest().authenticated()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()

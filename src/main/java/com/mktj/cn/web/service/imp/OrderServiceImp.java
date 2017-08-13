@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.naming.OperationNotSupportedException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -47,41 +48,28 @@ public class OrderServiceImp extends BaseService implements OrderService {
 
     @Transactional(value = "transactionManager")
     @Override
-    public void transactionOrder(String phone, OrderVo orderVo) {
+    public void transactionOrder(String phone, OrderVo orderVo) throws OperationNotSupportedException {
         User user = userRepository.findByPhone(phone);
         Product product = productRepository.findOne(orderVo.getProductId());
         if (product == null) {
-            throw new RuntimeException("无法找到对应的商品");
+            throw new OperationNotSupportedException("无法找到对应的商品");
         }
         DeliveryAddress deliveryAddress = deliveryAddressRepository.findOneByIdAndUser(orderVo.getDeliverAddressId(), user);
         if (deliveryAddress == null) {
-            throw new RuntimeException("无法找到对应的收货地址");
+            throw new OperationNotSupportedException("无法找到对应的收货地址");
         }
-        if (product.getRoleType().getCode() > 0){
+        if (product.getRoleType() != null && product.getRoleType().getCode() > 0) {
             transactionPackageOrder(user, orderVo, deliveryAddress, product);
-        }else{
+        } else {
+            if (orderVo.getProductNum() == 0) {
+                throw new OperationNotSupportedException("购买订单量不能为 0 件");
+            }
             transactionOrdinaryOrder(user, orderVo, deliveryAddress, product);
         }
     }
 
     @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
     private void transactionPackageOrder(User user, OrderVo orderVo, DeliveryAddress deliveryAddress, Product product) {
-        int piece = orderVo.getProductNum();
-        BigDecimal price = getProductPrice(user.getRoleType(), product);
-        BigDecimal totalCost = price.multiply(BigDecimal.valueOf(piece));
-        if (orderVo.getPayType() == PayType.余额支付) {
-            if (totalCost.compareTo(user.getScore()) == 1) {
-                throw new RuntimeException("对不起，您的积分不足，无法购买");
-            }
-            user.setScore(user.getScore().subtract(totalCost));
-        }
-        saveOrder(user.getPhone(), orderVo, user, product, deliveryAddress, price, totalCost);
-        user.setRoleType(product.getRoleType());
-        userRepository.save(user);
-    }
-
-    @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
-    private void transactionOrdinaryOrder(User user, OrderVo orderVo, DeliveryAddress deliveryAddress, Product product) {
         int piece = product.getPiece();
         BigDecimal price = product.getRetailPrice();
         BigDecimal totalCost = price.multiply(BigDecimal.valueOf(piece));
@@ -91,23 +79,39 @@ public class OrderServiceImp extends BaseService implements OrderService {
             }
             user.setScore(user.getScore().subtract(totalCost));
         }
-        saveOrder(user.getPhone(), orderVo, user, product, deliveryAddress, price, totalCost);
+        saveOrder(user.getPhone(), orderVo, user, product,OrderType.服务订单, deliveryAddress, piece, price, totalCost);
+        user.setRoleType(product.getRoleType());
         userRepository.save(user);
     }
 
     @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
-    private void saveOrder(String phone, OrderVo orderVo, User user, Product product, DeliveryAddress deliveryAddress, BigDecimal price, BigDecimal totalCost) {
+    private void transactionOrdinaryOrder(User user, OrderVo orderVo, DeliveryAddress deliveryAddress, Product product) {
+        int piece = orderVo.getProductNum();
+        BigDecimal price = getProductPrice(user.getRoleType(), product);
+        BigDecimal totalCost = price.multiply(BigDecimal.valueOf(piece));
+        if (orderVo.getPayType() == PayType.余额支付) {
+            if (totalCost.compareTo(user.getScore()) == 1) {
+                throw new RuntimeException("对不起，您的积分不足，无法购买");
+            }
+            user.setScore(user.getScore().subtract(totalCost));
+        }
+        saveOrder(user.getPhone(), orderVo, user, product, OrderType.普通订单,deliveryAddress, piece, price, totalCost);
+        userRepository.save(user);
+    }
+
+    @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
+    private void saveOrder(String phone, OrderVo orderVo, User user, Product product,OrderType orderType, DeliveryAddress deliveryAddress, int piece, BigDecimal price, BigDecimal totalCost) {
         Order order = new Order();
         order.setOrderCode(generateRandomCode(phone));
         order.setUser(user);
         order.setOrderStatus(OrderStatus.待确认);
         order.setOrderTime(new Date());
         order.setOrderComment(orderVo.getOrderComment());
-        order.setOrderType(OrderType.普通订单);
+        order.setOrderType(orderType);
         order.setPayWay(orderVo.getPayType());
         order.setProductName(product.getProductName());
         order.setProductCode(product.getProductCode());
-        order.setProductNum(orderVo.getProductNum());
+        order.setProductNum(piece);
         order.setProductPrice(price);
         order.setProductCost(totalCost);
         order.setReceiverProvince(deliveryAddress.getProvince());
@@ -153,9 +157,9 @@ public class OrderServiceImp extends BaseService implements OrderService {
     }
 
     @Override
-    public List<OrderDTO> findByOrderStatusAndUser(OrderStatus status, String phone) {
+    public List<OrderDTO> findByOrderTypeAndOrderStatusAndUser(OrderType orderType,OrderStatus status, String phone) {
         User user = userRepository.findByPhone(phone);
-        List<Order> orderList = orderRepository.findByOrderStatusAndUser(status, user);
+        List<Order> orderList = orderRepository.findByOrderTypeAndOrderStatusAndUser(orderType,status, user);
         return orderMapper.orderToOrderDTOList(orderList);
     }
 

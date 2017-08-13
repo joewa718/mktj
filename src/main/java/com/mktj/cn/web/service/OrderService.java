@@ -5,6 +5,7 @@ import com.mktj.cn.web.util.OrderStatus;
 import com.mktj.cn.web.util.OrderType;
 import com.mktj.cn.web.vo.OrderVo;
 
+import javax.naming.OperationNotSupportedException;
 import java.util.List;
 
 /**
@@ -12,13 +13,13 @@ import java.util.List;
  */
 public interface OrderService {
 
-    void transactionOrder(String phone,OrderVo orderVo);
+    void transactionOrder(String phone,OrderVo orderVo) throws OperationNotSupportedException;
 
     OrderDTO getOrder(String phone, long orderId);
 
     void updateOrderStatusByIdAndUser(OrderStatus status, long id,  String phone);
 
-    List<OrderDTO> findByOrderStatusAndUser(OrderStatus status, String phone);
+    List<OrderDTO> findByOrderTypeAndOrderStatusAndUser(OrderType orderType,OrderStatus status, String phone);
 
     Long countByOrderTypeAndUser(String phone,OrderType orderType);
 
