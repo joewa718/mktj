@@ -2,7 +2,7 @@
  * Common js
  */
 domainUrl="http://whstudy.github.io/htdocs/";
-serviceUrl="http://122.152.208.113";
+serviceUrl="";
 imageNginxUrl="http://122.152.208.113:8080/";
 
 function getQueryString(name) {
