@@ -65,17 +65,6 @@ spring:
   http:
     multipart:
       location: c:/upload_temp
-  redis:
-     database: 0
-     host: 127.0.0.1
-     port: 6379
-     password:
-     timeout: 0
-     pool:
-         max-active: 8
-         max-wait: -1
-         max-idle: 8
-         min-idle: 0
 management:
   port: 54001
   health:
@@ -103,17 +92,6 @@ spring:
   http:
     multipart:
       location: /opt/projects/mktj/temp
-  redis:
-     database: 0
-     host: 10.250.33.222
-     port: 6379
-     password: 123456
-     timeout: 0
-     pool:
-         max-active: 8
-         max-wait: -1
-         max-idle: 8
-         min-idle: 0
 web:
   maximumSessions: 1
 photo:
