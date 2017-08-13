@@ -1,6 +1,7 @@
 package com.mktj.cn.web.configuration;
 
 import com.mktj.cn.web.handler.*;
+import com.mktj.cn.web.properties.WechatMpProperties;
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.mp.api.WxMpConfigStorage;
 import me.chanjar.weixin.mp.api.WxMpInMemoryConfigStorage;

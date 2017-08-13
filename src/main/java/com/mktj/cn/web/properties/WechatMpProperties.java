@@ -1,4 +1,4 @@
-package com.mktj.cn.web.configuration;
+package com.mktj.cn.web.properties;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;

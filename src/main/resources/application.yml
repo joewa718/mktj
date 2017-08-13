@@ -42,6 +42,9 @@ wechat:
     secret: 6b14f343294929d96ff1be2f720d130b
     token: hlwerbv123nsf
     aesKey: u3hX2kQdo1hvQWRkg9MjOahuw3zY7nxmargMNf9TJW7
+sms:
+  app-id: 1400038379
+  app-key: 1b9e33d5acd98689763038c5c347db41
 ---
 server:
   port: 8080
