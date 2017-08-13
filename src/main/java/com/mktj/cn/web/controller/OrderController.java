@@ -39,8 +39,8 @@ public class OrderController extends BaseController {
     }
 
     @ApiOperation(value = "根据订单状态查询订单")
-    @RequestMapping(value = "/getOrderListByOrderStatus", method = RequestMethod.POST)
-    public ResponseEntity<List<OrderDTO>> getOrderListByOrderStatus(@RequestParam OrderType orderType,@RequestParam OrderStatus orderStatus) {
+    @RequestMapping(value = "/findByOrderTypeAndOrderStatusAndUser", method = RequestMethod.POST)
+    public ResponseEntity<List<OrderDTO>> findByOrderTypeAndOrderStatusAndUser(@RequestParam OrderType orderType,@RequestParam OrderStatus orderStatus) {
         String phone = super.getCurrentUser().getUsername();
         List<OrderDTO> orderDTOList = orderService.findByOrderTypeAndOrderStatusAndUser(orderType,orderStatus,phone);
         return new ResponseEntity<>(orderDTOList,HttpStatus.OK);
