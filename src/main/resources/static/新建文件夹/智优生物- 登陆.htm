@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<!-- saved from url=(0036)http://agentsystem.zhi-you.net/login -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta http-equiv="Cache-Control" content="no-store">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>智优生物- 登陆</title>
+
+<link rel="shortcut icon" href="http://state.zhi-you.net/favicon.ico">
+<link rel="stylesheet" href="./智优生物- 登陆_files/common.css">
+<link rel="stylesheet" href="./智优生物- 登陆_files/components.css">
+<link rel="stylesheet" href="./智优生物- 登陆_files/custom.css">
+<link rel="stylesheet" href="./智优生物- 登陆_files/icon.css">
+<link rel="stylesheet" href="./智优生物- 登陆_files/font-awesome.min.css">
+<link rel="stylesheet" href="./智优生物- 登陆_files/jquery.miui.css">
+<script src="./智优生物- 登陆_files/jquery.min.js"></script>
+<script src="./智优生物- 登陆_files/layer.js"></script><link href="./智优生物- 登陆_files/layer.css" type="text/css" rel="styleSheet" id="layermcss">
+<script src="./智优生物- 登陆_files/jquery.miui.js"></script>
+<script src="./智优生物- 登陆_files/fastclick.js"></script>
+<script src="./智优生物- 登陆_files/common.js"></script>
+<script src="./智优生物- 登陆_files/util.js"></script>
+<script>
+  var Config = {
+    stc : '',
+    ctx : '',
+    stccdn : 'http://state.zhi-you.net'
+  }
+</script>
+
+
+
+<script src="./智优生物- 登陆_files/layer(1).js"></script><link rel="stylesheet" href="./智优生物- 登陆_files/layer(2).css" id="layuicss-skinlayercss">
+<script type="text/javascript">
+  $(function() {
+    $('.valid-form').submit(function() {
+      var phone = $('#phone').val();
+      var password = $('#password').val();
+      if (!phone) {
+        messageFlash('请输入手机号');
+        return false;
+      }
+      if (!password) {
+        messageFlash('请输入密码');
+        return false;
+      }
+    });
+  });
+
+  //选择出游时间
+  function ajaXTime() {
+    var phone = $('#phone').val();
+    var password = $('#password').val();
+    $.ajax({
+      url : '/ajaxTime',
+      data : {
+        phone:phone,
+        password:password,
+      },
+      dataType : 'json',
+      type : 'POST',
+      success : function(result) {
+        if(result.code == 0) {
+          $('#form').submit();
+        }else {
+          layer.msg(result.message,{time:3000});
+        }
+      }
+    });
+  }
+</script>
+</head>
+<body>
+  <header class="header">
+    <h1>登陆</h1>
+    <a href="http://agentsystem.zhi-you.net/" class="button-left"><i class="fa fa-angle-left"></i></a>
+  </header>
+
+  <form class="valid-form" action="./智优生物- 登陆_files/智优生物- 登陆.htm" id="form" method="post">
+    <div class="list-group mt-15">
+      <div class="list-item">
+        <i class="list-icon fa fa-mobile fs-20"></i>
+        <div class="list-text">
+          <input type="text" id="phone" name="phone" class="form-input" value="" placeholder="输入登陆手机号" data-form-un="1502271942863.8967">
+        </div>
+      </div>
+      <div class="list-item">
+        <i class="list-icon fa fa-key"></i>
+        <div class="list-text">
+          <input type="password" id="password" name="password" class="form-input" value="" placeholder="输入登陆密码" data-form-pw="1502271942863.8967">
+        </div>
+      </div>
+    </div>
+
+    <div class="form-btn">
+      <input class="btn green btn-block round-2" type="button" onclick="ajaXTime()" value="登 陆" data-form-sbm="1502271942863.8967">
+    </div>
+    
+  </form>
+  
+  <div class="form-btn">
+    <a class="btn btn-block default round-2" href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx8d8b06aa56074960&amp;redirect_uri=http%3A%2F%2Fagentsystem.zhi-you.net%2Fnotify%2FweixinMp&amp;response_type=code&amp;scope=snsapi_userinfo&amp;state=abcXZY#wechat_redirect"><i class="icon icon-weixin"></i> 微信授权登陆</a>
+  </div>
+    
+  <a href="http://agentsystem.zhi-you.net/findPassword" class="abs-mb block p-10 mb-10 font-999 fs-13 text-center"><i class="fa fa-question-circle"></i> 忘记密码</a>
+  
+
+
+</body></html>
