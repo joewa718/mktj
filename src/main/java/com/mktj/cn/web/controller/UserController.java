@@ -6,6 +6,7 @@ import com.mktj.cn.web.dto.RealInfoDTO;
 import com.mktj.cn.web.dto.UserDTO;
 import com.mktj.cn.web.exception.DuplicateAccountException;
 import com.mktj.cn.web.service.UserService;
+import com.mktj.cn.web.util.ImageCode;
 import com.mktj.cn.web.vo.DeliveryAddressVo;
 import com.mktj.cn.web.vo.RealInfoVo;
 import com.mktj.cn.web.vo.UserVo;
@@ -19,12 +20,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/user")
@@ -190,4 +196,20 @@ public class UserController extends BaseController {
         DeliveryAddressDTO deliveryAddressDTO = userService.getDefaultAddressByUser(phone);
         return new ResponseEntity<>(deliveryAddressDTO,HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/captcha", method = RequestMethod.GET)
+    public String captcha(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        OutputStream os = response.getOutputStream();
+        Map<String,Object> map = ImageCode.getImageCode(60, 20, os);
+        String simpleCaptcha = "simpleCaptcha";
+        request.getSession().setAttribute(simpleCaptcha, map.get("strEnsure").toString().toLowerCase());
+        request.getSession().setAttribute("codeTime",new Date().getTime());
+        try {
+            ImageIO.write((BufferedImage) map.get("image"), "JPEG", os);
+        } catch (IOException e) {
+            return "";
+        }
+        return null;
+    }
+
 }

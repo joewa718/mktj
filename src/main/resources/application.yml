@@ -1,7 +1,7 @@
 spring:
   #resources.static-locations: classpath:/dist/
   profiles:
-    active: st
+    active: dev
   data:
     jpa:
       repositories:
@@ -17,7 +17,7 @@ spring:
   jpa:
     properties:
       hibernate:
-        generate_statistics: true
+        generate_statistics: false
         cache:
           use_second_level_cache: true
           use_query_cache: true
