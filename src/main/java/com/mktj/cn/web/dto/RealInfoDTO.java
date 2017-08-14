@@ -101,7 +101,6 @@ public class RealInfoDTO {
     }
 
 
-
     public String getRegion() {
         return region;
     }

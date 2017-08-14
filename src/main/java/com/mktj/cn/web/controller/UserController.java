@@ -15,12 +15,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.imageio.ImageIO;
 import javax.naming.OperationNotSupportedException;
 import javax.servlet.RequestDispatcher;
@@ -46,16 +44,16 @@ public class UserController extends BaseController {
 
     @ApiOperation(value = "上传文件")
     @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
-    public ResponseEntity<ImageDTO> uploadFile( @RequestParam(value = "file") MultipartFile file) throws ServletException, IOException {
-        ImageDTO imageDTO =new ImageDTO();
+    public ResponseEntity<ImageDTO> uploadFile(@RequestParam(value = "file") MultipartFile file) throws ServletException, IOException {
+        ImageDTO imageDTO = new ImageDTO();
         String fileName = null;
         try {
             fileName = userService.updateFile(file, filePath);
         } catch (Exception e) {
-            log.error(e.getMessage(),e);
+            log.error(e.getMessage(), e);
             imageDTO.setCode(500);
             imageDTO.setData(e.getMessage());
-            return new ResponseEntity<>(imageDTO,HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(imageDTO, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         imageDTO.setCode(0);
         imageDTO.setData(fileName);
@@ -64,19 +62,19 @@ public class UserController extends BaseController {
 
     @ApiOperation(value = "上传头像专用，注册后才能上传头像")
     @RequestMapping(value = "/uploadPhoto", method = RequestMethod.POST)
-    public ResponseEntity<ImageDTO> uploadPhoto( @RequestParam(value = "file") MultipartFile file) throws ServletException, IOException {
-        ImageDTO imageDTO =new ImageDTO();
+    public ResponseEntity<ImageDTO> uploadPhoto(@RequestParam(value = "file") MultipartFile file) throws ServletException, IOException {
+        ImageDTO imageDTO = new ImageDTO();
         String phone = super.getCurrentUser().getUsername();
         String photo = null;
         try {
             photo = userService.updateFile(file, filePath);
         } catch (Exception e) {
-            log.error(e.getMessage(),e);
+            log.error(e.getMessage(), e);
             imageDTO.setCode(500);
             imageDTO.setData(e.getMessage());
-            return new ResponseEntity<ImageDTO>(imageDTO,HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<ImageDTO>(imageDTO, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        userService.editPhoto(phone,photo);
+        userService.editPhoto(phone, photo);
         imageDTO.setCode(0);
         imageDTO.setData(photo);
         return new ResponseEntity<>(imageDTO, HttpStatus.OK);
@@ -88,12 +86,12 @@ public class UserController extends BaseController {
         UserDTO userDTO = null;
         try {
             HttpSession session = request.getSession();
-            userDTO = userService.regUser(user,session);
+            userDTO = userService.regUser(user, session);
         } catch (DuplicateAccountException e) {
-            log.error(e.getMessage(),e);
+            log.error(e.getMessage(), e);
             return new ResponseEntity<>("账户已存在", HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (OperationNotSupportedException e) {
-            log.error(e.getMessage(),e);
+            log.error(e.getMessage(), e);
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
@@ -104,10 +102,10 @@ public class UserController extends BaseController {
     public ResponseEntity<Object> regRealInfo(@ModelAttribute RealInfoVo realInfoVo) throws ServletException, IOException {
         String phone = super.getCurrentUser().getUsername();
         try {
-            userService.regRealInfo(phone,realInfoVo);
+            userService.regRealInfo(phone, realInfoVo);
         } catch (Exception e) {
-            log.error(e.getMessage(),e);
-            return new ResponseEntity<>("注册实名认证失败:"+e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+            log.error(e.getMessage(), e);
+            return new ResponseEntity<>("注册实名认证失败:" + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>("", HttpStatus.OK);
     }
@@ -192,7 +190,7 @@ public class UserController extends BaseController {
     @RequestMapping(value = "/setNickname", method = RequestMethod.POST)
     public ResponseEntity setNickname(@RequestParam("nickname") String nickname) {
         String phone = super.getCurrentUser().getUsername();
-        userService.editNickname(phone,nickname);
+        userService.editNickname(phone, nickname);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -201,14 +199,14 @@ public class UserController extends BaseController {
     public ResponseEntity<DeliveryAddressDTO> getDefaultDeliveryAddress() {
         String phone = super.getCurrentUser().getUsername();
         DeliveryAddressDTO deliveryAddressDTO = userService.getDefaultAddressByUser(phone);
-        return new ResponseEntity<>(deliveryAddressDTO,HttpStatus.OK);
+        return new ResponseEntity<>(deliveryAddressDTO, HttpStatus.OK);
     }
 
     @ApiOperation(value = "图片验证码")
     @RequestMapping(value = "/captcha", method = RequestMethod.GET)
     public String captcha(HttpServletRequest request, HttpServletResponse response) throws Exception {
         OutputStream os = response.getOutputStream();
-        Map<String,Object> map = ImageCode.getImageCode(60, 20, os);
+        Map<String, Object> map = ImageCode.getImageCode(60, 20, os);
         request.getSession().setAttribute("captcha", map.get("strEnsure").toString().toLowerCase());
         try {
             ImageIO.write((BufferedImage) map.get("image"), "JPEG", os);
@@ -220,15 +218,15 @@ public class UserController extends BaseController {
 
     @ApiOperation(value = "发送手机验证码")
     @RequestMapping(value = "/sendRegCode", method = RequestMethod.POST)
-    public ResponseEntity sendRegCode(@RequestParam("phone") String phone,@RequestParam("captcha") String captcha,HttpServletRequest request) {
+    public ResponseEntity sendRegCode(@RequestParam("phone") String phone, @RequestParam("captcha") String captcha, HttpServletRequest request) {
         String code = "";
         try {
             HttpSession session = request.getSession();
-            code = userService.sendRegCode(phone,captcha,session);
-            session.setAttribute("regCode",code.toLowerCase());
-            session.setAttribute("regCodeTime",new Date().getTime());
+            code = userService.sendRegCode(phone, captcha, session);
+            session.setAttribute("regCode", code.toLowerCase());
+            session.setAttribute("regCodeTime", new Date().getTime());
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.OK);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }

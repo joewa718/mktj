@@ -90,7 +90,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         });
         http.logout().invalidateHttpSession(true).logoutSuccessHandler(logoutSuccessHandler);
         http.authorizeRequests()
-                .antMatchers("/css/**", "/js/**", "/tpl/**","/plugin/**", "/imageupload/**",  "/images/**", "/vendor/**", "/*.html", "/", "/fonts/**", "/l10n/**", "/**/favicon.ico", "/webjars/springfox-swagger-ui/**", "/swagger-resources/**", "/v2/**","/api/user/login","/api/user/regUser","/api/user/sendRegCode","/api/user/captcha","/api/wechat/portal/**","/api/wechat/user/**").permitAll()
+                .antMatchers("/css/**", "/js/**", "/tpl/**", "/plugin/**", "/imageupload/**", "/images/**", "/vendor/**", "/*.html", "/", "/fonts/**", "/l10n/**", "/**/favicon.ico", "/webjars/springfox-swagger-ui/**", "/swagger-resources/**", "/v2/**", "/api/user/login", "/api/user/regUser", "/api/user/sendRegCode", "/api/user/captcha", "/api/wechat/portal/**", "/api/wechat/user/**").permitAll()
                 .antMatchers("/api/user/**", "/api/product/**", "/api/order/**").hasAnyRole("USER")
                 .anyRequest().authenticated()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()

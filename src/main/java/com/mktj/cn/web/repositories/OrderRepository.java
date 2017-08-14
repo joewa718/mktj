@@ -17,11 +17,11 @@ public interface OrderRepository extends CrudRepository<Order, Long>, JpaSpecifi
 
     @Modifying
     @Query("update Order o set o.orderStatus = ?1 where o.id = ?2 and o.user =?3")
-    void updateOrderStatusByIdAndUser(OrderStatus status,long id,User user);
+    void updateOrderStatusByIdAndUser(OrderStatus status, long id, User user);
 
-    List<Order> findByOrderTypeAndOrderStatusAndUser(OrderType orderType,OrderStatus orderStatus, User user);
+    List<Order> findByOrderTypeAndOrderStatusAndUser(OrderType orderType, OrderStatus orderStatus, User user);
 
-    Order findOneByIdAndUser(long id,User user);
+    Order findOneByIdAndUser(long id, User user);
 
     Long countByOrderTypeAndUser(OrderType orderType, User user);
 }

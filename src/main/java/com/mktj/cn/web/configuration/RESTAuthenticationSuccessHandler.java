@@ -19,6 +19,6 @@ public class RESTAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         clearAuthenticationAttributes(request);
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("/api/user/getLoginUser");
-        requestDispatcher.forward(request,response);
+        requestDispatcher.forward(request, response);
     }
 }

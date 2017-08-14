@@ -27,13 +27,14 @@ public class DeliveryAddress {
     private String city;
     @Column(name = "region")
     private String region;
-    @Column(name="detailed",length = 500)
+    @Column(name = "detailed", length = 500)
     private String detailed;
     @Column(name = "is_default")
     private boolean isDefault;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
     public String getDeliveryMan() {
         return deliveryMan;
     }
@@ -97,7 +98,6 @@ public class DeliveryAddress {
     public void setUser(User user) {
         this.user = user;
     }
-
 
 
     public String getDetailed() {

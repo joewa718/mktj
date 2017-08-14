@@ -247,10 +247,10 @@ public class UserServiceImp extends BaseService implements UserService {
     }
 
     @Override
-    public String sendRegCode(String phone,String captcha,HttpSession session) throws Exception {
+    public String sendRegCode(String phone, String captcha, HttpSession session) throws Exception {
         try {
             String session_captcha = (String) session.getAttribute("captcha");
-            if(captcha == null || !captcha.equals(session_captcha)){
+            if (captcha == null || !captcha.equals(session_captcha)) {
                 throw new OperationNotSupportedException("图片验证码不正确");
             }
             String code = GenerateRandomCode.getRandNum(6);

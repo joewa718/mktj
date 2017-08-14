@@ -4,7 +4,6 @@ import com.mktj.cn.web.dto.DeliveryAddressDTO;
 import com.mktj.cn.web.dto.RealInfoDTO;
 import com.mktj.cn.web.dto.UserDTO;
 import com.mktj.cn.web.exception.DuplicateAccountException;
-import com.mktj.cn.web.po.User;
 import com.mktj.cn.web.util.RoleType;
 import com.mktj.cn.web.vo.DeliveryAddressVo;
 import com.mktj.cn.web.vo.RealInfoVo;
@@ -27,7 +26,7 @@ public interface UserService {
 
     UserDTO regUser(UserVo userVo, HttpSession session) throws DuplicateAccountException, OperationNotSupportedException;
 
-    void regRealInfo(String phone,RealInfoVo vo);
+    void regRealInfo(String phone, RealInfoVo vo);
 
     UserDTO findUserByPhone(String phone);
 
@@ -35,23 +34,23 @@ public interface UserService {
 
     List<DeliveryAddressDTO> findDeliveryAddressByPhone(String phone);
 
-    void saveDeliveryAddress(String phone,DeliveryAddressVo deliveryAddressVo);
+    void saveDeliveryAddress(String phone, DeliveryAddressVo deliveryAddressVo);
 
-    void editDeliveryAddress(String phone,DeliveryAddressVo deliveryAddressVo);
+    void editDeliveryAddress(String phone, DeliveryAddressVo deliveryAddressVo);
 
-    void setDeliveryAddressDefault(String phone,long deliveryAddressId,boolean isDefault);
+    void setDeliveryAddressDefault(String phone, long deliveryAddressId, boolean isDefault);
 
-    void editPassword(String phone,String oldPassword,String password);
+    void editPassword(String phone, String oldPassword, String password);
 
-    void editPhoto(String phone,String photo);
+    void editPhoto(String phone, String photo);
 
-    void editRoleType(String phone,RoleType roleType);
+    void editRoleType(String phone, RoleType roleType);
 
-    void editReceiveMessage(String phone,boolean isReceiveMessage);
+    void editReceiveMessage(String phone, boolean isReceiveMessage);
 
-    void editNickname(String phone,String nickname);
+    void editNickname(String phone, String nickname);
 
     DeliveryAddressDTO getDefaultAddressByUser(String phone);
 
-    String sendRegCode(String phone,String captcha,HttpSession session) throws Exception;
+    String sendRegCode(String phone, String captcha, HttpSession session) throws Exception;
 }

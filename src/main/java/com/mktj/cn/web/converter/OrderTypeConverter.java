@@ -7,19 +7,19 @@ import javax.persistence.Converter;
 
 @Converter
 public class OrderTypeConverter implements AttributeConverter<OrderType, Integer> {
-    public Integer convertToDatabaseColumn( OrderType value ) {
-        if ( value == null ) {
+    public Integer convertToDatabaseColumn(OrderType value) {
+        if (value == null) {
             return null;
         }
 
         return value.getCode();
     }
 
-    public OrderType convertToEntityAttribute( Integer value ) {
-        if ( value == null ) {
+    public OrderType convertToEntityAttribute(Integer value) {
+        if (value == null) {
             return null;
         }
 
-        return OrderType.fromCode( value );
+        return OrderType.fromCode(value);
     }
 }

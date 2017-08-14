@@ -79,7 +79,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
             }
             user.setScore(user.getScore().subtract(totalCost));
         }
-        saveOrder(user.getPhone(), orderVo, user, product,OrderType.服务订单, deliveryAddress, piece, price, totalCost);
+        saveOrder(user.getPhone(), orderVo, user, product, OrderType.服务订单, deliveryAddress, piece, price, totalCost);
         user.setRoleType(product.getRoleType());
         userRepository.save(user);
     }
@@ -95,12 +95,12 @@ public class OrderServiceImp extends BaseService implements OrderService {
             }
             user.setScore(user.getScore().subtract(totalCost));
         }
-        saveOrder(user.getPhone(), orderVo, user, product, OrderType.普通订单,deliveryAddress, piece, price, totalCost);
+        saveOrder(user.getPhone(), orderVo, user, product, OrderType.普通订单, deliveryAddress, piece, price, totalCost);
         userRepository.save(user);
     }
 
     @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
-    private void saveOrder(String phone, OrderVo orderVo, User user, Product product,OrderType orderType, DeliveryAddress deliveryAddress, int piece, BigDecimal price, BigDecimal totalCost) {
+    private void saveOrder(String phone, OrderVo orderVo, User user, Product product, OrderType orderType, DeliveryAddress deliveryAddress, int piece, BigDecimal price, BigDecimal totalCost) {
         Order order = new Order();
         order.setOrderCode(generateOrderCode(String.valueOf(user.getId())));
         order.setUser(user);
@@ -157,9 +157,9 @@ public class OrderServiceImp extends BaseService implements OrderService {
     }
 
     @Override
-    public List<OrderDTO> findByOrderTypeAndOrderStatusAndUser(OrderType orderType,OrderStatus status, String phone) {
+    public List<OrderDTO> findByOrderTypeAndOrderStatusAndUser(OrderType orderType, OrderStatus status, String phone) {
         User user = userRepository.findByPhone(phone);
-        List<Order> orderList = orderRepository.findByOrderTypeAndOrderStatusAndUser(orderType,status, user);
+        List<Order> orderList = orderRepository.findByOrderTypeAndOrderStatusAndUser(orderType, status, user);
         return orderMapper.orderToOrderDTOList(orderList);
     }
 

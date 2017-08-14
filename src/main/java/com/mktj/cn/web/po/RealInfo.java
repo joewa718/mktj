@@ -39,6 +39,7 @@ public class RealInfo implements Serializable {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
     public void setIdCard(String idCard) {
         this.idCard = idCard;
     }
@@ -91,6 +92,7 @@ public class RealInfo implements Serializable {
     public void setIdCardPhotoBack(String idCardPhotoBack) {
         this.idCardPhotoBack = idCardPhotoBack;
     }
+
     public long getId() {
         return id;
     }

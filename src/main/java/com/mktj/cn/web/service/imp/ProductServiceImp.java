@@ -13,11 +13,12 @@ import org.springframework.stereotype.Service;
  * @create 2017-08-09 13:27
  **/
 @Service
-public class ProductServiceImp implements ProductService{
+public class ProductServiceImp implements ProductService {
     @Autowired
     ProductRepository productRepository;
     @Autowired
     ProductMapper productMapper;
+
     @Override
     public Iterable<ProductDTO> getProductOrdinaryList() {
         return productMapper.productToProductDTOList(productRepository.getProductListByProductType(ProductType.普通产品));

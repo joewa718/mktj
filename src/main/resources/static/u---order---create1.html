@@ -1,465 +1,475 @@
-<html><!--@(window)--><!--@(document)--><head>
-<meta charset="utf-8">
-<meta http-equiv="Cache-Control" content="no-store">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<html><!--@(window)--><!--@(document)-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Cache-Control" content="no-store">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-<script src="http://state.zhi-you.net/plugin/laytpl-1.1/laytpl.js"></script>
+    <script src="http://state.zhi-you.net/plugin/laytpl-1.1/laytpl.js"></script>
 
-<title>确认订单信息</title>
+    <title>确认订单信息</title>
 
-<link rel="shortcut icon" href="http://state.zhi-you.net/favicon.ico">
-<link rel="stylesheet" href="css/common.css">
-<link rel="stylesheet" href="http://state.zhi-you.net/css/components.css">
-<link rel="stylesheet" href="http://state.zhi-you.net/css/custom.css">
-<link rel="stylesheet" href="http://state.zhi-you.net/css/icon.css">
-<link rel="stylesheet" href="http://state.zhi-you.net/plugin/font-awesome-4.6.3/css/font-awesome.min.css">
-<link rel="stylesheet" href="http://state.zhi-you.net/plugin/miui-1.0/jquery.miui.css">
-<script src="http://state.zhi-you.net/plugin/jquery-1.11.0/jquery.min.js"></script>
-<script src="http://state.zhi-you.net/plugin/layer-mobile-2.0/layer.js"></script><link href="http://state.zhi-you.net/plugin/layer-mobile-2.0/need/layer.css?2.0" type="text/css" rel="styleSheet" id="layermcss">
-<script src="http://state.zhi-you.net/plugin/miui-1.0/jquery.miui.js"></script>
-<script src="http://state.zhi-you.net/plugin/fastclick-1.0/fastclick.js "></script>
-<script src="js/common.js"></script>
-<script src="http://state.zhi-you.net/js/util.js"></script>
-<script>
-  var Config = {
-    stc : '',
-    ctx : '',
-    stccdn : 'http://state.zhi-you.net'
-  }
-</script>
+    <link rel="shortcut icon" href="http://state.zhi-you.net/favicon.ico">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="http://state.zhi-you.net/css/components.css">
+    <link rel="stylesheet" href="http://state.zhi-you.net/css/custom.css">
+    <link rel="stylesheet" href="http://state.zhi-you.net/css/icon.css">
+    <link rel="stylesheet" href="http://state.zhi-you.net/plugin/font-awesome-4.6.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="http://state.zhi-you.net/plugin/miui-1.0/jquery.miui.css">
+    <script src="http://state.zhi-you.net/plugin/jquery-1.11.0/jquery.min.js"></script>
+    <script src="http://state.zhi-you.net/plugin/layer-mobile-2.0/layer.js"></script>
+    <link href="http://state.zhi-you.net/plugin/layer-mobile-2.0/need/layer.css?2.0" type="text/css" rel="styleSheet"
+          id="layermcss">
+    <script src="http://state.zhi-you.net/plugin/miui-1.0/jquery.miui.js"></script>
+    <script src="http://state.zhi-you.net/plugin/fastclick-1.0/fastclick.js "></script>
+    <script src="js/common.js"></script>
+    <script src="http://state.zhi-you.net/js/util.js"></script>
+    <script>
+        var Config = {
+            stc: '',
+            ctx: '',
+            stccdn: 'http://state.zhi-you.net'
+        }
+    </script>
 
 
+    <script src="http://state.zhi-you.net/js/area.js"></script>
 
-<script src="http://state.zhi-you.net/js/area.js"></script>
+    <script>
+        $(function () {
+            $('#btnSubmit').click(function () {
+                // if(!$('#deliverAddressId').val()) {
+                //   messageFlash('请先选择收货地址.');
+                //   return false;
+                // }
+                // if($('input[name=isPayToPlatform]:checked').length == 0) {
+                //   messageFlash('请先选择收款对象.');
+                //   return false;
+                // }
 
-<script>
-  $(function() {
-    $('#btnSubmit').click(function(){
-      // if(!$('#deliverAddressId').val()) {
-      //   messageFlash('请先选择收货地址.');
-      //   return false;  
-      // }
-      // if($('input[name=isPayToPlatform]:checked').length == 0) {
-      //   messageFlash('请先选择收款对象.');
-      //   return false;  
-      // }
+                // 检测是否  实名认证realFlage
 
-      // 检测是否  实名认证realFlage
-      
-      //    $.dialog({
-      //       content : '实名认证后才能提交订单,去认证？',
-      //     callback : function(index) {
-      //       if (index == 1) {
-      //         $(".miui-dialog").remove();
-      //         $('#orderForm').attr("action",'/u---userInfo');
-      //         $('#orderForm').submit();
-      //        return false;
-      //     }
-      //   }
-      // });
-       // return false;
-      
-      /*if(!false){
-        $.dialog({
-          content : '实名认证后才能提交订单,去认证？',
-          callback : function(index) {
-            if (index == 1) {
-              $(".miui-dialog").remove();
-              $('#orderForm').attr("action",'/u---userInfo');
-              $('#orderForm').submit();
-              return false;
-            }
-          }
+                //    $.dialog({
+                //       content : '实名认证后才能提交订单,去认证？',
+                //     callback : function(index) {
+                //       if (index == 1) {
+                //         $(".miui-dialog").remove();
+                //         $('#orderForm').attr("action",'/u---userInfo');
+                //         $('#orderForm').submit();
+                //        return false;
+                //     }
+                //   }
+                // });
+                // return false;
+
+                /*if(!false){
+                 $.dialog({
+                 content : '实名认证后才能提交订单,去认证？',
+                 callback : function(index) {
+                 if (index == 1) {
+                 $(".miui-dialog").remove();
+                 $('#orderForm').attr("action",'/u---userInfo');
+                 $('#orderForm').submit();
+                 return false;
+                 }
+                 }
+                 });
+                 return false;
+                 }*/
+
+                // var recommendPhone = $('#recommendPhone').val();
+                // if(!recommendPhone) {
+                //   messageFlash('请填写推荐人手机号');
+                //   return false;
+                // }
+                var data = $('#orderForm').serializeArray();
+
+                $.ajax({
+                    url: serviceUrl + '/api/order/applyOrder',
+                    type: 'POST',
+                    data: data,
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                })
+                    .done(function (data) {
+                        messageAlert(result);
+                    })
+                    .fail(function (data) {
+                        console.log("error");
+                    })
+
+                // $.ajax({
+                //   url: serviceUrl+'/api/order/applyOrder',
+                //   data: data,
+                //   type: 'POST',
+                //   success: function(result){
+                //     // if(result.code == 0) {
+                //     //   $('[name="recommendPhone"]').val(result.message);
+                //     //   $('#orderForm').submit();
+                //     // } else {
+                //       messageAlert(result);
+                //     // }
+                //   }
+                // });
+                // return false;
+
+            });
+
+            //选择收货地址
+            $('.receiver-info').click(function () {
+                if ($(this).find('.btn-add-address').length) {
+                    return;
+                }
+                showAddressList();
+            });
+
+            $('body').on('click', '.btn-add-address', function () {
+                showAddressCreate();
+            });
+
+            $('body').on('click', '.address', function () {
+                var $this = $(this);
+                var address = {};
+                address.id = $this.attr('data-id');
+                address.deliveryMan = $this.find('.address-name').text();
+                address.phone = $this.find('.address-phone').text();
+                address.addressText = $this.find('.address-text').text();
+
+                $.dialog({
+                    content: '您确定要设置收货地址吗？<br>' + '收件人：' + address.deliveryMan + '<br>' + '手机号：' + address.phone + '<br>' + '地址：' + address.addressText,
+                    callback: function (index) {
+                        if (index == 1) {
+                            hideAddressList();
+                            setAddress(address);
+                            return true;
+                        }
+                    }
+                });
+            });
+
+            $('body').on('click', '.btn-create', function () {
+                var deliveryMan = $('#deliveryMan').val();
+                var phone = $('#phone').val();
+                var address = $('#address').val();
+                var region = $('#district option:selected').val();
+                if (!deliveryMan) {
+                    messageFlash('请填写收件人名');
+                    return;
+                }
+                if (!phone) {
+                    messageFlash('请填写收件人电话');
+                    return;
+                }
+                if (!region) {
+                    messageFlash('请选择收件人省市区');
+                    return;
+                }
+                if (!address) {
+                    messageFlash('请填写收件人详细地址');
+                    return;
+                }
+
+                $.ajax({
+                    url: serviceUrl + '/api/user/saveDeliverAddress',
+                    data: {
+                        deliveryMan: $('#deliveryMan').val(),
+                        phone: $('#phone').val(),
+                        address: $('#address').val(),
+                        region: $('#district option:selected').val()
+                    },
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (result) {
+                        if (result.code == 0) {
+                            var address = result.data;
+                            setAddress(address);
+                            hideAddressCreate();
+                        }
+                    }
+                });
+            });
+
+            $('.form-switch label').click(function () {
+                var checked = $(this).prev().is(':checked');
+                $('#isOrderFill').val(!checked);
+            });
+
         });
-        return false;
-      }*/
-        
-        // var recommendPhone = $('#recommendPhone').val();
-        // if(!recommendPhone) {
-        //   messageFlash('请填写推荐人手机号');
-        //   return false;
-        // }
-        var data=$('#orderForm').serializeArray();
 
         $.ajax({
-          url: serviceUrl+'/api/order/applyOrder',
-          type: 'POST',
-          data: data,
-          xhrFields: {
-            withCredentials:true
-          },
-        })
-        .done(function(data) {
-          messageAlert(result);
-        })
-        .fail(function(data) {
-          console.log("error");
-        })
-
-        // $.ajax({
-        //   url: serviceUrl+'/api/order/applyOrder',
-        //   data: data,
-        //   type: 'POST',
-        //   success: function(result){
-        //     // if(result.code == 0) {
-        //     //   $('[name="recommendPhone"]').val(result.message);
-        //     //   $('#orderForm').submit();
-        //     // } else {
-        //       messageAlert(result);
-        //     // }
-        //   }
-        // });
-        // return false;
-        
-    });
-    
-    //选择收货地址
-    $('.receiver-info').click(function(){
-      if($(this).find('.btn-add-address').length){
-        return;
-      }
-      showAddressList();
-    });
-  
-    $('body').on('click', '.btn-add-address', function() {
-      showAddressCreate();
-    });
-
-    $('body').on('click', '.address', function() {
-      var $this = $(this);
-      var address = {};
-      address.id = $this.attr('data-id');
-      address.deliveryMan = $this.find('.address-name').text();
-      address.phone = $this.find('.address-phone').text();
-      address.addressText = $this.find('.address-text').text();
-      
-      $.dialog({
-        content : '您确定要设置收货地址吗？<br>' + '收件人：' + address.deliveryMan + '<br>' + '手机号：' + address.phone + '<br>' + '地址：' + address.addressText,
-        callback : function(index){
-          if(index == 1) {
-            hideAddressList();
-            setAddress(address);
-            return true;
-          }
-        }
-      });
-    });
-
-    $('body').on('click', '.btn-create', function() {
-      var deliveryMan = $('#deliveryMan').val();
-      var phone = $('#phone').val();
-      var address = $('#address').val();
-      var region = $('#district option:selected').val();
-      if (!deliveryMan) {
-        messageFlash('请填写收件人名');
-        return;
-      }
-      if (!phone) {
-        messageFlash('请填写收件人电话');
-        return;
-      }
-      if (!region) {
-        messageFlash('请选择收件人省市区');
-        return;
-      }
-      if (!address) {
-        messageFlash('请填写收件人详细地址');
-        return;
-      }
-
-      $.ajax({
-        url : serviceUrl+'/api/user/saveDeliverAddress',
-        data : {
-          deliveryMan : $('#deliveryMan').val(),
-          phone : $('#phone').val(),
-          address : $('#address').val(),
-          region : $('#district option:selected').val()
-        },
-        type : 'POST',
-        dataType : 'json',
-        success : function(result) {
-          if (result.code == 0) {
-            var address = result.data;
-            setAddress(address);
-            hideAddressCreate();
-          }
-        }
-      });
-    });
-
-    $('.form-switch label').click(function() {
-      var checked = $(this).prev().is(':checked');
-      $('#isOrderFill').val(!checked);
-    });
-
-  });
-
-  $.ajax({
-    url : serviceUrl+'/api/user/getDefaultDeliveryAddress',
-    xhrFields: {
-      withCredentials:true
-    },
-    data : {
-      deliveryMan : $('#deliveryMan').val(),
-      phone : $('#phone').val(),
-      address : $('#address').val(),
-      region : $('#district option:selected').val()
-    },
-    type : 'POST',
-    dataType : 'json',
-    success : function(result) {
-      if (result.code == 0) {
-        var address = result.data;
-        setAddress(address);
-        hideAddressCreate();
-      }
-    }
-  });
-  
-  function showAddressCreate() {
-    var addressCreateHtml = document.getElementById('addressCreateTpl').innerHTML;
-    $('article > .list-item').hide();
-    $('body').addClass('o-hidden').append(addressCreateHtml);
-    $('#addressCreate').show().animate({
-      'left' : 0
-    }, 300, function() {
-      $('#addressList').remove();
-    });
-    var area = new areaInit('province', 'city', 'district');
-  }
-  
-  function hideAddressCreate(){
-    $('#addressCreate').animate({
-      'left' : '100%'
-    }, 300, function() {
-      $('#addressCreate').remove();
-      $('body').removeClass('o-hidden');
-    });
-  }
-
-  function showAddressList() {
-    $.ajax({
-      url : '/u---address---listAjax',
-      type : 'POST',
-      dataType : 'json',
-      success : function(result) {
-        var addressTpl = document.getElementById('addressListTpl').innerHTML;
-        laytpl(addressTpl).render(result.data, function(html) {
-          $('article > .list-item').hide();
-          $('body').addClass('o-hidden').append(html);
-          $('#addressList').show().animate({
-            'left' : 0
-          }, 300, function() {
-          });
-          
+            url: serviceUrl + '/api/user/getDefaultDeliveryAddress',
+            xhrFields: {
+                withCredentials: true
+            },
+            data: {
+                deliveryMan: $('#deliveryMan').val(),
+                phone: $('#phone').val(),
+                address: $('#address').val(),
+                region: $('#district option:selected').val()
+            },
+            type: 'POST',
+            dataType: 'json',
+            success: function (result) {
+                if (result.code == 0) {
+                    var address = result.data;
+                    setAddress(address);
+                    hideAddressCreate();
+                }
+            }
         });
-      }
-    });
-  }
-  
-  function hideAddressList(){
-    $('#addressList').animate({
-      'left' : '100%'
-    }, 300, function() {
-      $('#addressList').remove();
-      $('body').removeClass('o-hidden');
-    });
-  }
-  
-  function setAddress(address) {
-    $('#deliverAddressId').val(address.id);
-    var addressText = address.addressText ? address.addressText 
-        : address.province + ' ' + address.city + ' ' + address.district + ' ' + address.address
-    $('.receiver-info').html('<div>' + address.deliveryMan + '<span class="right">' + address.phone + '</span></div>' 
-        + '<div class="fs-14 font-777">' + addressText+ '</div>')
-  }
-  
-</script>
 
-<script id="addressCreateTpl" type="text/html">
-<aside id="addressCreate" class="abs-lt size-100p bg-gray zindex-1000" style="left: 100%; display: none;">
-  <header class="header">
-    <h1>新增收货地址</h1>
-    <a href="javascript:hideAddressCreate();" class="button-left"><i class="fa fa-angle-left"></i></a>
-  </header>
-  <article class="address-create">
-      <div class="form-message note note-warning mb-0 hide">
-        <p>输入信息有误，请先更正。</p>
-      </div>
-      <div class="list-group">
-        <div class="list-item">
-          <label class="list-label" for="deliveryMan">收件人</label>
-          <div class="list-text">
-            <input type="text" id="deliveryMan" name="deliveryMan" class="form-input" value="" placeholder="填写收件人姓名">
-          </div>
-        </div>
-        <div class="list-item">
-          <label class="list-label" for="phone">手机号码</label>
-          <div class="list-text">
-            <input type="tel" id="phone" name="phone" class="form-input" value="" placeholder="填写收件人手机号码">
-          </div>
-        </div>
-        <div class="list-item">
-          <label class="list-label">省份</label>
-          <div class="list-text form-select">
-            <select name="province" id="province">
-              <option value="">请选择</option>
-            </select>
-          </div>
-        </div>
-        <div class="list-item">
-          <label class="list-label">城市</label>
-          <div class="list-text form-select">
-            <select name="city" id="city">
-              <option value="">请选择</option>
-            </select>
-          </div>
-        </div>
-        <div class="list-item">
-          <label class="list-label">地区</label>
-          <div class="list-text form-select">
-            <select name="region" id="district">
-              <option value="">请选择</option>
-            </select>
-          </div>
-        </div>
-        <div class="list-item">
-          <div class="list-text">
-            <textarea id="address" name="address" class="form-input" rows="3" placeholder="填写详细地址，例如街道名称，楼层和门牌号等信息"></textarea>
-          </div>
-        </div>
-        <div class="list-item">
-          <div class="list-text">设为默认地址</div>
-          <div class="list-unit form-switch">
-            <input type="hidden" name="_isDefault" value="false">
-            <input type="checkbox" id="isDefault" name="isDefault">
-            <label class="i-switch" for="isDefault"></label>
-          </div>
-        </div>
-      </div>
+        function showAddressCreate() {
+            var addressCreateHtml = document.getElementById('addressCreateTpl').innerHTML;
+            $('article > .list-item').hide();
+            $('body').addClass('o-hidden').append(addressCreateHtml);
+            $('#addressCreate').show().animate({
+                'left': 0
+            }, 300, function () {
+                $('#addressList').remove();
+            });
+            var area = new areaInit('province', 'city', 'district');
+        }
 
-      <div class="form-btn">
-        <input class="btn-create btn green btn-block" type="button" value="保 存">
-      </div>
-  </article>
-</aside>
-</script>
+        function hideAddressCreate() {
+            $('#addressCreate').animate({
+                'left': '100%'
+            }, 300, function () {
+                $('#addressCreate').remove();
+                $('body').removeClass('o-hidden');
+            });
+        }
 
-<script id="addressListTpl" type="text/html">
-<aside id="addressList" class="address-list abs-lt size-100p bg-gray z-100" style="left: 100%; display: none;">
-  <header class="header">
-    <h1>设置收货地址</h1>
-    <a href="javascript:hideAddressList();" class="button-left"><i class="fa fa-angle-left"></i></a>
-    <a href="javascript:;" class="button-right btn-add-address">新增</a>
-  </header>
-  <div class="list-group">
-    {{# for(var i = 0, len = d.length; i < len; i++){ }}
-      <a href="javascript:;" class="list-item address" data-id="{{ d[i].id }}">
-        <div class="list-text pl-10 pr-10">
-          <div><span class="address-name">{{ d[i].deliveryMan }}</span><span class="address-phone fs-14 font-777 right">{{ d[i].phone }}</span></div>
-          <div class="fs-14 font-777 address-text">{{ d[i].province }} {{ d[i].city }} {{ d[i].district }} {{ d[i].address }}</div>
-        </div>
-      </a>
-      {{# } }}
-  </div>
-</aside>
-</script>
+        function showAddressList() {
+            $.ajax({
+                url: '/u---address---listAjax',
+                type: 'POST',
+                dataType: 'json',
+                success: function (result) {
+                    var addressTpl = document.getElementById('addressListTpl').innerHTML;
+                    laytpl(addressTpl).render(result.data, function (html) {
+                        $('article > .list-item').hide();
+                        $('body').addClass('o-hidden').append(html);
+                        $('#addressList').show().animate({
+                            'left': 0
+                        }, 300, function () {
+                        });
+
+                    });
+                }
+            });
+        }
+
+        function hideAddressList() {
+            $('#addressList').animate({
+                'left': '100%'
+            }, 300, function () {
+                $('#addressList').remove();
+                $('body').removeClass('o-hidden');
+            });
+        }
+
+        function setAddress(address) {
+            $('#deliverAddressId').val(address.id);
+            var addressText = address.addressText ? address.addressText
+                : address.province + ' ' + address.city + ' ' + address.district + ' ' + address.address
+            $('.receiver-info').html('<div>' + address.deliveryMan + '<span class="right">' + address.phone + '</span></div>'
+                + '<div class="fs-14 font-777">' + addressText + '</div>')
+        }
+
+    </script>
+
+    <script id="addressCreateTpl" type="text/html">
+        <aside id="addressCreate" class="abs-lt size-100p bg-gray zindex-1000" style="left: 100%; display: none;">
+            <header class="header">
+                <h1>新增收货地址</h1>
+                <a href="javascript:hideAddressCreate();" class="button-left"><i class="fa fa-angle-left"></i></a>
+            </header>
+            <article class="address-create">
+                <div class="form-message note note-warning mb-0 hide">
+                    <p>输入信息有误，请先更正。</p>
+                </div>
+                <div class="list-group">
+                    <div class="list-item">
+                        <label class="list-label" for="deliveryMan">收件人</label>
+                        <div class="list-text">
+                            <input type="text" id="deliveryMan" name="deliveryMan" class="form-input" value=""
+                                   placeholder="填写收件人姓名">
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <label class="list-label" for="phone">手机号码</label>
+                        <div class="list-text">
+                            <input type="tel" id="phone" name="phone" class="form-input" value=""
+                                   placeholder="填写收件人手机号码">
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <label class="list-label">省份</label>
+                        <div class="list-text form-select">
+                            <select name="province" id="province">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <label class="list-label">城市</label>
+                        <div class="list-text form-select">
+                            <select name="city" id="city">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <label class="list-label">地区</label>
+                        <div class="list-text form-select">
+                            <select name="region" id="district">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-text">
+                            <textarea id="address" name="address" class="form-input" rows="3"
+                                      placeholder="填写详细地址，例如街道名称，楼层和门牌号等信息"></textarea>
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-text">设为默认地址</div>
+                        <div class="list-unit form-switch">
+                            <input type="hidden" name="_isDefault" value="false">
+                            <input type="checkbox" id="isDefault" name="isDefault">
+                            <label class="i-switch" for="isDefault"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-btn">
+                    <input class="btn-create btn green btn-block" type="button" value="保 存">
+                </div>
+            </article>
+        </aside>
+    </script>
+
+    <script id="addressListTpl" type="text/html">
+        <aside id="addressList" class="address-list abs-lt size-100p bg-gray z-100" style="left: 100%; display: none;">
+            <header class="header">
+                <h1>设置收货地址</h1>
+                <a href="javascript:hideAddressList();" class="button-left"><i class="fa fa-angle-left"></i></a>
+                <a href="javascript:;" class="button-right btn-add-address">新增</a>
+            </header>
+            <div class="list-group">
+                {{# for(var i = 0, len = d.length; i < len; i++){ }}
+                <a href="javascript:;" class="list-item address" data-id="{{ d[i].id }}">
+                    <div class="list-text pl-10 pr-10">
+                        <div><span class="address-name">{{ d[i].deliveryMan }}</span><span
+                                class="address-phone fs-14 font-777 right">{{ d[i].phone }}</span></div>
+                        <div class="fs-14 font-777 address-text">{{ d[i].province }} {{ d[i].city }} {{ d[i].district }}
+                            {{ d[i].address }}
+                        </div>
+                    </div>
+                </a>
+                {{# } }}
+            </div>
+        </aside>
+    </script>
 </head>
 <body class="order-detail">
-  <header class="header">
+<header class="header">
     <h1>确认订单信息</h1>
     <a href="javascript:history.back();" class="button-left"><i class="fa fa-angle-left"></i></a>
-  </header>
-  
-  <form id="orderForm" class="valid-form" action="/u---order---create" method="post">
+</header>
+
+<form id="orderForm" class="valid-form" action="/u---order---create" method="post">
     <!-- <input type="hidden" name="orderType" value=""> -->
-  
-  
-  <article>
-    <div class="list-group">
-      <div class="list-title">收件人信息</div>
-      <div class="list-item">
-        <div class="list-icon"><i class="fa fa-map-marker fs-24"></i></div>
-        <div class="list-text fs-14 font-333 receiver-info">
-          
-            <span class="lh-30">您还未设置收货地址</span>
-            <a class="btn-add-address btn orange btn-sm round-2 right width-180" href="javascript:;">设置收货地址</a>
-          
-          
-        </div>
-        <input type="hidden" id="deliverAddressId" name="deliverAddressId" value="1">
-      </div>
-    </div>
-    
-    <div class="list-group">
-      <div class="list-title">商品信息</div>
-      <div class="list-item">
-        <img class="image-80 block mr-10" alt="" src="http://image.zhi-you.net/image/8d5c51ce-a52d-499d-adbf-79640d36a247@320h_320w_1e_1c.jpg">
-        <div class="list-text relative font-333">
-          <div class="fs-14 lh-24">¥ 优检一生2.0</div>
-          <div class="lh-24 fs-14 text-right font-orange">¥ 128.00</div>
-          <div class="lh-24 fs-12 text-right font-gray">x 3600</div>
-          <input type="hidden" name="productId" value="2">
-          <input type="hidden" name="productNum" value="3600">
-        </div>
-      </div>
-      <div class="list-item">
-        <div class="list-text text-right">
-          
-          <div class="fs-14">应付款： <span class="font-orange fs-16 bold">¥ 460800.00</span></div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="list-group">
-      <div class="list-title">请选择付款方式</div>
-      
-      
-        <div class="list-item form-radio">
-          <label class="list-text" for="isPayToPlatform1">余额支付</label>
-          <div class="list-unit">
-            <!-- <input id="isPayToPlatform1" type="radio" name="isPayToPlatform" value="true"> -->
-            <label class="i-checked" for="isPayToPlatform1"></label>
-          </div>
-        </div>
-      
-    </div>
 
-    
-    
-    <div class="list-group">
-      <div class="list-title">请写下您的订单留言</div>
-      <div class="list-item">
-        <div class="list-text">
-          <textarea name="orderComment" class="form-input" rows="2" placeholder="填写您的订单留言"></textarea>
-        </div>
-      </div>
-    </div>
-    
-    
-      <div class="list-group">
-        <div class="list-item">
-          <label class="list-label">推荐人手机号</label>
-          <div class="list-text">
-            <input id="recommendPhone" name="recommendPhone" class="form-input" type="tel" value="" placeholder="输入推荐人服务商手机号">
-            <!-- <input type="hidden" name="recommendPhone" value=""> -->
-          </div>
-        </div>
-        <div style="color: #8a6d3b; padding: 15px 30px 15px 15px;">
-          <p>此手机号码为直属推荐人的手机号码，填写错误，则推荐关系不予以更改</p>
-        </div>
-      </div>
-    
-    
-    <div class="form-btn">
-      <input id="btnSubmit" type="button" value="确认订单" class="btn btn-block orange round-2">
-    </div>
-    
-  </article>
-  </form>
 
-</body></html>
+    <article>
+        <div class="list-group">
+            <div class="list-title">收件人信息</div>
+            <div class="list-item">
+                <div class="list-icon"><i class="fa fa-map-marker fs-24"></i></div>
+                <div class="list-text fs-14 font-333 receiver-info">
+
+                    <span class="lh-30">您还未设置收货地址</span>
+                    <a class="btn-add-address btn orange btn-sm round-2 right width-180" href="javascript:;">设置收货地址</a>
+
+
+                </div>
+                <input type="hidden" id="deliverAddressId" name="deliverAddressId" value="1">
+            </div>
+        </div>
+
+        <div class="list-group">
+            <div class="list-title">商品信息</div>
+            <div class="list-item">
+                <img class="image-80 block mr-10" alt=""
+                     src="http://image.zhi-you.net/image/8d5c51ce-a52d-499d-adbf-79640d36a247@320h_320w_1e_1c.jpg">
+                <div class="list-text relative font-333">
+                    <div class="fs-14 lh-24">¥ 优检一生2.0</div>
+                    <div class="lh-24 fs-14 text-right font-orange">¥ 128.00</div>
+                    <div class="lh-24 fs-12 text-right font-gray">x 3600</div>
+                    <input type="hidden" name="productId" value="2">
+                    <input type="hidden" name="productNum" value="3600">
+                </div>
+            </div>
+            <div class="list-item">
+                <div class="list-text text-right">
+
+                    <div class="fs-14">应付款： <span class="font-orange fs-16 bold">¥ 460800.00</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="list-group">
+            <div class="list-title">请选择付款方式</div>
+
+
+            <div class="list-item form-radio">
+                <label class="list-text" for="isPayToPlatform1">余额支付</label>
+                <div class="list-unit">
+                    <!-- <input id="isPayToPlatform1" type="radio" name="isPayToPlatform" value="true"> -->
+                    <label class="i-checked" for="isPayToPlatform1"></label>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="list-group">
+            <div class="list-title">请写下您的订单留言</div>
+            <div class="list-item">
+                <div class="list-text">
+                    <textarea name="orderComment" class="form-input" rows="2" placeholder="填写您的订单留言"></textarea>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="list-group">
+            <div class="list-item">
+                <label class="list-label">推荐人手机号</label>
+                <div class="list-text">
+                    <input id="recommendPhone" name="recommendPhone" class="form-input" type="tel" value=""
+                           placeholder="输入推荐人服务商手机号">
+                    <!-- <input type="hidden" name="recommendPhone" value=""> -->
+                </div>
+            </div>
+            <div style="color: #8a6d3b; padding: 15px 30px 15px 15px;">
+                <p>此手机号码为直属推荐人的手机号码，填写错误，则推荐关系不予以更改</p>
+            </div>
+        </div>
+
+
+        <div class="form-btn">
+            <input id="btnSubmit" type="button" value="确认订单" class="btn btn-block orange round-2">
+        </div>
+
+    </article>
+</form>
+
+</body>
+</html>

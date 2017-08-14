@@ -8,19 +8,19 @@ import javax.persistence.Converter;
 @Converter
 public class OrderStatusConverter implements AttributeConverter<OrderStatus, Integer> {
 
-    public Integer convertToDatabaseColumn( OrderStatus value ) {
-        if ( value == null ) {
+    public Integer convertToDatabaseColumn(OrderStatus value) {
+        if (value == null) {
             return null;
         }
 
         return value.getCode();
     }
 
-    public OrderStatus convertToEntityAttribute( Integer value ) {
-        if ( value == null ) {
+    public OrderStatus convertToEntityAttribute(Integer value) {
+        if (value == null) {
             return null;
         }
 
-        return OrderStatus.fromCode( value );
+        return OrderStatus.fromCode(value);
     }
 }

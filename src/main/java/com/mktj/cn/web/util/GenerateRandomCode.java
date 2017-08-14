@@ -1,23 +1,22 @@
 package com.mktj.cn.web.util;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Random;
 
 public class GenerateRandomCode {
 
-    public synchronized String generateOrderCode(int len,String userId) {
+    public synchronized String generateOrderCode(int len, String userId) {
         int random = this.createRandomInt();
         String code = this.generate(random, len - userId.length()) + userId;
         return code.toUpperCase();
     }
+
     public synchronized String generate(int len) {
         int random = this.createRandomInt();
         String code = this.generate(random, len);
         return code.toUpperCase();
     }
 
-    private  String generate(int random, int len) {
+    private String generate(int random, int len) {
         Random rd = new Random(random);
         final int maxNum = 62;
         StringBuffer sb = new StringBuffer();
@@ -46,7 +45,6 @@ public class GenerateRandomCode {
         int tempint = (int) Math.ceil(temp);
         return tempint;
     }
-
 
 
     public static String getRandNum(int charCount) {

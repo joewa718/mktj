@@ -1,358 +1,350 @@
-<html><!--@(window)--><!--@(document)--><head>
-<meta charset="utf-8">
-<meta http-equiv="Cache-Control" content="no-store">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<html><!--@(window)--><!--@(document)-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Cache-Control" content="no-store">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-<title>订单详情</title>
+    <title>订单详情</title>
 
-<link rel="shortcut icon" href="http://state.zhi-you.net/favicon.ico">
-<link rel="stylesheet" href="css/common.css">
-<link rel="stylesheet" href="http://state.zhi-you.net/css/components.css">
-<link rel="stylesheet" href="http://state.zhi-you.net/css/custom.css">
-<link rel="stylesheet" href="http://state.zhi-you.net/css/icon.css">
-<link rel="stylesheet" href="http://state.zhi-you.net/plugin/font-awesome-4.6.3/css/font-awesome.min.css">
-<link rel="stylesheet" href="http://state.zhi-you.net/plugin/miui-1.0/jquery.miui.css">
-<script src="http://state.zhi-you.net/plugin/jquery-1.11.0/jquery.min.js"></script>
-<script src="http://state.zhi-you.net/plugin/layer-mobile-2.0/layer.js"></script><link href="http://state.zhi-you.net/plugin/layer-mobile-2.0/need/layer.css?2.0" type="text/css" rel="styleSheet" id="layermcss">
-<script src="http://state.zhi-you.net/plugin/miui-1.0/jquery.miui.js"></script>
-<script src="http://state.zhi-you.net/plugin/fastclick-1.0/fastclick.js "></script>
-<script src="js/common.js"></script>
-<script src="js/moment.js"></script>
-<script src="http://state.zhi-you.net/js/util.js"></script>
-<script>
-  var Config = {
-    stc : '',
-    ctx : '',
-    stccdn : 'http://state.zhi-you.net'
-  }
-</script>
+    <link rel="shortcut icon" href="http://state.zhi-you.net/favicon.ico">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="http://state.zhi-you.net/css/components.css">
+    <link rel="stylesheet" href="http://state.zhi-you.net/css/custom.css">
+    <link rel="stylesheet" href="http://state.zhi-you.net/css/icon.css">
+    <link rel="stylesheet" href="http://state.zhi-you.net/plugin/font-awesome-4.6.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="http://state.zhi-you.net/plugin/miui-1.0/jquery.miui.css">
+    <script src="http://state.zhi-you.net/plugin/jquery-1.11.0/jquery.min.js"></script>
+    <script src="http://state.zhi-you.net/plugin/layer-mobile-2.0/layer.js"></script>
+    <link href="http://state.zhi-you.net/plugin/layer-mobile-2.0/need/layer.css?2.0" type="text/css" rel="styleSheet"
+          id="layermcss">
+    <script src="http://state.zhi-you.net/plugin/miui-1.0/jquery.miui.js"></script>
+    <script src="http://state.zhi-you.net/plugin/fastclick-1.0/fastclick.js "></script>
+    <script src="js/common.js"></script>
+    <script src="js/moment.js"></script>
+    <script src="http://state.zhi-you.net/js/util.js"></script>
+    <script>
+        var Config = {
+            stc: '',
+            ctx: '',
+            stccdn: 'http://state.zhi-you.net'
+        }
+    </script>
 
-<script>
-  $(function() {
-    switch ('0') {
-      case '0':
-        messageShow('下单成功，请继续支付', 'success', 5);
-        break;
-      case '500':
-        messageShow('下单成功，请继续支付', 'error', 5);
-        break;
-      default:
-        messageShow('下单成功，请继续支付', 'info', 5);
-        break;
-    }
-  });
-</script>
-
-
-
-<script src="http://state.zhi-you.net/js/area.js"></script>
-
-<script>
-  $(function() {
-    
-    $('.header .button-popmenu').click(function(){
-      $('.header-popmenu').toggle(300);
-    });
-    
-    $("article").click(function() {
-      $('.header-popmenu').slideUp();
-    });
-    
-    $('.image-view').click(function() {
-      var images = $(this).find('img');
-      if (images.length == 0) {
-        var url = $(this).attr('data-src');
-        var title = $(this).attr('data-title');
-        $.imageview({
-          url : url,
-          title : title
+    <script>
+        $(function () {
+            switch ('0') {
+                case '0':
+                    messageShow('下单成功，请继续支付', 'success', 5);
+                    break;
+                case '500':
+                    messageShow('下单成功，请继续支付', 'error', 5);
+                    break;
+                default:
+                    messageShow('下单成功，请继续支付', 'info', 5);
+                    break;
+            }
         });
-      } else {
-        var title = $(this).attr('data-title');
-        var imageUrls = [];
-        $.each(images, function(n, image) {
-          imageUrls.push($(image).attr('data-src'));
-        })
-        $.imageview({
-          url : imageUrls,
-          title : title
+    </script>
+
+
+    <script src="http://state.zhi-you.net/js/area.js"></script>
+
+    <script>
+        $(function () {
+
+            $('.header .button-popmenu').click(function () {
+                $('.header-popmenu').toggle(300);
+            });
+
+            $("article").click(function () {
+                $('.header-popmenu').slideUp();
+            });
+
+            $('.image-view').click(function () {
+                var images = $(this).find('img');
+                if (images.length == 0) {
+                    var url = $(this).attr('data-src');
+                    var title = $(this).attr('data-title');
+                    $.imageview({
+                        url: url,
+                        title: title
+                    });
+                } else {
+                    var title = $(this).attr('data-title');
+                    var imageUrls = [];
+                    $.each(images, function (n, image) {
+                        imageUrls.push($(image).attr('data-src'));
+                    })
+                    $.imageview({
+                        url: imageUrls,
+                        title: title
+                    });
+                }
+            });
+
+            /*
+             * 进货订单操作(买家)
+             */
+
+            //买家支付
+            $('#btnPay').click(function () {
+                $.dialog({
+                    content: '请选择支付方式',
+                    skin: 'footer',
+                    btn: ['<a id="btnPay1" class="btn orange block round-2">U币积分支付</a>'/*, '<a id="btnPay2" class="btn green block round-2">银行汇款</a>' */],
+                    callback: function (index) {
+                        if (index == 1) {
+                            location.href = 'u---pay---order.html?payType=0';
+                        }
+                        /*  else if (index == 2) {
+                         location.href = '/u---pay---order---37988?payType=1';
+                         } */
+                    }
+                });
+            });
+
+            //确认收货
+            $('#btnConfirm').click(function () {
+                $.dialog({
+                    content: '您确定已收到该订单的商品吗？',
+                    callback: function (index) {
+                        if (index == 1) {
+                            location.href = '/u---order---confirmDelivery?id=37988';
+                        }
+                    }
+                });
+            });
+
+            /*
+             * 出货订单操作(卖家)
+             */
+            $('#btnPlatformDeliver').click(function () {
+                $.dialog({
+                    content: '您确定要将此订单转给公司发货吗？',
+                    callback: function (index) {
+                        if (index == 1) {
+                            location.href = '/u---order---platformDeliver?id=37988';
+                        }
+                    }
+                });
+            });
+
+            //确认收款
+            $('#btnConfirmPay').click(function () {
+                $.dialog({
+                    content: '您确定已收到买家款项吗？',
+                    callback: function (index) {
+                        if (index == 1) {
+                            location.href = '/u---order---confirmPay?id=37988';
+                        }
+                    }
+                });
+            });
+
+            //确认收款
+            $('#btnRejectPay').click(function () {
+                $.dialog({
+                    content: '您确定未收到买家款项并驳回此订单吗？',
+                    callback: function (index) {
+                        if (index == 1) {
+                            location.href = '/u---order---rejectPay?id=37988';
+                        }
+                    }
+                });
+            });
+
+            /* 取消订单 */
+            $('#btnDelete').click(function () {
+                $.dialog({
+                    content: '您确定要删除此订单吗？',
+                    callback: function (index) {
+                        if (index == 1) {
+                            location.href = '/u---order---delete?id=37988';
+                        }
+                    }
+                });
+            });
+
+            /* 删除订单 */
+            $('#btnCancel').click(function () {
+                $.dialog({
+                    content: '您确定要取消此订单吗？',
+                    callback: function (index) {
+                        if (index == 1) {
+                            location.href = '/u---order---cancel?id=37988';
+                        }
+                    }
+                });
+            });
+
         });
-      }
-    });
-
-    /*
-     * 进货订单操作(买家)
-     */
-
-    //买家支付
-    $('#btnPay').click(function() {
-      $.dialog({
-        content : '请选择支付方式',
-        skin : 'footer',
-        btn : [ '<a id="btnPay1" class="btn orange block round-2">U币积分支付</a>'/*, '<a id="btnPay2" class="btn green block round-2">银行汇款</a>' */],
-        callback : function(index) {
-          if (index == 1) {
-            location.href = 'u---pay---order.html?payType=0';
-          }/*  else if (index == 2) {
-            location.href = '/u---pay---order---37988?payType=1';
-          } */
-        }
-      });
-    });
-    
-    //确认收货
-    $('#btnConfirm').click(function() {
-      $.dialog({
-        content : '您确定已收到该订单的商品吗？',
-        callback : function(index) {
-          if (index == 1) {
-            location.href = '/u---order---confirmDelivery?id=37988';
-          }
-        }
-      });
-    });
-    
-    /*
-     * 出货订单操作(卖家)
-     */
-    $('#btnPlatformDeliver').click(function() {
-      $.dialog({
-        content : '您确定要将此订单转给公司发货吗？',
-        callback : function(index) {
-          if (index == 1) {
-            location.href = '/u---order---platformDeliver?id=37988';
-          }
-        }
-      });
-    });
-    
-    //确认收款
-    $('#btnConfirmPay').click(function() {
-      $.dialog({
-        content : '您确定已收到买家款项吗？',
-        callback : function(index) {
-          if (index == 1) {
-            location.href = '/u---order---confirmPay?id=37988';
-          }
-        }
-      });
-    });
-    
-  //确认收款
-    $('#btnRejectPay').click(function() {
-      $.dialog({
-        content : '您确定未收到买家款项并驳回此订单吗？',
-        callback : function(index) {
-          if (index == 1) {
-            location.href = '/u---order---rejectPay?id=37988';
-          }
-        }
-      });
-    });
-    
-    /* 取消订单 */
-    $('#btnDelete').click(function() {
-      $.dialog({
-        content : '您确定要删除此订单吗？',
-        callback : function(index) {
-          if (index == 1) {
-            location.href = '/u---order---delete?id=37988';
-          }
-        }
-      });
-    });
-    
-    /* 删除订单 */
-    $('#btnCancel').click(function() {
-      $.dialog({
-        content : '您确定要取消此订单吗？',
-        callback : function(index) {
-          if (index == 1) {
-            location.href = '/u---order---cancel?id=37988';
-          }
-        }
-      });
-    });
-    
-  });
-</script>
+    </script>
 </head>
 <body class="order-detail">
-  <header class="header">
+<header class="header">
     <h1>订单详情</h1>
     <a onclick="history.go(-1);" class="button-left"><i class="fa fa-angle-left"></i></a>
-    
+
     <a href="javascript:;" class="button-right button-popmenu"><i class="fa fa-ellipsis-h"></i></a>
     <nav class="header-popmenu hide">
-    
-      <a id="btnCancel" href="javascript:;"><i class="fa fa-times-circle-o"></i> 取消</a>
-      
-      
+
+        <a id="btnCancel" href="javascript:;"><i class="fa fa-times-circle-o"></i> 取消</a>
+
+
     </nav>
-    
-  </header>
-  
-  <article>
-    
-    
+
+</header>
+
+<article>
+
+
     <div class="note note-danger mb-0">
-      <p><i class="fa fa-clock-o fs-16"></i> 订单状态：买家未支付</p>
+        <p><i class="fa fa-clock-o fs-16"></i> 订单状态：买家未支付</p>
     </div>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <div class="list-group">
-      <div class="list-title">收货人信息</div>
-      
-      <div class="list-item">
-        <div class="list-icon"><i class="fa fa-map-marker font-orange fs-24"></i></div>
-        <div class="list-text fs-14 font-333 pl-5">
-          <div><span class="receiverName">收货人</span><span class="right receiverPhone">13000000000</span></div>
-          <div class="fs-14 font-777 address">北京市 市辖区 海淀区 中关村 大恒科技大厦</div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="list-group">
-      <div class="list-title">发货信息</div>
-      
-        <div class="list-item lh-20">
-          <div class="list-text fs-14">发货人</div>
-          
-          
-            <div class="list-unit"><span class="sendName">发货人</span> <small class="sendPhone">13000000000</small></div>
-            <img class="image-40 round ml-10" src="http://image.zhi-you.net/avatar/2138e45e-09d4-4eaf-b38f-745b17db6df6@160h_160w_1e_1c.jpg">
-          
-        </div>
-      
-      
-      
-      
-    </div>
-    
-    <div class="list-group">
-      <div class="list-title">商品信息</div>
-      
-      <div class="list-item">
-        <img class="image-80 block mr-10" alt="" src="http://image.zhi-you.net/image/8d5c51ce-a52d-499d-adbf-79640d36a247@160h_160w_1e_1c.jpg">
-        <div class="list-text relative font-333">
-          <div class="fs-14 lh-24 productName">¥ 优检一生2.0</div>
-          <div class="lh-24 fs-14 text-right font-orange productPrice">¥ 148.00</div>
-          <div class="lh-24 fs-12 text-right font-gray productNum">x 80</div>
-        </div>
-      </div>
-      
-      <div class="list-item">
-        <div class="list-text text-right">
-          
-          <div class="fs-14">应付款： <span class="font-orange fs-16 bold productCost">¥ 11840.00</span></div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="list-group">
-      <div class="list-item lh-20">
-        <div class="list-text fs-14">订单编号</div>
-        <div class="list-unit fs-12 orderCode">DD201708081054599308</div>
-      </div>
-      <div class="list-item lh-20">
-        <div class="list-text fs-14">下单时间</div>
-        <div class="list-unit fs-12 orderTime">2017-08-08 10:55:00</div>
-      </div>
-      
-      
-      
-      <div class="list-item lh-20">
-        <div class="list-text fs-14">付款给</div>
-        
-        <div class="list-unit fs-12">平台</div>
-        
-        
-      </div>
-      <div class="list-item lh-20">
-        <div class="list-text fs-14">类型</div>
-        <div class="list-unit fs-12">普通订单</div>
-      </div>
-    </div>
-    
-    
+
 
     <div class="list-group">
-      <div class="list-title">买家留言</div>
-      <div class="list-item">
-        <div class="list-text">
-          <p class="fs-14 font-999 orderComment">买家无留言</p>
+        <div class="list-title">收货人信息</div>
+
+        <div class="list-item">
+            <div class="list-icon"><i class="fa fa-map-marker font-orange fs-24"></i></div>
+            <div class="list-text fs-14 font-333 pl-5">
+                <div><span class="receiverName">收货人</span><span class="right receiverPhone">13000000000</span></div>
+                <div class="fs-14 font-777 address">北京市 市辖区 海淀区 中关村 大恒科技大厦</div>
+            </div>
         </div>
-        
-      </div>
     </div>
-    
-    
-    
-      
-        
-        <div class="form-btn">
-          <a id="btnPay" class="btn btn-block green round-2" href="javascript:;"><i class="fa fa-cny"></i> 立即支付</a>
+
+    <div class="list-group">
+        <div class="list-title">发货信息</div>
+
+        <div class="list-item lh-20">
+            <div class="list-text fs-14">发货人</div>
+
+
+            <div class="list-unit"><span class="sendName">发货人</span>
+                <small class="sendPhone">13000000000</small>
+            </div>
+            <img class="image-40 round ml-10"
+                 src="http://image.zhi-you.net/avatar/2138e45e-09d4-4eaf-b38f-745b17db6df6@160h_160w_1e_1c.jpg">
+
         </div>
-    
-  </article>
-  
+
+
+    </div>
+
+    <div class="list-group">
+        <div class="list-title">商品信息</div>
+
+        <div class="list-item">
+            <img class="image-80 block mr-10" alt=""
+                 src="http://image.zhi-you.net/image/8d5c51ce-a52d-499d-adbf-79640d36a247@160h_160w_1e_1c.jpg">
+            <div class="list-text relative font-333">
+                <div class="fs-14 lh-24 productName">¥ 优检一生2.0</div>
+                <div class="lh-24 fs-14 text-right font-orange productPrice">¥ 148.00</div>
+                <div class="lh-24 fs-12 text-right font-gray productNum">x 80</div>
+            </div>
+        </div>
+
+        <div class="list-item">
+            <div class="list-text text-right">
+
+                <div class="fs-14">应付款： <span class="font-orange fs-16 bold productCost">¥ 11840.00</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="list-group">
+        <div class="list-item lh-20">
+            <div class="list-text fs-14">订单编号</div>
+            <div class="list-unit fs-12 orderCode">DD201708081054599308</div>
+        </div>
+        <div class="list-item lh-20">
+            <div class="list-text fs-14">下单时间</div>
+            <div class="list-unit fs-12 orderTime">2017-08-08 10:55:00</div>
+        </div>
+
+
+        <div class="list-item lh-20">
+            <div class="list-text fs-14">付款给</div>
+
+            <div class="list-unit fs-12">平台</div>
+
+
+        </div>
+        <div class="list-item lh-20">
+            <div class="list-text fs-14">类型</div>
+            <div class="list-unit fs-12">普通订单</div>
+        </div>
+    </div>
+
+
+    <div class="list-group">
+        <div class="list-title">买家留言</div>
+        <div class="list-item">
+            <div class="list-text">
+                <p class="fs-14 font-999 orderComment">买家无留言</p>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="form-btn">
+        <a id="btnPay" class="btn btn-block green round-2" href="javascript:;"><i class="fa fa-cny"></i> 立即支付</a>
+    </div>
+
+</article>
+
 <script type="text/javascript">
 
     $.ajax({
-      url: serviceUrl+'/api/order/getOrder',
-      type: 'POST',
-      xhrFields: {
-        withCredentials:true
-      },
-      data:{orderId:getQueryString('id')},
+        url: serviceUrl + '/api/order/getOrder',
+        type: 'POST',
+        xhrFields: {
+            withCredentials: true
+        },
+        data: {orderId: getQueryString('id')},
     })
-    .done(function(data) {
-      for(var o in data){
-        $('.'+o).text(data[o]);
-        if(o=='orderTime'){
-          $('.'+o).text(moment(data[o]).format('YYYY-MM-DD HH:mm:ss'));
-        }
-      }
-    })
-    .fail(function(data) {
-      console.log("error");
-    })
+        .done(function (data) {
+            for (var o in data) {
+                $('.' + o).text(data[o]);
+                if (o == 'orderTime') {
+                    $('.' + o).text(moment(data[o]).format('YYYY-MM-DD HH:mm:ss'));
+                }
+            }
+        })
+        .fail(function (data) {
+            console.log("error");
+        })
 
-id: 10
-orderCode: "CF76198C72A9643B681571D971CE237C"
-orderComment: "321"
-orderStatus: "待确认"
-orderTime: 1502600791000
-orderType: "服务订单"
-payWay: null
-productCode: "ASZ2135"
-productCost: 375
-productName: "套餐一"
-productNum: 10
-productPrice: 37.5
-receiverCity: "861"
-receiverDetailed: "四川路123号"
-receiverName: "吴亦凡"
-receiverPhone: "13524998437"
-receiverProvince: "860"
-receiverRegion: "862"
-recommendPhone: null
-sendName: "付凯波"
-sendPhone: "12345678912"
+    id: 10
+    orderCode: "CF76198C72A9643B681571D971CE237C"
+    orderComment: "321"
+    orderStatus: "待确认"
+    orderTime: 1502600791000
+    orderType: "服务订单"
+    payWay: null
+    productCode: "ASZ2135"
+    productCost: 375
+    productName: "套餐一"
+    productNum: 10
+    productPrice: 37.5
+    receiverCity: "861"
+    receiverDetailed: "四川路123号"
+    receiverName: "吴亦凡"
+    receiverPhone: "13524998437"
+    receiverProvince: "860"
+    receiverRegion: "862"
+    recommendPhone: null
+    sendName: "付凯波"
+    sendPhone: "12345678912"
 
 </script>
 
-</body></html>
+</body>
+</html>

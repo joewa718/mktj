@@ -32,7 +32,7 @@ public class User implements Serializable {
     private BigDecimal score = BigDecimal.valueOf(0);
     @Column(name = "disable")
     private Boolean disable = false;
-    @Convert( converter = RoleTypeConverter.class )
+    @Convert(converter = RoleTypeConverter.class)
     @Column(name = "role_type")
     private RoleType roleType;
     @Column(name = "authorization_code")

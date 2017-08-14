@@ -1,119 +1,108 @@
-
-
-
-
-
-
-
-
-
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8">
-<meta http-equiv="Cache-Control" content="no-store" />
-<meta http-equiv="Pragma" content="no-cache" />
-<meta http-equiv="Expires" content="0" />
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <meta http-equiv="Cache-Control" content="no-store"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-<title>民康优检- 授权查询</title>
+    <title>民康优检- 授权查询</title>
 
-<link rel="shortcut icon" href="http://state.zhi-you.net/favicon.ico" />
-<link rel="stylesheet" href="http://state.zhi-you.net/css/common.css" />
-<link rel="stylesheet" href="http://state.zhi-you.net/css/components.css" />
-<link rel="stylesheet" href="http://state.zhi-you.net/css/custom.css" />
-<link rel="stylesheet" href="http://state.zhi-you.net/css/icon.css" />
-<link rel="stylesheet" href="http://state.zhi-you.net/plugin/font-awesome-4.6.3/css/font-awesome.min.css" />
-<link rel="stylesheet" href="http://state.zhi-you.net/plugin/miui-1.0/jquery.miui.css" />
-<script src="http://state.zhi-you.net/plugin/jquery-1.11.0/jquery.min.js"></script>
-<script src="http://state.zhi-you.net/plugin/layer-mobile-2.0/layer.js"></script>
-<script src="http://state.zhi-you.net/plugin/miui-1.0/jquery.miui.js"></script>
-<script src="http://state.zhi-you.net/plugin/fastclick-1.0/fastclick.js "></script>
-<script src="js/common.js"></script>
-<script src="http://state.zhi-you.net/js/util.js"></script>
-<script>
-  var Config = {
-    stc : '',
-    ctx : '',
-    stccdn : 'http://state.zhi-you.net'
-  }
-</script>
-
-
-
-<link rel="stylesheet" href="http://state.zhi-you.net/css/error.css" />
-<script type="text/javascript">
-  $(function() {
-      $('.fa-search').click(function(){
-        var codeText = $.trim($('#searchInput').val());  //获取授权编码
-
-        if(codeText != ''){
-          $.ajax({  
-            url: "/code/check",
-            type: "post",
-            dataType: "json",
-            data: {'code': codeText},
-            success: function(data){
-              if(data.code == 0){
-                $('#authorImage').attr('src',"/code/image?userId="+data.data);
-                $('.error').hide();
-                $('#imgWrap').show();
-              }else{
-                $.dialog({
-                  content : '授权码未找到！',
-                  skin: 'message',
-                  timeout : 2
-                });
-                $('.error').show();
-                $('#imgWrap').hide();
-              }
-            }  
-          }); 
-        }else{
-          $.dialog({
-            content : '授权码不能为空！',
-            skin: 'message',
-            timeout : 2
-          });
+    <link rel="shortcut icon" href="http://state.zhi-you.net/favicon.ico"/>
+    <link rel="stylesheet" href="http://state.zhi-you.net/css/common.css"/>
+    <link rel="stylesheet" href="http://state.zhi-you.net/css/components.css"/>
+    <link rel="stylesheet" href="http://state.zhi-you.net/css/custom.css"/>
+    <link rel="stylesheet" href="http://state.zhi-you.net/css/icon.css"/>
+    <link rel="stylesheet" href="http://state.zhi-you.net/plugin/font-awesome-4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="http://state.zhi-you.net/plugin/miui-1.0/jquery.miui.css"/>
+    <script src="http://state.zhi-you.net/plugin/jquery-1.11.0/jquery.min.js"></script>
+    <script src="http://state.zhi-you.net/plugin/layer-mobile-2.0/layer.js"></script>
+    <script src="http://state.zhi-you.net/plugin/miui-1.0/jquery.miui.js"></script>
+    <script src="http://state.zhi-you.net/plugin/fastclick-1.0/fastclick.js "></script>
+    <script src="js/common.js"></script>
+    <script src="http://state.zhi-you.net/js/util.js"></script>
+    <script>
+        var Config = {
+            stc: '',
+            ctx: '',
+            stccdn: 'http://state.zhi-you.net'
         }
- 
-      });
-  });
-</script>
+    </script>
+
+
+    <link rel="stylesheet" href="http://state.zhi-you.net/css/error.css"/>
+    <script type="text/javascript">
+        $(function () {
+            $('.fa-search').click(function () {
+                var codeText = $.trim($('#searchInput').val());  //获取授权编码
+
+                if (codeText != '') {
+                    $.ajax({
+                        url: "/code/check",
+                        type: "post",
+                        dataType: "json",
+                        data: {'code': codeText},
+                        success: function (data) {
+                            if (data.code == 0) {
+                                $('#authorImage').attr('src', "/code/image?userId=" + data.data);
+                                $('.error').hide();
+                                $('#imgWrap').show();
+                            } else {
+                                $.dialog({
+                                    content: '授权码未找到！',
+                                    skin: 'message',
+                                    timeout: 2
+                                });
+                                $('.error').show();
+                                $('#imgWrap').hide();
+                            }
+                        }
+                    });
+                } else {
+                    $.dialog({
+                        content: '授权码不能为空！',
+                        skin: 'message',
+                        timeout: 2
+                    });
+                }
+
+            });
+        });
+    </script>
 </head>
 <body>
-  <header class="header">
+<header class="header">
     <h1>授权查询</h1>
     <a onclick="history.go(-1);" class="button-left"><i class="fa fa-angle-left"></i></a>
-  </header>
+</header>
 
-  <div class="list-group">
+<div class="list-group">
     <div class="list-item ">
         <div class="list-text">
-          <input id="searchInput" name="searchInput" class="form-input" placeholder="请输入授权码" value="" type="text">
+            <input id="searchInput" name="searchInput" class="form-input" placeholder="请输入授权码" value="" type="text">
         </div>
         <div class="list-unit">
-          <i class="fa fa-search btn blue"></i>
+            <i class="fa fa-search btn blue"></i>
         </div>
     </div>
-  </div>
-  
-  <section id="imgWrap" class="p-15">
+</div>
+
+<section id="imgWrap" class="p-15">
     <img id="authorImage" class="block-100" src="">
-  </section>
-  
-  <section class="error hide">
+</section>
+
+<section class="error hide">
     <i class="error-icon font-gray fa fa-exclamation-triangle"></i>
     <div class="error-info">
-      <p>暂无数据</p>
-      <p>请检查您输入的授权码是否正确</p>
+        <p>暂无数据</p>
+        <p>请检查您输入的授权码是否正确</p>
     </div>
-  </section>  
-  
- 
-  
+</section>
+
+
 </body>
 </html>
  

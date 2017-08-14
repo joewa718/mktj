@@ -1,176 +1,192 @@
-<html><!--@(window)--><!--@(document)--><head>
-<meta charset="utf-8">
-<meta http-equiv="Cache-Control" content="no-store">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="keywords" content="微信分销">
-<meta name="description" content="上传头像 ">
+<html><!--@(window)--><!--@(document)-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Cache-Control" content="no-store">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="keywords" content="微信分销">
+    <meta name="description" content="上传头像 ">
 
-<title>上传头像</title>
+    <title>上传头像</title>
 
-<link rel="shortcut icon" href="http://state.zhi-you.net/favicon.ico">
-<link rel="stylesheet" href="css/common.css">
-<link rel="stylesheet" href="http://state.zhi-you.net/css/components.css">
-<link rel="stylesheet" href="http://state.zhi-you.net/css/custom.css">
-<link rel="stylesheet" href="http://state.zhi-you.net/css/icon.css">
-<link rel="stylesheet" href="http://state.zhi-you.net/plugin/font-awesome-4.6.3/css/font-awesome.min.css">
-<link rel="stylesheet" href="http://state.zhi-you.net/plugin/miui-1.0/jquery.miui.css">
-<script src="http://state.zhi-you.net/plugin/jquery-1.11.0/jquery.min.js"></script>
-<script src="http://state.zhi-you.net/plugin/layer-mobile-2.0/layer.js"></script><link href="http://state.zhi-you.net/plugin/layer-mobile-2.0/need/layer.css?2.0" type="text/css" rel="styleSheet" id="layermcss">
-<script src="http://state.zhi-you.net/plugin/miui-1.0/jquery.miui.js"></script>
-<script src="http://state.zhi-you.net/plugin/fastclick-1.0/fastclick.js "></script>
-<script src="js/common.js"></script>
-<script src="http://state.zhi-you.net/js/util.js"></script>
-<script>
-  var Config = {
-    stc : '',
-    ctx : '',
-    stccdn : 'http://state.zhi-you.net'
-  }
-</script>
-
-
-
-<script type="text/javascript">
-
-var mutex = (function() { //互斥上传类型
-    var m = {};
-    return {
-        set : function(t, xhr) {
-            m.xhr && m.xhr.abort();
-            m.type = t;
-            xhr && (m.xhr = xhr);
-        },
-        is : function(t) {
-            return m.type === t;
-        },
-        get : function() {
-            return m.type;
+    <link rel="shortcut icon" href="http://state.zhi-you.net/favicon.ico">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="http://state.zhi-you.net/css/components.css">
+    <link rel="stylesheet" href="http://state.zhi-you.net/css/custom.css">
+    <link rel="stylesheet" href="http://state.zhi-you.net/css/icon.css">
+    <link rel="stylesheet" href="http://state.zhi-you.net/plugin/font-awesome-4.6.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="http://state.zhi-you.net/plugin/miui-1.0/jquery.miui.css">
+    <script src="http://state.zhi-you.net/plugin/jquery-1.11.0/jquery.min.js"></script>
+    <script src="http://state.zhi-you.net/plugin/layer-mobile-2.0/layer.js"></script>
+    <link href="http://state.zhi-you.net/plugin/layer-mobile-2.0/need/layer.css?2.0" type="text/css" rel="styleSheet"
+          id="layermcss">
+    <script src="http://state.zhi-you.net/plugin/miui-1.0/jquery.miui.js"></script>
+    <script src="http://state.zhi-you.net/plugin/fastclick-1.0/fastclick.js "></script>
+    <script src="js/common.js"></script>
+    <script src="http://state.zhi-you.net/js/util.js"></script>
+    <script>
+        var Config = {
+            stc: '',
+            ctx: '',
+            stccdn: 'http://state.zhi-you.net'
         }
-    }
-})();
+    </script>
 
-$(function() {
-    var $avatar = $('.user-avatar .avatar img');
-    var setAvator = function(src) {
-        $avatar.attr('src', src);
-    };
-    
-    $.ajax({
-      url: serviceUrl+'/api/user/getLoginUser',
-      type: 'POST',
-      xhrFields: {
-        withCredentials:true
-      },
-    })
-    .done(function(data) {
-      $avatar.attr('src',imageNginxUrl+data.headPortrait);
-    })
-    .fail(function(data) {
-      console.log("error");
-    })
 
-    $('#upload').on('change', function(e) {
-        if (!this.value)
-            return;
-        mutex.set('local');
-        $avatar.attr('src', 'http://state.zhi-you.net/image/loading_circle.gif');
-        // $('#uploadForm').submit();
+    <script type="text/javascript">
 
-        var formData = new FormData($('#uploadForm')[0]);
-        // formData.append("myfile", document.getElementById("file1").files[0]);   
-        $.ajax({
-            url: serviceUrl+"/api/user/uploadPhoto",
-            type: "POST",
-            data: formData,
-            xhrFields: {
-              withCredentials:true
-            },
-            /**
-            *必须false才会自动加上正确的Content-Type
-            */
-            contentType: false,
-            /**
-            * 必须false才会避开jQuery对 formdata 的默认处理
-            * XMLHttpRequest会对 formdata 进行正确的处理
-            */
-            processData: false,
-            success: function (data) {
-                setAvator(imageNginxUrl+data.data);
-                if (data.status == "true") {
-                    alert("上传成功！");
+        var mutex = (function () { //互斥上传类型
+            var m = {};
+            return {
+                set: function (t, xhr) {
+                    m.xhr && m.xhr.abort();
+                    m.type = t;
+                    xhr && (m.xhr = xhr);
+                },
+                is: function (t) {
+                    return m.type === t;
+                },
+                get: function () {
+                    return m.type;
                 }
-                if (data.status == "error") {
-                    alert(data.msg);
-                }
-                $("#imgWait").hide();
-            },
-            error: function () {
-                alert("上传失败！");
-                $("#imgWait").hide();
             }
-        });
+        })();
 
-    });
-    $('#uploadtarget').on('load', function() {
-        if (!mutex.is('local'))
-            return;
-        var txt = $('#uploadtarget').contents().find('body').text();
-        txt = $.parseJSON(txt);
-        if (!txt.data) {
-            $.messageError('上传的图片无效，请重新上传');
-            return;
+        $(function () {
+            var $avatar = $('.user-avatar .avatar img');
+            var setAvator = function (src) {
+                $avatar.attr('src', src);
+            };
+
+            $.ajax({
+                url: serviceUrl + '/api/user/getLoginUser',
+                type: 'POST',
+                xhrFields: {
+                    withCredentials: true
+                },
+            })
+                .done(function (data) {
+                    $avatar.attr('src', imageNginxUrl + data.headPortrait);
+                })
+                .fail(function (data) {
+                    console.log("error");
+                })
+
+            $('#upload').on('change', function (e) {
+                if (!this.value)
+                    return;
+                mutex.set('local');
+                $avatar.attr('src', 'http://state.zhi-you.net/image/loading_circle.gif');
+                // $('#uploadForm').submit();
+
+                var formData = new FormData($('#uploadForm')[0]);
+                // formData.append("myfile", document.getElementById("file1").files[0]);
+                $.ajax({
+                    url: serviceUrl + "/api/user/uploadPhoto",
+                    type: "POST",
+                    data: formData,
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    /**
+                     *必须false才会自动加上正确的Content-Type
+                     */
+                    contentType: false,
+                    /**
+                     * 必须false才会避开jQuery对 formdata 的默认处理
+                     * XMLHttpRequest会对 formdata 进行正确的处理
+                     */
+                    processData: false,
+                    success: function (data) {
+                        setAvator(imageNginxUrl + data.data);
+                        if (data.status == "true") {
+                            alert("上传成功！");
+                        }
+                        if (data.status == "error") {
+                            alert(data.msg);
+                        }
+                        $("#imgWait").hide();
+                    },
+                    error: function () {
+                        alert("上传失败！");
+                        $("#imgWait").hide();
+                    }
+                });
+
+            });
+            $('#uploadtarget').on('load', function () {
+                if (!mutex.is('local'))
+                    return;
+                var txt = $('#uploadtarget').contents().find('body').text();
+                txt = $.parseJSON(txt);
+                if (!txt.data) {
+                    $.messageError('上传的图片无效，请重新上传');
+                    return;
+                }
+                setAvator(txt.data);
+            });
+        });
+    </script>
+    <style type="text/css">
+        .user-avatar {
+            padding: 30px;
         }
-        setAvator(txt.data);
-    });
-});
-</script>
-<style type="text/css">
-.user-avatar {
-  padding: 30px;
-}
-.user-avatar .avatar {
-  margin: 0 auto;
-  display: block; width: 240px; height: 240px;
-}
-.user-avatar .avatar img {
-  width: 100%; height: 100%; z-index: 90;
-  background: #fff url('http://state.zhi-you.net/image/avatar_default.jpg') no-repeat center;
-}
-.user-avatar .btns {
-  position: relative; margin: 30px auto;
-  width: 240px;
-}
-.user-avatar .input-file {
-  position: absolute; top: 0; left: 0;
-  width: 100%; height: 35px; opacity: 0; z-index: 1;
-}
-</style>
+
+        .user-avatar .avatar {
+            margin: 0 auto;
+            display: block;
+            width: 240px;
+            height: 240px;
+        }
+
+        .user-avatar .avatar img {
+            width: 100%;
+            height: 100%;
+            z-index: 90;
+            background: #fff url('http://state.zhi-you.net/image/avatar_default.jpg') no-repeat center;
+        }
+
+        .user-avatar .btns {
+            position: relative;
+            margin: 30px auto;
+            width: 240px;
+        }
+
+        .user-avatar .input-file {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 35px;
+            opacity: 0;
+            z-index: 1;
+        }
+    </style>
 </head>
 <body>
 
-  <header class="header">
+<header class="header">
     <h1>修改头像</h1>
     <a href="u---info.html" class="button-left"><i class="fa fa-angle-left"></i></a>
-  </header>
+</header>
 
-  <article class="user-avatar">
-    <form id="uploadForm" target="uploadtarget" action=serviceUrl+"/api/user/uploadPhoto" method="post" enctype="multipart/form-data">
-      <figure class="avatar">
-        <img src="images/avatar.jpg">
-      </figure>
-      <div class="btns">
-        <input type="button" class="btn btn-block orange round-2 mt-10" value="更改头像">
-        <input type="file" class="input-file" id="upload" name="file" value="选择图片" accept="image/*">
-      </div>
+<article class="user-avatar">
+    <form id="uploadForm" target="uploadtarget" action=serviceUrl+"/api/user/uploadPhoto" method="post"
+          enctype="multipart/form-data">
+        <figure class="avatar">
+            <img src="images/avatar.jpg">
+        </figure>
+        <div class="btns">
+            <input type="button" class="btn btn-block orange round-2 mt-10" value="更改头像">
+            <input type="file" class="input-file" id="upload" name="file" value="选择图片" accept="image/*">
+        </div>
     </form>
     <iframe src="about:blank" id="uploadtarget" name="uploadtarget" frameborder="0" style="display: none;"></iframe>
-  </article>
-   
+</article>
 
 
-
-</body></html>
+</body>
+</html>

@@ -52,18 +52,18 @@ public class Order {
     private BigDecimal productCost;
     @Column(name = "product_num")
     private int productNum;
-    @Convert( converter = PayTypeConverter.class )
+    @Convert(converter = PayTypeConverter.class)
     @Column(name = "pay_way")
     private PayType payWay;
     @Column(name = "order_comment")
     private String orderComment;
-    @Convert( converter = OrderTypeConverter.class )
+    @Convert(converter = OrderTypeConverter.class)
     @Column(name = "order_type")
     private OrderType orderType;
     @Column(name = "order_time")
     @Temporal(TemporalType.TIMESTAMP)
     private Date orderTime;
-    @Convert( converter = OrderStatusConverter.class )
+    @Convert(converter = OrderStatusConverter.class)
     @Column(name = "order_status")
     private OrderStatus orderStatus;
     @Column(name = "recommend_phone")
@@ -240,7 +240,7 @@ public class Order {
     public void setReceiverDetailed(String receiverDetailed) {
         this.receiverDetailed = receiverDetailed;
     }
-    
+
     public String getRecommendPhone() {
         return recommendPhone;
     }

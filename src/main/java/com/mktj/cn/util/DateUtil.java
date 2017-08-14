@@ -292,7 +292,8 @@ public class DateUtil {
 
         return list;
     }
-    public static Date toDate(String format, String date){
+
+    public static Date toDate(String format, String date) {
         Date resDate = null;
         try {
             resDate = new SimpleDateFormat(format).parse(date);

@@ -12,7 +12,7 @@ public class ProductDTO {
     private String product_code;
     private String productName;
     private String productImage;
-    private String description ;
+    private String description;
     private BigDecimal retailPrice;
     private Integer piece;
     private BigDecimal price1;

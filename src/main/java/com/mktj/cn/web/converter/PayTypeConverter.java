@@ -7,19 +7,19 @@ import javax.persistence.Converter;
 
 @Converter
 public class PayTypeConverter implements AttributeConverter<PayType, Integer> {
-    public Integer convertToDatabaseColumn( PayType value ) {
-        if ( value == null ) {
+    public Integer convertToDatabaseColumn(PayType value) {
+        if (value == null) {
             return null;
         }
 
         return value.getCode();
     }
 
-    public PayType convertToEntityAttribute( Integer value ) {
-        if ( value == null ) {
+    public PayType convertToEntityAttribute(Integer value) {
+        if (value == null) {
             return null;
         }
 
-        return PayType.fromCode( value );
+        return PayType.fromCode(value);
     }
 }

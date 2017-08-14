@@ -11,9 +11,11 @@ public class UserSecurityDTO extends org.springframework.security.core.userdetai
     private String email;
     private Boolean disable;
     private String clientName;
-    public UserSecurityDTO(){
-        super(null,null,null);
+
+    public UserSecurityDTO() {
+        super(null, null, null);
     }
+
     public UserSecurityDTO(String phone, String password, Collection<? extends GrantedAuthority> authorities, User user)
             throws IllegalArgumentException {
         super(phone, password, authorities);

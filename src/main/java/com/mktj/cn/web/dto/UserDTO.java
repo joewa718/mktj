@@ -3,6 +3,7 @@ package com.mktj.cn.web.dto;
 /**
  * Created by zhanwa01 on 2017/8/9.
  */
+
 import java.math.BigDecimal;
 
 /**

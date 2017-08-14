@@ -98,6 +98,7 @@ public class RealInfoVo implements Serializable {
     public void setIdCardPhotoFront(String idCardPhotoFront) {
         this.idCardPhotoFront = idCardPhotoFront;
     }
+
     public String getIdCardPhotoBack() {
         return idCardPhotoBack;
     }

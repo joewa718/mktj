@@ -1,183 +1,194 @@
-<html><!--@(window)--><!--@(document)--><head>
-  <meta charset="utf-8">
-  <meta http-equiv="Cache-Control" content="no-store">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<html><!--@(window)--><!--@(document)-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Cache-Control" content="no-store">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-  <title>合伙人套餐</title>
-  
-<link rel="shortcut icon" href="http://state.zhi-you.net/favicon.ico">
-<link rel="stylesheet" href="css/common.css">
-<link rel="stylesheet" href="http://state.zhi-you.net/css/components.css">
-<link rel="stylesheet" href="http://state.zhi-you.net/css/custom.css">
-<link rel="stylesheet" href="http://state.zhi-you.net/css/icon.css">
-<link rel="stylesheet" href="http://state.zhi-you.net/plugin/font-awesome-4.6.3/css/font-awesome.min.css">
-<link rel="stylesheet" href="http://state.zhi-you.net/plugin/miui-1.0/jquery.miui.css">
-<script src="http://state.zhi-you.net/plugin/jquery-1.11.0/jquery.min.js"></script>
-<script src="http://state.zhi-you.net/plugin/layer-mobile-2.0/layer.js"></script><link href="http://state.zhi-you.net/plugin/layer-mobile-2.0/need/layer.css?2.0" type="text/css" rel="styleSheet" id="layermcss">
-<script src="http://state.zhi-you.net/plugin/miui-1.0/jquery.miui.js"></script>
-<script src="http://state.zhi-you.net/plugin/fastclick-1.0/fastclick.js "></script>
-<script src="js/common.js"></script>
-<script src="http://state.zhi-you.net/js/util.js"></script>
-<script>
-  var Config = {
-    stc : '',
-    ctx : '',
-    stccdn : 'http://state.zhi-you.net'
-  }
-</script>
+    <title>合伙人套餐</title>
 
-
-
-  <style>
-    .form-radio.current {
-      background-color: #f1f1f1;
-    }
-    .form-radio img {
-      opacity: .7;
-    }
-    .form-radio.current img {
-      opacity: 1;
-    }
-    .form-radio.current h2 {
-      color: #222 !important;
-    }
-    .form-radio.current div {
-      font-weight: bold;
-    }
-  </style>
-
-  <script>
-    $(function() {
-
-      $('.form-radio img, .form-radio .list-text').click(function(){
-        $('[name="agentLevel"]').removeAttr('checked');
-        $(this).parent().find('[name="agentLevel"]').click().attr('checked', 'checked');
-      });
-
-      $('[name="agentLevel"]').click(function(){
-        var item = $(this).parents('.form-radio');
-        item.addClass('current').siblings().removeClass('current');
-        var quantity = item.find('.quantity').text();
-        var productId = item.attr('data-id');
-        $('[name="quantity"]').val(quantity);
-        $('[name="productId"]').val(productId);
-      });
-
-      $('#btnSubmit').click(function(){
-        if(!$('[name="quantity"]').val()) {
-          messageFlash('请选择合伙人套餐');
-          return false;
+    <link rel="shortcut icon" href="http://state.zhi-you.net/favicon.ico">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="http://state.zhi-you.net/css/components.css">
+    <link rel="stylesheet" href="http://state.zhi-you.net/css/custom.css">
+    <link rel="stylesheet" href="http://state.zhi-you.net/css/icon.css">
+    <link rel="stylesheet" href="http://state.zhi-you.net/plugin/font-awesome-4.6.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="http://state.zhi-you.net/plugin/miui-1.0/jquery.miui.css">
+    <script src="http://state.zhi-you.net/plugin/jquery-1.11.0/jquery.min.js"></script>
+    <script src="http://state.zhi-you.net/plugin/layer-mobile-2.0/layer.js"></script>
+    <link href="http://state.zhi-you.net/plugin/layer-mobile-2.0/need/layer.css?2.0" type="text/css" rel="styleSheet"
+          id="layermcss">
+    <script src="http://state.zhi-you.net/plugin/miui-1.0/jquery.miui.js"></script>
+    <script src="http://state.zhi-you.net/plugin/fastclick-1.0/fastclick.js "></script>
+    <script src="js/common.js"></script>
+    <script src="http://state.zhi-you.net/js/util.js"></script>
+    <script>
+        var Config = {
+            stc: '',
+            ctx: '',
+            stccdn: 'http://state.zhi-you.net'
         }
+    </script>
+
+
+    <style>
+        .form-radio.current {
+            background-color: #f1f1f1;
+        }
+
+        .form-radio img {
+            opacity: .7;
+        }
+
+        .form-radio.current img {
+            opacity: 1;
+        }
+
+        .form-radio.current h2 {
+            color: #222 !important;
+        }
+
+        .form-radio.current div {
+            font-weight: bold;
+        }
+    </style>
+
+    <script>
+        $(function () {
+
+            $('.form-radio img, .form-radio .list-text').click(function () {
+                $('[name="agentLevel"]').removeAttr('checked');
+                $(this).parent().find('[name="agentLevel"]').click().attr('checked', 'checked');
+            });
+
+            $('[name="agentLevel"]').click(function () {
+                var item = $(this).parents('.form-radio');
+                item.addClass('current').siblings().removeClass('current');
+                var quantity = item.find('.quantity').text();
+                var productId = item.attr('data-id');
+                $('[name="quantity"]').val(quantity);
+                $('[name="productId"]').val(productId);
+            });
+
+            $('#btnSubmit').click(function () {
+                if (!$('[name="quantity"]').val()) {
+                    messageFlash('请选择合伙人套餐');
+                    return false;
+                }
 
 // 148
 // 168
 // 128
 // 198
 
-        var obj = {};
-        $.each($('#form').serializeArray(),function(i,v){
-          obj[v.name] = v.value;
+                var obj = {};
+                $.each($('#form').serializeArray(), function (i, v) {
+                    obj[v.name] = v.value;
+                });
+                obj.priceAll = 128 * obj.quantity;
+                sessionStorage.setItem('agentLevel', JSON.stringify(obj));
+
+                location.href = './u---order---create1.html';
+
+                // $('#form').submit();
+            });
+
         });
-        obj.priceAll=128*obj.quantity;
-        sessionStorage.setItem('agentLevel',JSON.stringify(obj));
-        
-        location.href='./u---order---create1.html';
-
-        // $('#form').submit();
-      });
-
-    });
-  </script>
+    </script>
 
 </head>
 <body>
 
 <header class="header">
-  <h1>成为合伙人</h1>
-  <a href="u.html" class="button-left"><i class="fa fa-angle-left"></i></a>
-  <a class="button-right" href="/help"><i class="fa fa-question-circle"></i></a>
+    <h1>成为合伙人</h1>
+    <a href="u.html" class="button-left"><i class="fa fa-angle-left"></i></a>
+    <a class="button-right" href="/help"><i class="fa fa-question-circle"></i></a>
 </header>
 
 <div class="note note-warning mb-0">
-  <p><i class="fa fa-exclamation-circle"></i> 购买下列套餐产品即可成为相应合伙人。</p>
+    <p><i class="fa fa-exclamation-circle"></i> 购买下列套餐产品即可成为相应合伙人。</p>
 </div>
 
 <article class="mb-15 clearfix">
-  <form id="form" action="/u---order---create" method="get">
-    <input type="hidden" name="productId" value="">
-    <input type="hidden" name="quantity" value="">
+    <form id="form" action="/u---order---create" method="get">
+        <input type="hidden" name="productId" value="">
+        <input type="hidden" name="quantity" value="">
 
-    <div class="list-group">
-      <!-- form-radio -->
-      
-        <div class="list-item form-radio" data-id="2">
-          <div class="list-icon">
-            <input id="agentLevel4New" type="radio" name="agentLevel" value="V1">
-            <label class="i-checked" for="agentLevel4New"></label>
-          </div>
-          <img class="image-80 block mr-10" src="http://image.zhi-you.net/image/8d5c51ce-a52d-499d-adbf-79640d36a247@320h_320w_1e_1c.jpg">
-          <div class="list-text">
-            <h2 class="font-777 fs-15 lh-24">民康优检合伙人套餐 <span class="quantity">3600</span>次</h2>
-            <div class="lh-30"><label class="label blue">高级合伙人</label></div>
-            <div class="font-orange lh-24">¥ 460800.00</div>
-          </div>
-        </div>      
+        <div class="list-group">
+            <!-- form-radio -->
 
-        <div class="list-item form-radio" data-id="2">
-          <div class="list-icon">
-            <input id="agentLevel1New" type="radio" name="agentLevel" value="V3">
-            <label class="i-checked" for="agentLevel1New"></label>
-          </div>
-          <img class="image-80 block mr-10" src="http://image.zhi-you.net/image/8d5c51ce-a52d-499d-adbf-79640d36a247@320h_320w_1e_1c.jpg">
-          <div class="list-text">
-            <h2 class="font-777 fs-15 lh-24">民康优检合伙人套餐 <span class="quantity">240</span>次</h2>
-            <div class="lh-30"><label class="label red">合伙人</label></div>
-            <div class="font-orange lh-24">¥ 35520.00</div>
-          </div>
+            <div class="list-item form-radio" data-id="2">
+                <div class="list-icon">
+                    <input id="agentLevel4New" type="radio" name="agentLevel" value="V1">
+                    <label class="i-checked" for="agentLevel4New"></label>
+                </div>
+                <img class="image-80 block mr-10"
+                     src="http://image.zhi-you.net/image/8d5c51ce-a52d-499d-adbf-79640d36a247@320h_320w_1e_1c.jpg">
+                <div class="list-text">
+                    <h2 class="font-777 fs-15 lh-24">民康优检合伙人套餐 <span class="quantity">3600</span>次</h2>
+                    <div class="lh-30"><label class="label blue">高级合伙人</label></div>
+                    <div class="font-orange lh-24">¥ 460800.00</div>
+                </div>
+            </div>
+
+            <div class="list-item form-radio" data-id="2">
+                <div class="list-icon">
+                    <input id="agentLevel1New" type="radio" name="agentLevel" value="V3">
+                    <label class="i-checked" for="agentLevel1New"></label>
+                </div>
+                <img class="image-80 block mr-10"
+                     src="http://image.zhi-you.net/image/8d5c51ce-a52d-499d-adbf-79640d36a247@320h_320w_1e_1c.jpg">
+                <div class="list-text">
+                    <h2 class="font-777 fs-15 lh-24">民康优检合伙人套餐 <span class="quantity">240</span>次</h2>
+                    <div class="lh-30"><label class="label red">合伙人</label></div>
+                    <div class="font-orange lh-24">¥ 35520.00</div>
+                </div>
+            </div>
+
+            <div class="list-item form-radio" data-id="2">
+                <div class="list-icon">
+                    <input id="agentLevel2New" type="radio" name="agentLevel" value="V2">
+                    <label class="i-checked" for="agentLevel2New"></label>
+                </div>
+                <img class="image-80 block mr-10"
+                     src="http://image.zhi-you.net/image/8d5c51ce-a52d-499d-adbf-79640d36a247@320h_320w_1e_1c.jpg">
+                <div class="list-text">
+                    <h2 class="font-777 fs-15 lh-24">民康优检合伙人套餐 <span class="quantity">80</span>次</h2>
+                    <div class="lh-30"><label class="label yellow">准合伙人</label></div>
+                    <div class="font-orange lh-24">¥ 13440.00</div>
+                </div>
+            </div>
+
+            <div class="list-item form-radio" data-id="2">
+                <div class="list-icon">
+                    <input id="agentLevel3New" type="radio" name="agentLevel" value="V1">
+                    <label class="i-checked" for="agentLevel3New"></label>
+                </div>
+                <img class="image-80 block mr-10"
+                     src="http://image.zhi-you.net/image/8d5c51ce-a52d-499d-adbf-79640d36a247@320h_320w_1e_1c.jpg">
+                <div class="list-text">
+                    <h2 class="font-777 fs-15 lh-24">民康优检合伙人套餐 <span class="quantity">5</span>次</h2>
+                    <div class="lh-30"><label class="label green">天使</label></div>
+                    <div class="font-orange lh-24">¥ 990.00</div>
+                </div>
+            </div>
+
         </div>
 
-        <div class="list-item form-radio" data-id="2">
-          <div class="list-icon">
-            <input id="agentLevel2New" type="radio" name="agentLevel" value="V2">
-            <label class="i-checked" for="agentLevel2New"></label>
-          </div>
-          <img class="image-80 block mr-10" src="http://image.zhi-you.net/image/8d5c51ce-a52d-499d-adbf-79640d36a247@320h_320w_1e_1c.jpg">
-          <div class="list-text">
-            <h2 class="font-777 fs-15 lh-24">民康优检合伙人套餐 <span class="quantity">80</span>次</h2>
-            <div class="lh-30"><label class="label yellow">准合伙人</label></div>
-            <div class="font-orange lh-24">¥ 13440.00</div>
-          </div>
+        <div class="form-btn">
+            <!-- <a id="btnSubmit" class="btn orange btn-block" href="javascript:;" onclick="location.href='./u---order---create1.html'">购买套餐</a> -->
+            <a id="btnSubmit" class="btn orange btn-block">购买套餐</a>
         </div>
 
-        <div class="list-item form-radio" data-id="2">
-          <div class="list-icon">
-            <input id="agentLevel3New" type="radio" name="agentLevel" value="V1">
-            <label class="i-checked" for="agentLevel3New"></label>
-          </div>
-          <img class="image-80 block mr-10" src="http://image.zhi-you.net/image/8d5c51ce-a52d-499d-adbf-79640d36a247@320h_320w_1e_1c.jpg">
-          <div class="list-text">
-            <h2 class="font-777 fs-15 lh-24">民康优检合伙人套餐 <span class="quantity">5</span>次</h2>
-            <div class="lh-30"><label class="label green">天使</label></div>
-            <div class="font-orange lh-24">¥ 990.00</div>
-          </div>
-        </div>
-
-    </div>
-
-    <div class="form-btn">
-      <!-- <a id="btnSubmit" class="btn orange btn-block" href="javascript:;" onclick="location.href='./u---order---create1.html'">购买套餐</a> -->
-      <a id="btnSubmit" class="btn orange btn-block">购买套餐</a>
-    </div>
-
-  </form>
+    </form>
 </article>
 
 <script type="text/javascript">
 
 </script>
 
-</body></html>
+</body>
+</html>

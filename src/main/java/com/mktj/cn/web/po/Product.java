@@ -1,6 +1,5 @@
 package com.mktj.cn.web.po;
 
-import com.mktj.cn.web.converter.PayTypeConverter;
 import com.mktj.cn.web.converter.ProductTypeConverter;
 import com.mktj.cn.web.util.ProductType;
 import com.mktj.cn.web.util.RoleType;
@@ -9,6 +8,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+
 /**
  * @author zhanwang
  * @create 2017-08-08 13:34
@@ -32,8 +32,8 @@ public class Product {
     private String sendMan;
     @Column(name = "send_phone")
     private String sendPhone;
-    @Column(name = "description",length = 500)
-    private String description ;
+    @Column(name = "description", length = 500)
+    private String description;
     @Column(name = "retail_Price")
     private BigDecimal retailPrice;
     @Column(name = "piece")
@@ -51,10 +51,10 @@ public class Product {
     @Column(name = "release_time")
     private String releaseTime;
     @Column(name = "is_off_shelf")
-    private Boolean isOffShelf ;
+    private Boolean isOffShelf;
     @Column(name = "role_type")
     private RoleType roleType;
-    @Convert( converter = ProductTypeConverter.class )
+    @Convert(converter = ProductTypeConverter.class)
     @Column(name = "product_type")
     private ProductType productType;
 

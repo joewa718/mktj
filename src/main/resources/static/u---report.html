@@ -1,106 +1,112 @@
-<html><!--@(window)--><!--@(document)--><head>
-<meta charset="utf-8">
-<meta http-equiv="Cache-Control" content="no-store">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<html><!--@(window)--><!--@(document)-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Cache-Control" content="no-store">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-<title>检测报告列表</title>
+    <title>检测报告列表</title>
 
-<link rel="shortcut icon" href="http://state.zhi-you.net/favicon.ico">
-<link rel="stylesheet" href="css/common.css">
-<link rel="stylesheet" href="http://state.zhi-you.net/css/components.css">
-<link rel="stylesheet" href="http://state.zhi-you.net/css/custom.css">
-<link rel="stylesheet" href="http://state.zhi-you.net/css/icon.css">
-<link rel="stylesheet" href="http://state.zhi-you.net/plugin/font-awesome-4.6.3/css/font-awesome.min.css">
-<link rel="stylesheet" href="http://state.zhi-you.net/plugin/miui-1.0/jquery.miui.css">
-<script src="http://state.zhi-you.net/plugin/jquery-1.11.0/jquery.min.js"></script>
-<script src="http://state.zhi-you.net/plugin/layer-mobile-2.0/layer.js"></script><link href="http://state.zhi-you.net/plugin/layer-mobile-2.0/need/layer.css?2.0" type="text/css" rel="styleSheet" id="layermcss">
-<script src="http://state.zhi-you.net/plugin/miui-1.0/jquery.miui.js"></script>
-<script src="http://state.zhi-you.net/plugin/fastclick-1.0/fastclick.js "></script>
-<script src="js/common.js"></script>
-<script src="http://state.zhi-you.net/js/util.js"></script>
-<script>
-  var Config = {
-    stc : '',
-    ctx : '',
-    stccdn : 'http://state.zhi-you.net'
-  }
-</script>
+    <link rel="shortcut icon" href="http://state.zhi-you.net/favicon.ico">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="http://state.zhi-you.net/css/components.css">
+    <link rel="stylesheet" href="http://state.zhi-you.net/css/custom.css">
+    <link rel="stylesheet" href="http://state.zhi-you.net/css/icon.css">
+    <link rel="stylesheet" href="http://state.zhi-you.net/plugin/font-awesome-4.6.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="http://state.zhi-you.net/plugin/miui-1.0/jquery.miui.css">
+    <script src="http://state.zhi-you.net/plugin/jquery-1.11.0/jquery.min.js"></script>
+    <script src="http://state.zhi-you.net/plugin/layer-mobile-2.0/layer.js"></script>
+    <link href="http://state.zhi-you.net/plugin/layer-mobile-2.0/need/layer.css?2.0" type="text/css" rel="styleSheet"
+          id="layermcss">
+    <script src="http://state.zhi-you.net/plugin/miui-1.0/jquery.miui.js"></script>
+    <script src="http://state.zhi-you.net/plugin/fastclick-1.0/fastclick.js "></script>
+    <script src="js/common.js"></script>
+    <script src="http://state.zhi-you.net/js/util.js"></script>
+    <script>
+        var Config = {
+            stc: '',
+            ctx: '',
+            stccdn: 'http://state.zhi-you.net'
+        }
+    </script>
 
 
+    <style>
+        .tour, .insure {
+            width: 20px;
+            height: 23px;
+            position: relative;
+            left: 30px;
+            top: 5px;
+        }
 
-  <style>
-    .tour,.insure {
-      width:20px;
-      height:23px;
-      position: relative;
-      left: 30px;
-      top: 5px;
-    }
-    .insure {
-      left: 40px;
-    }
+        .insure {
+            left: 40px;
+        }
     </style>
-<script src="http://state.zhi-you.net/plugin/laytpl-1.1/laytpl.js"></script>
-<script type="text/javascript">
-  $(function() {
-    if (!$('.page-more').hasClass('disabled')) {
-      $('.page-more').click(loadMore);
-    }
-  });
-  
-  var timeLT = '2017-07-25 15:22:11';
-  var pageNumber = 0;
+    <script src="http://state.zhi-you.net/plugin/laytpl-1.1/laytpl.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            if (!$('.page-more').hasClass('disabled')) {
+                $('.page-more').click(loadMore);
+            }
+        });
 
-  function loadMore() {
-    $.ajax({
-      url : '/u---report',
-      data : {
-        pageNumber : pageNumber + 1,
-        timeLT : timeLT
-      },
-      dataType : 'json',
-      type : 'POST',
-      success : function(result) {
-        if(result.code != 0) {
-          return;
+        var timeLT = '2017-07-25 15:22:11';
+        var pageNumber = 0;
+
+        function loadMore() {
+            $.ajax({
+                url: '/u---report',
+                data: {
+                    pageNumber: pageNumber + 1,
+                    timeLT: timeLT
+                },
+                dataType: 'json',
+                type: 'POST',
+                success: function (result) {
+                    if (result.code != 0) {
+                        return;
+                    }
+                    var page = result.data.page;
+                    if (page.data.length) {
+                        timeLT = result.data.timeLT;
+                        pageNumber = page.pageNumber;
+                        var pageData = page.data;
+                        for (var i in pageData) {
+                            var row = pageData[i];
+                            buildRow(row);
+                        }
+                    }
+                    if (!page.data.length || page.data.length < page.pageSize) {
+                        $('.page-more').addClass('disabled').html('<span>没有更多数据了</span>').unbind('click', loadMore);
+                    }
+                }
+            });
         }
-        var page = result.data.page;
-        if (page.data.length) {
-          timeLT = result.data.timeLT;
-          pageNumber = page.pageNumber;
-          var pageData = page.data;
-          for ( var i in pageData) {
-            var row = pageData[i];
-            buildRow(row);
-          }
+
+        function buildRow(row) {
+            var rowTpl = document.getElementById('rowTpl').innerHTML;
+            laytpl(rowTpl).render(row, function (html) {
+                $('.list-group').append(html);
+            });
         }
-        if (!page.data.length || page.data.length < page.pageSize) {
-          $('.page-more').addClass('disabled').html('<span>没有更多数据了</span>').unbind('click', loadMore);
-        }
-      }
-    });
-  }
-  
-  function buildRow(row){
-    var rowTpl = document.getElementById('rowTpl').innerHTML;
-    laytpl(rowTpl).render(row, function(html) {
-      $('.list-group').append(html);
-    });
-  }
-</script>
-<script id="rowTpl" type="text/html">
-  <a class="list-item" href="/u---report/{{ d.id }}">
-    <div class="list-text report">
-      <div class="lh-30">{{ d.realname }}<span class="ml-10 fs-12 font-999">&lt;{{ d.gender }}  &gt;</span>
-        {{# if(d.tourFlage == '1'){ }} <img class="tour" src="http://agentsystem.zhi-you.net/images/tour.png" />{{# } }}
-        {{# if(d.insureFlage == '1'){ }} <img class="insure" src="http://agentsystem.zhi-you.net/images/insure.png" />{{# } }}
-        <span class="right fs-12 font-999">{{ d.phone }}</span></div>
-      <div class="fs-13 font-777">产品名称：{{ d.productTitle }}</div>
-      <div class="fs-13 font-777">
+    </script>
+    <script id="rowTpl" type="text/html">
+        <a class="list-item" href="/u---report/{{ d.id }}">
+            <div class="list-text report">
+                <div class="lh-30">{{ d.realname }}<span class="ml-10 fs-12 font-999">&lt;{{ d.gender }}  &gt;</span>
+                    {{# if(d.tourFlage == '1'){ }} <img class="tour"
+                                                        src="http://agentsystem.zhi-you.net/images/tour.png"/>{{# } }}
+                    {{# if(d.insureFlage == '1'){ }} <img class="insure"
+                                                          src="http://agentsystem.zhi-you.net/images/insure.png"/>{{# }
+                    }}
+                    <span class="right fs-12 font-999">{{ d.phone }}</span></div>
+                <div class="fs-13 font-777">产品名称：{{ d.productTitle }}</div>
+                <div class="fs-13 font-777">
       <span>检测结果：
       {{# if(d.reportResult == '阴性'){ }}
       <span class="font-red">阴性</span>
@@ -111,37 +117,36 @@
       {{# } else if(d.reportResult == '干扰色'){ }}
       <span class="ont-purple">干扰色</span>
       {{# } }}</span>
-      {{# if(d.confirmStatus == '待审核'){ }}
-      <span class="right lh-20 label orange">待审核</span>
-      {{# } else if(d.confirmStatus == '未通过'){ }}
-      <span class="right lh-20 label gray">未通过</span>
-      {{# } else if(d.confirmStatus == '已通过'){ }}
-      <span class="right lh-20 label blue">已通过</span>
-      {{# } }}
-      </div>
-    </div>
-  </a>
-</script>
+                    {{# if(d.confirmStatus == '待审核'){ }}
+                    <span class="right lh-20 label orange">待审核</span>
+                    {{# } else if(d.confirmStatus == '未通过'){ }}
+                    <span class="right lh-20 label gray">未通过</span>
+                    {{# } else if(d.confirmStatus == '已通过'){ }}
+                    <span class="right lh-20 label blue">已通过</span>
+                    {{# } }}
+                </div>
+            </div>
+        </a>
+    </script>
 </head>
 <body class="header-fixed">
-  <header class="header">
+<header class="header">
     <h1>检测报告</h1>
     <a onclick="history.go(-1);" class="button-left"><i class="fa fa-angle-left"></i></a>
     <a href="/u---report/create" class="button-right">新增</a>
-  </header>
-  
-  <article>
-    
-    
-    
-      <div class="page-empty">
+</header>
+
+<article>
+
+
+    <div class="page-empty">
         <i class="fa fa-file-o"></i>
         <span>暂无记录</span>
-      </div>
-    
-    
-    
-  </article>
+    </div>
 
 
-</body></html>
+</article>
+
+
+</body>
+</html>

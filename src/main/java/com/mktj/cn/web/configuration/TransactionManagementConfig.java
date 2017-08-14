@@ -12,10 +12,10 @@ import javax.sql.DataSource;
 
 @EnableTransactionManagement
 @Configuration
-public class TransactionManagementConfig  {
- 
+public class TransactionManagementConfig {
+
     @Bean
-    public PlatformTransactionManager transactionManager(@Qualifier("dataSource") @Autowired DataSource dataSource){
+    public PlatformTransactionManager transactionManager(@Qualifier("dataSource") @Autowired DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
     }
 }

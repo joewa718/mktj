@@ -5,12 +5,12 @@ import com.mktj.cn.web.util.GenerateRandomCode;
 public abstract class BaseService {
 
     protected String generateOrderCode(String userId) {
-        GenerateRandomCode grc =new GenerateRandomCode();
-        return grc.generateOrderCode(20,userId).toUpperCase();
+        GenerateRandomCode grc = new GenerateRandomCode();
+        return grc.generateOrderCode(20, userId).toUpperCase();
     }
 
     protected String generateAuthCode() {
-        GenerateRandomCode grc =new GenerateRandomCode();
+        GenerateRandomCode grc = new GenerateRandomCode();
         return grc.generate(17).toUpperCase();
     }
 

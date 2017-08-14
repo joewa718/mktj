@@ -8,19 +8,19 @@ import javax.persistence.Converter;
 @Converter
 public class RoleTypeConverter implements AttributeConverter<RoleType, Integer> {
 
-    public Integer convertToDatabaseColumn( RoleType value ) {
-        if ( value == null ) {
+    public Integer convertToDatabaseColumn(RoleType value) {
+        if (value == null) {
             return null;
         }
 
         return value.getCode();
     }
 
-    public RoleType convertToEntityAttribute( Integer value ) {
-        if ( value == null ) {
+    public RoleType convertToEntityAttribute(Integer value) {
+        if (value == null) {
             return null;
         }
 
-        return RoleType.fromCode( value );
+        return RoleType.fromCode(value);
     }
 }

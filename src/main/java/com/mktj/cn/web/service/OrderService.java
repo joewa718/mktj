@@ -13,14 +13,14 @@ import java.util.List;
  */
 public interface OrderService {
 
-    void transactionOrder(String phone,OrderVo orderVo) throws OperationNotSupportedException;
+    void transactionOrder(String phone, OrderVo orderVo) throws OperationNotSupportedException;
 
     OrderDTO getOrder(String phone, long orderId);
 
-    void updateOrderStatusByIdAndUser(OrderStatus status, long id,  String phone);
+    void updateOrderStatusByIdAndUser(OrderStatus status, long id, String phone);
 
-    List<OrderDTO> findByOrderTypeAndOrderStatusAndUser(OrderType orderType,OrderStatus status, String phone);
+    List<OrderDTO> findByOrderTypeAndOrderStatusAndUser(OrderType orderType, OrderStatus status, String phone);
 
-    Long countByOrderTypeAndUser(String phone,OrderType orderType);
+    Long countByOrderTypeAndUser(String phone, OrderType orderType);
 
 }

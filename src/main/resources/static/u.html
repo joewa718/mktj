@@ -1,251 +1,262 @@
-<html><!--@(window)--><!--@(document)--><head>
-<meta charset="utf-8">
-<meta http-equiv="Cache-Control" content="no-store">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<html><!--@(window)--><!--@(document)-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Cache-Control" content="no-store">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-<title>京惠生物 - 我的</title>
+    <title>京惠生物 - 我的</title>
 
-<link rel="shortcut icon" href="http://state.zhi-you.net/favicon.ico">
-<link rel="stylesheet" href="css/common.css">
-<link rel="stylesheet" href="http://state.zhi-you.net/css/components.css">
-<link rel="stylesheet" href="http://state.zhi-you.net/css/custom.css">
-<link rel="stylesheet" href="http://state.zhi-you.net/css/icon.css">
-<link rel="stylesheet" href="http://state.zhi-you.net/plugin/font-awesome-4.6.3/css/font-awesome.min.css">
-<link rel="stylesheet" href="http://state.zhi-you.net/plugin/miui-1.0/jquery.miui.css">
-<script src="http://state.zhi-you.net/plugin/jquery-1.11.0/jquery.min.js"></script>
-<script src="http://state.zhi-you.net/plugin/layer-mobile-2.0/layer.js"></script><link href="http://state.zhi-you.net/plugin/layer-mobile-2.0/need/layer.css?2.0" type="text/css" rel="styleSheet" id="layermcss">
-<script src="http://state.zhi-you.net/plugin/miui-1.0/jquery.miui.js"></script>
-<script src="http://state.zhi-you.net/plugin/fastclick-1.0/fastclick.js "></script>
-<script src="js/common.js"></script>
-<script src="http://state.zhi-you.net/js/util.js"></script>
-<script>
-  var Config = {
-    stc : '',
-    ctx : '',
-    stccdn : 'http://state.zhi-you.net'
-  }
-</script>
+    <link rel="shortcut icon" href="http://state.zhi-you.net/favicon.ico">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="http://state.zhi-you.net/css/components.css">
+    <link rel="stylesheet" href="http://state.zhi-you.net/css/custom.css">
+    <link rel="stylesheet" href="http://state.zhi-you.net/css/icon.css">
+    <link rel="stylesheet" href="http://state.zhi-you.net/plugin/font-awesome-4.6.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="http://state.zhi-you.net/plugin/miui-1.0/jquery.miui.css">
+    <script src="http://state.zhi-you.net/plugin/jquery-1.11.0/jquery.min.js"></script>
+    <script src="http://state.zhi-you.net/plugin/layer-mobile-2.0/layer.js"></script>
+    <link href="http://state.zhi-you.net/plugin/layer-mobile-2.0/need/layer.css?2.0" type="text/css" rel="styleSheet"
+          id="layermcss">
+    <script src="http://state.zhi-you.net/plugin/miui-1.0/jquery.miui.js"></script>
+    <script src="http://state.zhi-you.net/plugin/fastclick-1.0/fastclick.js "></script>
+    <script src="js/common.js"></script>
+    <script src="http://state.zhi-you.net/js/util.js"></script>
+    <script>
+        var Config = {
+            stc: '',
+            ctx: '',
+            stccdn: 'http://state.zhi-you.net'
+        }
+    </script>
 
-<script>
-  $(function() {
-    if(sessionStorage.getItem('isLogin')==1){
-      switch ('0') {
-      case '0':
-        messageShow('登录成功', 'success', 5);
-        break;
-      case '500':
-        messageShow('登录成功', 'error', 5);
-        break;
-      default:
-        messageShow('登录成功', 'info', 5);
-        break;
-      }
-    }
-    sessionStorage.setItem('isLogin',2);
-  });
-</script>
+    <script>
+        $(function () {
+            if (sessionStorage.getItem('isLogin') == 1) {
+                switch ('0') {
+                    case '0':
+                        messageShow('登录成功', 'success', 5);
+                        break;
+                    case '500':
+                        messageShow('登录成功', 'error', 5);
+                        break;
+                    default:
+                        messageShow('登录成功', 'info', 5);
+                        break;
+                }
+            }
+            sessionStorage.setItem('isLogin', 2);
+        });
+    </script>
 
 
+    <link rel="stylesheet" href="http://state.zhi-you.net/css/ucenter/index.css">
+    <style>
+        .icon-heartNew {
+            background-image: url(http://agentsystem.zhi-you.net/images/icon_heartNew.png);
+        }
 
-<link rel="stylesheet" href="http://state.zhi-you.net/css/ucenter/index.css">
-  <style>
-    .icon-heartNew {
-      background-image: url(http://agentsystem.zhi-you.net/images/icon_heartNew.png);
-    }
-    .user-account {
-       padding-top: 0;
-       padding-bottom: 0;
-    }
-    .user-account > a {
-      padding-top: 10px;
-      padding-bottom: 15px;
-    }
-    .quitBack {
-      width:70%;
-      margin-left: 15%;
-      height:45px;
-      line-height: 45px;
-      text-align: center;
-      color: #fff;
-      font-size: 18px;
-      margin-bottom: 15px;
-      background: #6cb92f;
-      -webkit-border-radius:25px;
-      -moz-border-radius:25px;
-      margin-top: 20px;
-      border-radius:25px;
-    }
-  </style>
+        .user-account {
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+
+        .user-account > a {
+            padding-top: 10px;
+            padding-bottom: 15px;
+        }
+
+        .quitBack {
+            width: 70%;
+            margin-left: 15%;
+            height: 45px;
+            line-height: 45px;
+            text-align: center;
+            color: #fff;
+            font-size: 18px;
+            margin-bottom: 15px;
+            background: #6cb92f;
+            -webkit-border-radius: 25px;
+            -moz-border-radius: 25px;
+            margin-top: 20px;
+            border-radius: 25px;
+        }
+    </style>
 </head>
 <body class="footer-fixed">
 
-  <header class="header">
+<header class="header">
     <h1>我的</h1>
     <a onclick="history.go(-1);" class="button-left">
-      <i class="fa fa-bell-o"></i>
-      
+        <i class="fa fa-bell-o"></i>
+
     </a>
     <a href="./u---userSetting.html" class="button-right"><i class="fa fa-cog"></i></a>
-  </header>
-  
-  <div class="list-group mb-0">
+</header>
+
+<div class="list-group mb-0">
     <a class="list-item user-profile bd-0" href="./u---info.html">
-      <img class="avatar round mr-20 ml-10" src="images/avatar.jpg">
-      <div class="list-text font-white lh-30">
-        <div class="fs-18 bold">昵称</div>
-        
-        
-        <label class="label orange">服务商</label>
-        
-      </div>
-      <i class="list-arrow"></i>
+        <img class="avatar round mr-20 ml-10" src="images/avatar.jpg">
+        <div class="list-text font-white lh-30">
+            <div class="fs-18 bold">昵称</div>
+
+
+            <label class="label orange">服务商</label>
+
+        </div>
+        <i class="list-arrow"></i>
     </a>
-  </div>
-  
-  <aside class="water">
+</div>
+
+<aside class="water">
     <div class="water-1"></div>
     <div class="water-2"></div>
-  </aside>
-  
-  <div class="user-account flex list-group">
+</aside>
+
+<div class="user-account flex list-group">
     <a class="flex-1 bd-r" href="#">
-    <!-- <a class="flex-1 bd-r" href="./u---account/countIncomeDataByUser.html"> -->
-      <i class="icon icon-money icon-2x"></i>
-      <em>积分钱包</em>
-      <span>¥0.00</span>
+        <!-- <a class="flex-1 bd-r" href="./u---account/countIncomeDataByUser.html"> -->
+        <i class="icon icon-money icon-2x"></i>
+        <em>积分钱包</em>
+        <span>¥0.00</span>
     </a>
     <a class="flex-1 bd-r" href="./u---order---in.html">
-      <i class="icon icon-in icon-2x"></i>
-      <em>订单</em>
-      <span class="orderCount">0次</span>
+        <i class="icon icon-in icon-2x"></i>
+        <em>订单</em>
+        <span class="orderCount">0次</span>
     </a>
     <a class="flex-1" href="./u---order---out.html">
-      <i class="icon icon-out icon-2x"></i>
-      <em>服务单</em>
-      <span>0次</span>
+        <i class="icon icon-out icon-2x"></i>
+        <em>服务单</em>
+        <span>0次</span>
     </a>
-  </div>
-  
-  <article>
+</div>
+
+<article>
 
 
+    <div class="user-account flex list-group">
 
-      <div class="user-account flex list-group">
-        
         <a class="flex-1 bd-r" href="./u---agent.html">
-          <i class="icon icon-agent icon-2x"></i>
-          <em>成为服务商</em>
+            <i class="icon icon-agent icon-2x"></i>
+            <em>成为服务商</em>
         </a>
 
-        
+
         <a class="flex-1 bd-r" href="./u---team---newTeam.html">
-          <i class="icon icon-users icon-2x"></i>
-          <em>我的团队</em>
+            <i class="icon icon-users icon-2x"></i>
+            <em>我的团队</em>
         </a>
-        
+
         <a class="flex-1 bd-r" href="./u---salesVolume---salesVolume.html">
-          <i class="icon icon-2x" style="background: url(&quot;http://agentsystem.zhi-you.net/images/xiaoliang.png&quot;)"></i>
-          <em>我的销量</em>
+            <i class="icon icon-2x"
+               style="background: url(&quot;http://agentsystem.zhi-you.net/images/xiaoliang.png&quot;)"></i>
+            <em>我的销量</em>
         </a>
-         
-         <!-- <a class="flex-1" href="#">
-           <i class="icon icon-out icon-2x" style="background: none;"></i>
-           <em></em>
-         </a> -->
 
-      </div>
+        <!-- <a class="flex-1" href="#">
+          <i class="icon icon-out icon-2x" style="background: none;"></i>
+          <em></em>
+        </a> -->
 
-      <div class="user-account flex list-group">
+    </div>
+
+    <div class="user-account flex list-group">
         <a class="flex-1 bd-r" href="./u---activity---collectList.html">
-          <i class="icon icon-2x icon-heartNew"></i>
-          <em>关注的活动</em>
+            <i class="icon icon-2x icon-heartNew"></i>
+            <em>关注的活动</em>
         </a>
         <a class="flex-1 bd-r" href="./u---activity---applyList.html">
-          <i class="icon icon-2x icon-join"></i>
-          <em>报名的活动</em>
+            <i class="icon icon-2x icon-join"></i>
+            <em>报名的活动</em>
         </a>
         <a class="flex-1" href="./u---activity---teamApplyList.html">
-          <i class="icon icon-2x icon-heart"></i>
-          <em>团队报名的活动</em>
+            <i class="icon icon-2x icon-heart"></i>
+            <em>团队报名的活动</em>
         </a>
-      </div>
-    
+    </div>
+
     <div class="user-account flex list-group">
 
-      <a class="flex-1 bd-r" href="./u---report.html">
-        <i class="icon icon-2x icon-report"></i>
-        <em>检测记录</em>
-      </a>
+        <a class="flex-1 bd-r" href="./u---report.html">
+            <i class="icon icon-2x icon-report"></i>
+            <em>检测记录</em>
+        </a>
 
-      <a class="flex-1 bd-r" href="./u---policy.html">
-        <i class="icon icon-2x icon-policy"></i>
-        <em>保险申请</em>
-      </a>
-      <a class="flex-1" href="#" style="background: #f7f7f7;">
-        <i class="icon icon-2x" style="background: url('http://agentsystem.zhi-you.net/images/lvyou.png');background-size:32px 32px;"></i>
-        <em>旅游申请</em>
-      </a>
+        <a class="flex-1 bd-r" href="./u---policy.html">
+            <i class="icon icon-2x icon-policy"></i>
+            <em>保险申请</em>
+        </a>
+        <a class="flex-1" href="#" style="background: #f7f7f7;">
+            <i class="icon icon-2x"
+               style="background: url('http://agentsystem.zhi-you.net/images/lvyou.png');background-size:32px 32px;"></i>
+            <em>旅游申请</em>
+        </a>
     </div>
-    
+
     <div class="user-account flex list-group">
 
-      <a class="flex-1 bd-r" href="./u---notice.html">
-        <i class="icon icon-2x" style="background: url(&quot;http://agentsystem.zhi-you.net/images/ucenterNotice.png&quot;)"></i>
-        <em>通知公告</em>
-      </a>
+        <a class="flex-1 bd-r" href="./u---notice.html">
+            <i class="icon icon-2x"
+               style="background: url(&quot;http://agentsystem.zhi-you.net/images/ucenterNotice.png&quot;)"></i>
+            <em>通知公告</em>
+        </a>
 
-      <a class="flex-1 bd-r" href="./u---userSetting">
-        <i class="icon icon-2x" style="background: url(&quot;http://agentsystem.zhi-you.net/images/shezhi.png&quot;)"></i>
-        <em>设置</em>
-      </a>
+        <a class="flex-1 bd-r" href="./u---userSetting">
+            <i class="icon icon-2x"
+               style="background: url(&quot;http://agentsystem.zhi-you.net/images/shezhi.png&quot;)"></i>
+            <em>设置</em>
+        </a>
 
-      <a class="flex-1 bd-r" href="#">
-        <i class="icon icon-2x" style="background: url(&quot;http://agentsystem.zhi-you.net/images/banben.png&quot;)"></i>
-        <em>版本通知</em>
-      </a>
-      <!-- <a class="flex-1" href="#" style="background: #f2f3f5;">
-        <i class="icon icon-2x"></i>
-        <em></em>
-      </a> -->
+        <a class="flex-1 bd-r" href="#">
+            <i class="icon icon-2x"
+               style="background: url(&quot;http://agentsystem.zhi-you.net/images/banben.png&quot;)"></i>
+            <em>版本通知</em>
+        </a>
+        <!-- <a class="flex-1" href="#" style="background: #f2f3f5;">
+          <i class="icon icon-2x"></i>
+          <em></em>
+        </a> -->
     </div>
-   
-<!--     <div class="user-account flex list-group" style="width: 33.33%;">
-      <a class="flex-1 bd-r" href="./u---honor.html">
-        <i class="icon icon-2x" style="background: url(&quot;http://agentsystem.zhi-you.net/images/honor.png&quot;)"></i>
-        <em>我的荣誉</em>
-      </a>
-    </div> -->
 
-    <a href="#"><div class="quitBack">安全退出</div></a>
-  </article>
-  <script>
-    $('.quitBack').click(function(){
-      $.dialog({
-        content : '您确定要退出吗？',
-        callback : function(index) {
-          if (index == 1) {
+    <!--     <div class="user-account flex list-group" style="width: 33.33%;">
+          <a class="flex-1 bd-r" href="./u---honor.html">
+            <i class="icon icon-2x" style="background: url(&quot;http://agentsystem.zhi-you.net/images/honor.png&quot;)"></i>
+            <em>我的荣誉</em>
+          </a>
+        </div> -->
 
-            $.ajax({
-              url: serviceUrl+'/logout',
-              type: 'POST',
-              xhrFields: {
-                withCredentials:true
-              },
-            })
-            .done(function(data) {
-              window.location.href="./login.html";
-            })
-            .fail(function(data) {
-              console.log("error");
-            })
+    <a href="#">
+        <div class="quitBack">安全退出</div>
+    </a>
+</article>
+<script>
+    $('.quitBack').click(function () {
+        $.dialog({
+            content: '您确定要退出吗？',
+            callback: function (index) {
+                if (index == 1) {
 
-          }
-        }
-      });
+                    $.ajax({
+                        url: serviceUrl + '/logout',
+                        type: 'POST',
+                        xhrFields: {
+                            withCredentials: true
+                        },
+                    })
+                        .done(function (data) {
+                            window.location.href = "./login.html";
+                        })
+                        .fail(function (data) {
+                            console.log("error");
+                        })
+
+                }
+            }
+        });
     });
 
     // var partner={
@@ -256,49 +267,49 @@
     // };
 
     $.ajax({
-      url: serviceUrl+'/api/user/getLoginUser',
-      type: 'POST',
-      xhrFields: {
-        withCredentials:true
-      },
+        url: serviceUrl + '/api/user/getLoginUser',
+        type: 'POST',
+        xhrFields: {
+            withCredentials: true
+        },
     })
-    .done(function(data) {
-      $('.bold').text(data.nickname);
-      $('.orange').text(data.roleType);
-      $('.avatar').attr('src',imageNginxUrl+data.headPortrait);
-    })
-    .fail(function(data) {
-      console.log("error");
-    })
+        .done(function (data) {
+            $('.bold').text(data.nickname);
+            $('.orange').text(data.roleType);
+            $('.avatar').attr('src', imageNginxUrl + data.headPortrait);
+        })
+        .fail(function (data) {
+            console.log("error");
+        })
 
     $.ajax({
-      url: serviceUrl+'/api/order/countByOrderTypeAndUser',
-      type: 'POST',
-      xhrFields: {
-        withCredentials:true
-      },
-      data:{orderType:'服务订单'},
+        url: serviceUrl + '/api/order/countByOrderTypeAndUser',
+        type: 'POST',
+        xhrFields: {
+            withCredentials: true
+        },
+        data: {orderType: '服务订单'},
     })
-    .done(function(data) {
-      $('.orderCount').text(data+'次');
-    })
-    .fail(function(data) {
-      console.log("error");
-    })
-  </script>
+        .done(function (data) {
+            $('.orderCount').text(data + '次');
+        })
+        .fail(function (data) {
+            console.log("error");
+        })
+</script>
 
 <nav class="footer footer-nav flex">
-  <a class="flex-1" href="./index.html"><i class="icon-home"></i><span>首页</span></a>
-  <a class="flex-1" href="./product.html"><i class="icon-cate"></i><span>服务</span></a>
-  <a class="flex-1" href="./activity.html"><i class="icon-activity"></i><span>活动</span></a>
-  <a class="flex-1 current" href="./u.html"><i class="icon-user"></i><span>我的</span></a>
+    <a class="flex-1" href="./index.html"><i class="icon-home"></i><span>首页</span></a>
+    <a class="flex-1" href="./product.html"><i class="icon-cate"></i><span>服务</span></a>
+    <a class="flex-1" href="./activity.html"><i class="icon-activity"></i><span>活动</span></a>
+    <a class="flex-1 current" href="./u.html"><i class="icon-user"></i><span>我的</span></a>
 </nav>
 
 
 <aside class="elevator">
-  <a href="javascript:;" class="go-top" style="display: none;"><i class="fa fa-angle-up"></i></a>
+    <a href="javascript:;" class="go-top" style="display: none;"><i class="fa fa-angle-up"></i></a>
 </aside>
 
 
-
-</body></html>
+</body>
+</html>
