@@ -183,7 +183,7 @@
             <artifactId>sms-sdk</artifactId>
             <version>1.0</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/smssdk.jar</systemPath>
+            <systemPath>${project.basedir}/src/main/resources/lib/smssdk.jar</systemPath>
         </dependency>
     </dependencies>
 
