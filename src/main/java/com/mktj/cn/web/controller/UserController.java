@@ -237,7 +237,7 @@ public class UserController extends BaseController {
         String code = "";
         try {
             HttpSession session = request.getSession();
-            code = userService.sendRegCode(phone, captcha, session);
+            code = userService.sendPwFoundCode(phone, captcha, session);
             session.setAttribute("sendPwFoundCode", code.toLowerCase());
             session.setAttribute("sendPwFoundTime", new Date().getTime());
         } catch (Exception e) {

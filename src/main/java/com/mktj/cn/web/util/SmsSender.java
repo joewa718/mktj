@@ -19,7 +19,7 @@ public class SmsSender {
     private String appKey;
     @Value("${sms.regTempId}")
     private int regTempId;
-    @Value("${sms.pwTempId}")
+    @Value("${sms.pwFoundTempId}")
     private int pwTempId;
 
     private final static String time = "10";
