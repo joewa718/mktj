@@ -261,4 +261,57 @@ public class UserServiceImp extends BaseService implements UserService {
             throw e;
         }
     }
+
+    @Override
+    public String sendPwFoundCode(String phone, String captcha, HttpSession session) throws Exception {
+        try {
+            String session_captcha = (String) session.getAttribute("captcha");
+            if (captcha == null || !captcha.equals(session_captcha)) {
+                throw new OperationNotSupportedException("图片验证码不正确");
+            }
+            String code = GenerateRandomCode.getRandNum(6);
+            smsSender.sendPwFoundCode(phone, code);
+            return code;
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw e;
+        }
+    }
+
+    @Override
+    public void foundPasswordNext(String phone,String pwFoundCode,HttpSession session) throws OperationNotSupportedException {
+        User user = userRepository.findByPhone(phone);
+        if(user == null){
+            throw new OperationNotSupportedException("未找到用户手机号");
+        }
+        String session_pwFoundCode = (String) session.getAttribute("sendPwFoundCode");
+        if (pwFoundCode == null || !pwFoundCode.equals(session_pwFoundCode)) {
+            throw new OperationNotSupportedException("手机验证码不正确");
+        }
+        Long sendPwFoundTime = (Long) session.getAttribute("sendPwFoundTime");
+        long cur_time = new Date().getTime();
+        if ((cur_time - sendPwFoundTime) / 1000 > 600) {//10分钟
+            throw new OperationNotSupportedException("手机验证码已经过期");
+        };
+    }
+
+    @Override
+    public void foundPassword(String phone, String password,String pwFoundCode,HttpSession session) throws OperationNotSupportedException {
+        User user = userRepository.findByPhone(phone);
+        if(user == null){
+            throw new OperationNotSupportedException("未找到用户手机号");
+        }
+        String session_pwFoundCode = (String) session.getAttribute("sendPwFoundCode");
+        if (pwFoundCode == null || !pwFoundCode.equals(session_pwFoundCode)) {
+            throw new OperationNotSupportedException("手机验证码不正确");
+        }
+        Long sendPwFoundTime = (Long) session.getAttribute("sendPwFoundTime");
+        long cur_time = new Date().getTime();
+        if ((cur_time - sendPwFoundTime) / 1000 > 600) {//10分钟
+            throw new OperationNotSupportedException("手机验证码已经过期");
+        }
+        user.setPassword(AESCryptUtil.encrypt(password));
+        userRepository.save(user);
+    }
+
 }

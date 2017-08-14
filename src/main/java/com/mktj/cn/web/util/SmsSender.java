@@ -19,15 +19,26 @@ public class SmsSender {
     private String appKey;
     @Value("${sms.regTempId}")
     private int regTempId;
+    @Value("${sms.pwTempId}")
+    private int pwTempId;
 
     private final static String time = "10";
 
     public void sendRegCode(String phone, String regCode) throws Exception {
+        sendCode(phone, regCode,regTempId);
+    }
+
+
+    public void sendPwFoundCode(String phone, String regCode) throws Exception {
+        sendCode(phone, regCode,pwTempId);
+    }
+
+    private void sendCode(String phone, String regCode,int tempId) throws Exception {
         SmsSingleSender singleSender = new SmsSingleSender(appId, appKey);
         ArrayList<String> params = new ArrayList<>();
         params.add(regCode);
         params.add(time);
-        SmsSingleSenderResult singleSenderResult = singleSender.sendWithParam("86", phone, regTempId, params, "", "", "");
+        SmsSingleSenderResult singleSenderResult = singleSender.sendWithParam("86", phone, tempId, params, "", "", "");
         log.info(singleSenderResult.toString());
     }
 }

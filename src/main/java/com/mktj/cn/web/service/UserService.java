@@ -53,4 +53,10 @@ public interface UserService {
     DeliveryAddressDTO getDefaultAddressByUser(String phone);
 
     String sendRegCode(String phone, String captcha, HttpSession session) throws Exception;
+
+    String sendPwFoundCode(String phone, String captcha, HttpSession session) throws Exception;
+
+    void foundPasswordNext(String phone,String pwFoundCode,HttpSession session) throws OperationNotSupportedException;
+
+    void foundPassword(String phone, String password,String pwFoundCode,HttpSession session) throws OperationNotSupportedException;
 }
