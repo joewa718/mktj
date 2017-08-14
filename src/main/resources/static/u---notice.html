@@ -1,5 +1,4 @@
-<html><!--@(window)--><!--@(document)-->
-<head>
+<html><!--@(window)--><!--@(document)--><head>
     <meta charset="utf-8">
     <meta http-equiv="Cache-Control" content="no-store">
     <meta http-equiv="Pragma" content="no-cache">
@@ -8,35 +7,34 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>通知公告列表</title>
-
-    <link rel="shortcut icon" href="http://state.zhi-you.net/favicon.ico">
-    <link rel="stylesheet" href="css/common.css">
-    <link rel="stylesheet" href="http://state.zhi-you.net/css/components.css">
-    <link rel="stylesheet" href="http://state.zhi-you.net/css/custom.css">
-    <link rel="stylesheet" href="http://state.zhi-you.net/css/icon.css">
-    <link rel="stylesheet" href="http://state.zhi-you.net/plugin/font-awesome-4.6.3/css/font-awesome.min.css">
-    <link rel="stylesheet" href="http://state.zhi-you.net/plugin/miui-1.0/jquery.miui.css">
-    <script src="http://state.zhi-you.net/plugin/jquery-1.11.0/jquery.min.js"></script>
-    <script src="http://state.zhi-you.net/plugin/layer-mobile-2.0/layer.js"></script>
-    <link href="http://state.zhi-you.net/plugin/layer-mobile-2.0/need/layer.css?2.0" type="text/css" rel="styleSheet"
-          id="layermcss">
-    <script src="http://state.zhi-you.net/plugin/miui-1.0/jquery.miui.js"></script>
-    <script src="http://state.zhi-you.net/plugin/fastclick-1.0/fastclick.js "></script>
-    <script src="js/common.js"></script>
-    <script src="http://state.zhi-you.net/js/util.js"></script>
-    <script>
-        var Config = {
-            stc: '',
-            ctx: '',
-            stccdn: 'http://state.zhi-you.net'
-        }
-    </script>
+    
+<link rel="shortcut icon" href="http://state.zhi-you.net/favicon.ico">
+<link rel="stylesheet" href="css/common.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/custom.css">
+<link rel="stylesheet" href="css/icon.css">
+<link rel="stylesheet" href="plugin/font-awesome-4.6.3/css/font-awesome.min.css">
+<link rel="stylesheet" href="plugin/miui-1.0/jquery.miui.css">
+<script src="plugin/jquery-1.11.0/jquery.min.js"></script>
+<script src="plugin/layer-mobile-2.0/layer.js"></script><link href="http://state.zhi-you.net/plugin/layer-mobile-2.0/need/layer.css?2.0" type="text/css" rel="styleSheet" id="layermcss">
+<script src="plugin/miui-1.0/jquery.miui.js"></script>
+<script src="plugin/fastclick-1.0/fastclick.js "></script>
+<script src="js/common.js"></script>
+<script src="js/util.js"></script>
+<script>
+  var Config = {
+    stc : '',
+    ctx : '',
+    stccdn : 'http://state.zhi-you.net'
+  }
+</script>
 
 
-    <script src="http://state.zhi-you.net/plugin/laytpl-1.1/laytpl.js"></script>
+
+    <script src="plugin/laytpl-1.1/laytpl.js"></script>
 
     <script type="text/javascript">
-        $(function () {
+        $(function() {
             if (!$('.page-more').hasClass('disabled')) {
                 $('.page-more').click(loadMore);
             }
@@ -47,15 +45,15 @@
 
         function loadMore() {
             $.ajax({
-                url: '/u---notice',
-                data: {
-                    pageNumber: pageNumber + 1,
-                    timeLT: timeLT
+                url : '/u---notice',
+                data : {
+                    pageNumber : pageNumber + 1,
+                    timeLT : timeLT
                 },
-                dataType: 'json',
-                type: 'POST',
-                success: function (result) {
-                    if (result.code != 0) {
+                dataType : 'json',
+                type : 'POST',
+                success : function(result) {
+                    if(result.code != 0) {
                         return;
                     }
                     var page = result.data.page;
@@ -63,7 +61,7 @@
                         timeLT = result.data.timeLT;
                         pageNumber = page.pageNumber;
                         var pageData = page.data;
-                        for (var i in pageData) {
+                        for ( var i in pageData) {
                             var row = pageData[i];
                             buildRow(row);
                         }
@@ -75,9 +73,9 @@
             });
         }
 
-        function buildRow(row) {
+        function buildRow(row){
             var rowTpl = document.getElementById('rowTpl').innerHTML;
-            laytpl(rowTpl).render(row, function (html) {
+            laytpl(rowTpl).render(row, function(html) {
                 $('.list-group').append(html);
             });
         }
@@ -99,31 +97,31 @@
     <h1>通知公告列表</h1>
 </header>
 <article>
-    <div class="list-group mb-0">
+        <div class="list-group mb-0">
+            
+                <a class="list-item article" href="notice1.html">
+                    <div class="list-text">
+                        <h2 class="fs-15 lh-24 o-hidden">关于云南、四川落地奢华游增值服务的通知</h2>
+                        <div class="font-777 fs-12">2017-08-02 14:06:29</div>
+                        <i class="list-arrow" style="float: right;margin-right: 0;margin-top: -25px;"></i>
+                    </div>
+                </a>
+            
+                <a class="list-item article" href="notice1.html">
+                    <div class="list-text">
+                        <h2 class="fs-15 lh-24 o-hidden">关于关于旅游活动的紧急通知</h2>
+                        <div class="font-777 fs-12">2017-06-26 10:13:59</div>
+                        <i class="list-arrow" style="float: right;margin-right: 0;margin-top: -25px;"></i>
+                    </div>
+                </a>
+            
+        </div>
 
-        <a class="list-item article" href="notice1.html">
-            <div class="list-text">
-                <h2 class="fs-15 lh-24 o-hidden">关于云南、四川落地奢华游增值服务的通知</h2>
-                <div class="font-777 fs-12">2017-08-02 14:06:29</div>
-                <i class="list-arrow" style="float: right;margin-right: 0;margin-top: -25px;"></i>
-            </div>
-        </a>
-
-        <a class="list-item article" href="notice1.html">
-            <div class="list-text">
-                <h2 class="fs-15 lh-24 o-hidden">关于关于旅游活动的紧急通知</h2>
-                <div class="font-777 fs-12">2017-06-26 10:13:59</div>
-                <i class="list-arrow" style="float: right;margin-right: 0;margin-top: -25px;"></i>
-            </div>
-        </a>
-
-    </div>
-
-
-    <div class="page-more disabled"><span>没有更多数据了</span></div>
-
+    
+    
+        <div class="page-more disabled"><span>没有更多数据了</span></div>
+    
 </article>
 
 
-</body>
-</html>
+</body></html>

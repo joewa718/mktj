@@ -1,20 +1,20 @@
-String.prototype.startWith = function (str) {
-    if (str == null || str == "" || this.length == 0 || str.length > this.length)
-        return false;
-    if (this.substr(0, str.length) == str)
-        return true;
-    else
-        return false;
+String.prototype.startWith = function(str) {
+  if (str == null || str == "" || this.length == 0 || str.length > this.length)
+    return false;
+  if (this.substr(0, str.length) == str)
     return true;
+  else
+    return false;
+  return true;
 }
-String.prototype.endWith = function (str) {
-    if (str == null || str == "" || this.length == 0 || str.length > this.length)
-        return false;
-    if (this.substring(this.length - str.length) == str)
-        return true;
-    else
-        return false;
+String.prototype.endWith = function(str) {
+  if (str == null || str == "" || this.length == 0 || str.length > this.length)
+    return false;
+  if (this.substring(this.length - str.length) == str)
     return true;
+  else
+    return false;
+  return true;
 }
 
 var areas = {};
@@ -3534,103 +3534,103 @@ areas['3510'] = '台湾省';
 areas['3511'] = '香港特别行政区';
 areas['3512'] = '澳门特别行政区';
 
-var areaInit = function (_province, _city, _district, defaultAreaId) {
-    var eleProvince = document.getElementById(_province);
-    var eleCity = document.getElementById(_city);
-    var eleDistrict = document.getElementById(_district);
+var areaInit = function(_province, _city, _district, defaultAreaId) {
+  var eleProvince = document.getElementById(_province);
+  var eleCity = document.getElementById(_city);
+  var eleDistrict = document.getElementById(_district);
 
-    var defaultProvinceId = null, defaultCityId = null, defaultDistrictId = null;
+  var defaultProvinceId = null, defaultCityId = null, defaultDistrictId = null;
 
-    if (defaultAreaId) {
-        for (var areaId in areas) {
-            if (areaId.endWith('_' + defaultAreaId)) {
-                var ids = areaId.split('_');
-                if (ids.length == 3) {
-                    defaultDistrictId = areaId;
-                    defaultCityId = areaId.substring(0, areaId.lastIndexOf('_'));
-                    defaultProvinceId = areaId.substring(0, areaId.indexOf('_'));
-                }
-                if (ids.length == 2) {
-                    defaultCityId = areaId;
-                    defaultProvinceId = areaId.substring(0, areaId.indexOf('_'));
-                }
-            }
+  if (defaultAreaId) {
+    for ( var areaId in areas) {
+      if (areaId.endWith('_' + defaultAreaId)) {
+        var ids = areaId.split('_');
+        if (ids.length == 3) {
+          defaultDistrictId = areaId;
+          defaultCityId = areaId.substring(0, areaId.lastIndexOf('_'));
+          defaultProvinceId = areaId.substring(0, areaId.indexOf('_'));
         }
-        if (defaultProvinceId == null) {
-            defaultProvinceId = defaultAreaId;
+        if (ids.length == 2) {
+          defaultCityId = areaId;
+          defaultProvinceId = areaId.substring(0, areaId.indexOf('_'));
         }
-        // alert(defaultProvinceId + "/" + defaultCityId + "/" + defaultDistrictId);
+      }
     }
-
-    function selectOption(element, id) {
-        for (var i = 0; i < element.options.length; i++) {
-            if (element.options[i].getAttribute('data-id') == id) {
-                element.selectedIndex = i;
-                return;
-            }
-        }
+    if (defaultProvinceId == null) {
+      defaultProvinceId = defaultAreaId;
     }
+    // alert(defaultProvinceId + "/" + defaultCityId + "/" + defaultDistrictId);
+  }
 
-    function addOption(element, id, name) {
-        var option = document.createElement("option");
-        element.options.add(option);
-        option.innerText = name;
-        option.setAttribute('data-id', id);
-        option.value = id.lastIndexOf('_') == -1 ? id : id.substring(id.lastIndexOf('_') + 1);
+  function selectOption(element, id) {
+    for (var i = 0; i < element.options.length; i++) {
+      if (element.options[i].getAttribute('data-id') == id) {
+        element.selectedIndex = i;
+        return;
+      }
     }
+  }
 
-    function changeCity() {
-        eleDistrict.options.length = 1;
-        if (eleCity.selectedIndex == -1) {
-            return;
-        }
-        // addOption(eleDistrict, '', '--请选择--');
-        var selectedOption = eleCity.options[eleCity.selectedIndex];
-        var city = selectedOption.value;
-        var cityAreaId = selectedOption.getAttribute('data-id');
-        for (var areaId in areas) {
-            if (areaId != cityAreaId && areaId.startWith(cityAreaId + '_')) {
-                addOption(eleDistrict, areaId, areas[areaId]);
-            }
-        }
-        if (defaultDistrictId) {
-            selectOption(eleDistrict, defaultDistrictId);
-        }
-    }
+  function addOption(element, id, name) {
+    var option = document.createElement("option");
+    element.options.add(option);
+    option.innerText = name;
+    option.setAttribute('data-id', id);
+    option.value = id.lastIndexOf('_') == -1 ? id : id.substring(id.lastIndexOf('_') + 1);
+  }
 
-    function changeProvince() {
-        eleCity.options.length = 1;
-        eleCity.onchange = null;
-        eleDistrict.options.length = 1;
-        eleDistrict.onchange = null;
-        if (eleProvince.selectedIndex == -1) {
-            return;
-        }
-        // addOption(eleCity, '', '--请选择--');
-        var selectedOption = eleProvince.options[eleProvince.selectedIndex];
-        var province = selectedOption.value;
-        var proAreaId = selectedOption.getAttribute('data-id');
-        for (var areaId in areas) {
-            if (areaId != proAreaId && areaId.startWith(proAreaId + '_') && areaId.indexOf('_') == areaId.lastIndexOf('_')) {
-                addOption(eleCity, areaId, areas[areaId]);
-            }
-        }
-        if (defaultCityId) {
-            selectOption(eleCity, defaultCityId);
-            changeCity();
-        }
-        eleCity.onchange = changeCity;
+  function changeCity() {
+    eleDistrict.options.length = 1;
+    if (eleCity.selectedIndex == -1) {
+      return;
     }
+    // addOption(eleDistrict, '', '--请选择--');
+    var selectedOption = eleCity.options[eleCity.selectedIndex];
+    var city = selectedOption.value;
+    var cityAreaId = selectedOption.getAttribute('data-id');
+    for ( var areaId in areas) {
+      if (areaId != cityAreaId && areaId.startWith(cityAreaId + '_')) {
+        addOption(eleDistrict, areaId, areas[areaId]);
+      }
+    }
+    if (defaultDistrictId) {
+      selectOption(eleDistrict, defaultDistrictId);
+    }
+  }
 
-    for (var areaId in areas) {
-        if (areaId.indexOf('_') == -1) {
-            addOption(eleProvince, areaId, areas[areaId]);
-        }
+  function changeProvince() {
+    eleCity.options.length = 1;
+    eleCity.onchange = null;
+    eleDistrict.options.length = 1;
+    eleDistrict.onchange = null;
+    if (eleProvince.selectedIndex == -1) {
+      return;
     }
+    // addOption(eleCity, '', '--请选择--');
+    var selectedOption = eleProvince.options[eleProvince.selectedIndex];
+    var province = selectedOption.value;
+    var proAreaId = selectedOption.getAttribute('data-id');
+    for ( var areaId in areas) {
+      if (areaId != proAreaId && areaId.startWith(proAreaId + '_') && areaId.indexOf('_') == areaId.lastIndexOf('_')) {
+        addOption(eleCity, areaId, areas[areaId]);
+      }
+    }
+    if (defaultCityId) {
+      selectOption(eleCity, defaultCityId);
+      changeCity();
+    }
+    eleCity.onchange = changeCity;
+  }
 
-    if (defaultProvinceId) {
-        selectOption(eleProvince, defaultProvinceId);
-        changeProvince();
+  for ( var areaId in areas) {
+    if (areaId.indexOf('_') == -1) {
+      addOption(eleProvince, areaId, areas[areaId]);
     }
-    eleProvince.onchange = changeProvince;
+  }
+
+  if (defaultProvinceId) {
+    selectOption(eleProvince, defaultProvinceId);
+    changeProvince();
+  }
+  eleProvince.onchange = changeProvince;
 }

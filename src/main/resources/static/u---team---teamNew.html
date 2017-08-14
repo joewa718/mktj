@@ -1,5 +1,4 @@
-<html><!--@(window)--><!--@(document)-->
-<head>
+<html><!--@(window)--><!--@(document)--><head>
     <meta http-equiv="Content-Type" content="text; charset=utf-8">
     <meta http-equiv="Cache-Control" content="no-store">
     <meta http-equiv="Pragma" content="no-cache">
@@ -8,323 +7,253 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>新成员详情</title>
-
-    <link rel="shortcut icon" href="http://state.zhi-you.net/favicon.ico">
-    <link rel="stylesheet" href="css/common.css">
-    <link rel="stylesheet" href="http://state.zhi-you.net/css/components.css">
-    <link rel="stylesheet" href="http://state.zhi-you.net/css/custom.css">
-    <link rel="stylesheet" href="http://state.zhi-you.net/css/icon.css">
-    <link rel="stylesheet" href="http://state.zhi-you.net/plugin/font-awesome-4.6.3/css/font-awesome.min.css">
-    <link rel="stylesheet" href="http://state.zhi-you.net/plugin/miui-1.0/jquery.miui.css">
-    <script src="http://state.zhi-you.net/plugin/jquery-1.11.0/jquery.min.js"></script>
-    <script src="http://state.zhi-you.net/plugin/layer-mobile-2.0/layer.js"></script>
-    <link href="http://state.zhi-you.net/plugin/layer-mobile-2.0/need/layer.css?2.0" type="text/css" rel="styleSheet"
-          id="layermcss">
-    <script src="http://state.zhi-you.net/plugin/miui-1.0/jquery.miui.js"></script>
-    <script src="http://state.zhi-you.net/plugin/fastclick-1.0/fastclick.js "></script>
-    <script src="js/common.js"></script>
-    <script src="http://state.zhi-you.net/js/util.js"></script>
-    <script>
-        var Config = {
-            stc: '',
-            ctx: '',
-            stccdn: 'http://state.zhi-you.net'
-        }
-    </script>
+    
+<link rel="shortcut icon" href="http://state.zhi-you.net/favicon.ico">
+<link rel="stylesheet" href="css/common.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/custom.css">
+<link rel="stylesheet" href="css/icon.css">
+<link rel="stylesheet" href="plugin/font-awesome-4.6.3/css/font-awesome.min.css">
+<link rel="stylesheet" href="plugin/miui-1.0/jquery.miui.css">
+<script src="plugin/jquery-1.11.0/jquery.min.js"></script>
+<script src="plugin/layer-mobile-2.0/layer.js"></script><link href="http://state.zhi-you.net/plugin/layer-mobile-2.0/need/layer.css?2.0" type="text/css" rel="styleSheet" id="layermcss">
+<script src="plugin/miui-1.0/jquery.miui.js"></script>
+<script src="plugin/fastclick-1.0/fastclick.js "></script>
+<script src="js/common.js"></script>
+<script src="js/util.js"></script>
+<script>
+  var Config = {
+    stc : '',
+    ctx : '',
+    stccdn : 'http://state.zhi-you.net'
+  }
+</script>
 
 
-    <script src="http://state.zhi-you.net/plugin/laytpl-1.1/laytpl.js"></script>
+
+    <script src="plugin/laytpl-1.1/laytpl.js"></script>
     <style>
-        body {
-            background: #f7f7f9
-        }
-
+        body {background: #f7f7f9}
         /*清除浮动代码*/
         .clearfloat:before, .clearfloat:after {
-            content: "";
-            display: table;
+            content:"";
+            display:table;
         }
-
-        .clearfloat:after {
-            clear: both;
-            overflow: hidden;
+        .clearfloat:after{
+            clear:both;
+            overflow:hidden;
         }
-
-        .clearfloat {
-            zoom: 1;
+        .clearfloat{
+            zoom:1;
         }
-
-        body, html {
-            font-family: "Microsoft YaHei";
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        a {
-            display: block;
-        }
-
+        body,html {font-family:  "Microsoft YaHei";text-overflow: ellipsis;
+            white-space: nowrap;}
+        a {display: block;}
         .all {
             width: 100%;
             background: #fff !important;
             border-bottom: 1px solid #e5e5e5;
         }
-
-        .teamAll img {
-            float: left;
-            width: 50px;
-            height: 50px;
-            margin-left: 8px;
-        }
-
+        .teamAll img {float: left;width: 50px;height: 50px;margin-left: 8px;}
         .teamAll span {
-            float: left;
-            line-height: 50px;
-            margin-left: 20px;
-            font-size: 18px;
+            float: left;line-height: 50px;margin-left: 20px;font-size: 18px;
             color: #838385;
         }
-
-        .teamAll a, .teamAll span.paim {
+        .teamAll a,.teamAll span.paim {
             float: right;
             line-height: 50px;
             color: #6cb92d;
             margin-right: 15px;
         }
-
         .TeamName img {
-            width: 55%;
-            margin-top: 20px;
+            width:55%;
+            margin-top:20px;
         }
-
         .TeamName span {
             display: block;
-            margin-top: 10px;
+            margin-top:10px;
         }
-
-        .rankingAllList {
-            border-bottom: 1px solid #e5e5e5;
-        }
-
+        .rankingAllList {border-bottom: 1px solid #e5e5e5;}
         .rankingAll {
-            width: 100%;
-            height: 60px;
+            width:100%;
+            height:60px;
         }
-
-        .rankingAll > span {
+        .rankingAll>span {
             float: left;
             display: block;;
-            width: 65px;
-            height: 100%;
+            width:65px;
+            height:100%;
             text-align: center;
-            line-height: 60px;
+            line-height:60px;
         }
-
-        .rankingAll > img {
+        .rankingAll>img {
             float: left;
             width: 40px;
             margin-top: 10px;
             margin-bottom: 10px;
-            height: 40px;
-            -webkit-border-radius: 50%;
-            -moz-border-radius: 50%;
-            border-radius: 50%;
+            height:40px;
+            -webkit-border-radius:50%;
+            -moz-border-radius:50%;
+            border-radius:50%;
         }
-
         .ranking {
             float: left;
-            width: 200px;
-            height: 100%;
+            width:200px;
+            height:100%;
             text-align: center;
             line-height: 60px;
         }
-
         .rankingSpan {
-            padding: 0 8px 0 8px;
+            padding:0 8px 0 8px;
             color: #fff;
             font-size: 12px;
         }
 
         .teamTop {
-            width: 90%;
-            height: 60px;
+            width:90%;
+            height:60px;
             margin-left: 5%;
             position: relative;
         }
-
         .teamTop img {
             position: absolute;
-            width: 70%;
-            height: 30px;
+            width:70%;
+            height:30px;
             top: 15px;
             z-index: 1;
         }
-
         .teamTop input {
             position: absolute;
             background: none;
-            width: 70%;
-            height: 30px;
+            width:70%;
+            height:30px;
             border: none;
             top: 15px;
             z-index: 2;
         }
-
-        .teamTop img.seatchImg, .searchBtn {
-            width: 20%;
-            height: 30px;
+        .teamTop img.seatchImg,.searchBtn {
+            width:20%;
+            height:30px;
             color: #6cb92d;
             text-align: center;
             line-height: 30px;
             position: absolute;
-            left: 80%;
-            top: 15px;
+            left:80%;
+            top:15px;
             z-index: 1;
         }
-
         .searchBtn {
             background: none;
-            border: none;
+            border:none;
             z-index: 2;
         }
-
-        .rankingTop {
-            font-size: 18px
-        }
-
-        .rankingAll > span.tel {
-            width: 60px;
+        .rankingTop {font-size: 18px}
+        .rankingAll>span.tel {
+            width:60px;
             float: right;
             margin-right: 20px;
             color: #303134;
         }
-
         .sanjiao {
             float: left;
-            height: 60px;
-            width: 50px;
+            height:60px;
+            width:50px;
             position: relative;
         }
-
         .jiaoOne {
             width: 0;
             height: 0;
-            border-top: 8px solid transparent;
+            border-top:8px solid transparent;
             border-bottom: 8px solid transparent;
             border-left: 8px solid #b4b4b4;
             position: absolute;
             left: 50%;
-            top: 50%;
+            top:50%;
             margin-left: -4px;
             margin-top: -8px;
         }
-
         .jiaoTwo {
             width: 0;
             height: 0;
-            border-left: 8px solid transparent;
-            border-right: 8px solid transparent;
-            border-top: 8px solid #b4b4b4;
+            border-left:8px solid transparent;
+            border-right:8px solid transparent;
+            border-top:8px solid #b4b4b4;
             border-bottom: 0px solid transparent;
             position: absolute;
             left: 50%;
-            top: 50%;
+            top:50%;
             margin-left: -8px;
             margin-top: -4px;
         }
-
         /*特级*/
         .must {
             background: #ffcd48;
         }
-
         .province {
             background: #7ed1df;
         }
-
         .city {
             background: #ffb558;
         }
-
         .VIP {
             background: #51c187;
         }
-
         .com {
             background: #91c7ae;
         }
-
         .telAll {
             float: right;
             margin-right: 20px;
-            height: 60px;
+            height:60px;
         }
-
         .telAll img {
-            width: 20px;
+            width:20px;
             margin-top: 20px;
         }
-
-        .jian {
-            margin-right: 0;
-            padding-right: 20px;
-        }
-
+        .jian {margin-right: 0;padding-right: 20px;}
         .jian img {
             margin-top: 24px;
         }
-
-        .allLast {
-            display: none;
-        }
-
+        .allLast {display: none;}
         .searchList {
-            width: 100%;
+            width:100%;
             height: 80px;
             background: #fff;
             text-align: center;
-            line-height: 80px;
+            line-height:80px;
             font-size: 20px;
             display: none;
         }
-
         .searchListShow {
             background: #fff;
             display: none;
         }
-
         .teamListNum {
-            width: 100%;
-            height: 40px;
+            width:100%;
+            height:40px;
             background: #fff;
         }
-
         .rankingNum {
-            width: 100%;
-            height: 60px;
+            width:100%;
+            height:60px;
             display: none;
         }
-
         .rankingAllList:last-child {
             border-bottom: none;
         }
-
         .ranknumber {
             float: left;
-            width: 25%;
+            width:25%;
         }
-
         .ranknumber p {
-            width: 100%;
+            width:100%;
             text-align: center;
             line-height: 25px;
             color: #a6a6a6;
         }
-
-        @media (device-height: 568px) and (-webkit-min-device-pixel-ratio: 2) {
-            /* 兼容iphone5 */
+        @media (device-height:568px) and (-webkit-min-device-pixel-ratio:2){/* 兼容iphone5 */
             .ranking {
-                width: 150px;
+                width:150px;
             }
         }
     </style>
@@ -356,7 +285,7 @@
             </div>
         </div>
         <div class="all allLast">
-
+            
         </div>
 
         <div class="all" change="false" onclick="showList(this)">
@@ -372,7 +301,7 @@
             </div>
         </div>
         <div class="all allLast">
-
+            
         </div>
         <div class="all" change="false" onclick="showList(this)">
             <div class="rankingAll">
@@ -388,7 +317,7 @@
         </div>
 
         <div class="all allLast">
-
+            
 
         </div>
         <div class="all" change="false" onclick="showList(this)">
@@ -404,27 +333,52 @@
             </div>
         </div>
         <div class="all allLast">
-
+            
         </div>
-
-
+        
+            
+                
+                    
+                        
+                    
+                    
+                    
+                
+                
+            
+        
+        
+            
+                
+                    
+                        
+                        
+                            
+                        
+                        
+                            
+                        
+                    
+                
+            
+        
     </div>
     <div class="searchList">查无此人!</div>
     <div class="searchListShow">
     </div>
 
-
+    
 </article>
 <script>
     //点击特级省级列表
-    function showList(obj) {
-        if ($(obj).attr("change") == "false") {
+    function showList(obj){
+        if($(obj).attr("change")=="false"){
             $(obj).next(".allLast").show();
-            $(obj).attr("change", "true");
+            $(obj).attr("change","true");
             $(obj).find(".jiaoOne").addClass("jiaoTwo");
-        } else {
+        }else {
             $(obj).find(".jiaoOne").removeClass("jiaoTwo");
-            $(obj).attr("change", "false");
+            $(obj).attr("change","false");
             $(obj).next(".allLast").hide();
         }
     }
@@ -432,31 +386,31 @@
     function seatch() {
         $(".searchList").hide();
         $(".searchListShow").html("");
-        if ($(".searchInput").val() == "") {
+        if($(".searchInput").val()==""){
             $(".numberList").show();
             $(".searchListShow").hide();
-        } else {
+        }else {
             $(".numberList").hide();
             $(".searchListShow").show();
 
             $.ajax({
-                url: '/u---team---ajaxteamNew',
-                data: {
-                    nameorPhone: $(".searchInput").val()
+                url : '/u---team---ajaxteamNew',
+                data : {
+                    nameorPhone:$(".searchInput").val()
                 },
-                dataType: 'json',
-                type: 'POST',
-                success: function (result) {
-                    if (result.code != 0) {
+                dataType : 'json',
+                type : 'POST',
+                success : function(result) {
+                    if(result.code != 0) {
                         return;
                     }
-                    var pageData = result.data;
+                    var pageData= result.data;
                     if (pageData.length) {
                         /*var pageData = page.data;*/
-                        for (var i in pageData) {
+                        for ( var i in pageData) {
                             var row = pageData[i];
-                            if (row.userRank != "V0") {
-                                buildRow(row);
+                            if (row.userRank!="V0"){
+                             buildRow(row);
                             }
                         }
                     }
@@ -468,9 +422,9 @@
         }
 
     }
-    function buildRow(row, indexs) {
+    function buildRow(row,indexs){
         var rowTpl = document.getElementById('rowTpl').innerHTML;
-        laytpl(rowTpl).render(row, function (html) {
+        laytpl(rowTpl).render(row,function(html) {
             $('.searchListShow').append(html);
             $(".searchList").hide();
         });
@@ -485,16 +439,17 @@
                 <span class="rankingSpan {{ d.userRank =='V4'?'must':d.userRank =='V3'?'province':d.userRank =='V2'?'city':d.userRank =='V1'?'VIP':d.userRank=='V0'?'com':''}}">{{d.userRank =='V4'?'特级':d.userRank =='V3'?'省级':d.userRank =='V2'?'市级':d.userRank =='V1'?'VIP':d.userRank =='V0'?'普通':''}}</span>
             </div>
             <a href="tel:{{ d.phone }}" class="telAll">
-                <img src="/images/tel.png"/></a>
+                <img src="/images/tel.png" /></a>
         </div>
     </div>
 </script>
 
 
+
 <aside class="elevator">
-    <a href="javascript:;" class="go-top" style="display: none;"><i class="fa fa-angle-up"></i></a>
+  <a href="javascript:;" class="go-top" style="display: none;"><i class="fa fa-angle-up"></i></a>
 </aside>
 
 
-</body>
-</html>
+
+</body></html>

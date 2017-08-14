@@ -1,203 +1,212 @@
+
+
+
+
+
+
+
+
+
+
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="Cache-Control" content="no-store"/>
-    <meta http-equiv="Pragma" content="no-cache"/>
-    <meta http-equiv="Expires" content="0"/>
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta charset="utf-8">
+<meta http-equiv="Cache-Control" content="no-store" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-    <title>新闻资讯</title>
+<title>新闻资讯</title>
 
-    <link rel="shortcut icon" href="http://state.zhi-you.net/favicon.ico"/>
-    <link rel="stylesheet" href="http://state.zhi-you.net/css/common.css"/>
-    <link rel="stylesheet" href="http://state.zhi-you.net/css/components.css"/>
-    <link rel="stylesheet" href="http://state.zhi-you.net/css/custom.css"/>
-    <link rel="stylesheet" href="http://state.zhi-you.net/css/icon.css"/>
-    <link rel="stylesheet" href="http://state.zhi-you.net/plugin/font-awesome-4.6.3/css/font-awesome.min.css"/>
-    <link rel="stylesheet" href="http://state.zhi-you.net/plugin/miui-1.0/jquery.miui.css"/>
-    <script src="http://state.zhi-you.net/plugin/jquery-1.11.0/jquery.min.js"></script>
-    <script src="http://state.zhi-you.net/plugin/layer-mobile-2.0/layer.js"></script>
-    <script src="http://state.zhi-you.net/plugin/miui-1.0/jquery.miui.js"></script>
-    <script src="http://state.zhi-you.net/plugin/fastclick-1.0/fastclick.js "></script>
-    <script src="js/common.js"></script>
-    <script src="http://state.zhi-you.net/js/util.js"></script>
-    <script>
-        var Config = {
-            stc: '',
-            ctx: '',
-            stccdn: 'http://state.zhi-you.net'
+<link rel="shortcut icon" href="http://state.zhi-you.net/favicon.ico" />
+<link rel="stylesheet" href="css/common.css" />
+<link rel="stylesheet" href="css/components.css" />
+<link rel="stylesheet" href="css/custom.css" />
+<link rel="stylesheet" href="css/icon.css" />
+<link rel="stylesheet" href="plugin/font-awesome-4.6.3/css/font-awesome.min.css" />
+<link rel="stylesheet" href="plugin/miui-1.0/jquery.miui.css" />
+<script src="plugin/jquery-1.11.0/jquery.min.js"></script>
+<script src="plugin/layer-mobile-2.0/layer.js"></script>
+<script src="plugin/miui-1.0/jquery.miui.js"></script>
+<script src="plugin/fastclick-1.0/fastclick.js "></script>
+<script src="js/common.js"></script>
+<script src="js/util.js"></script>
+<script>
+  var Config = {
+    stc : '',
+    ctx : '',
+    stccdn : 'http://state.zhi-you.net'
+  }
+</script>
+
+
+
+<script src="plugin/laytpl-1.1/laytpl.js"></script>
+<style>
+.article img {
+  width: 120px; height: 72px;
+}
+.article h2 {
+  max-height: 48px;
+}
+</style>
+<script type="text/javascript">
+  $(function() {
+    if (!$('.page-more').hasClass('disabled')) {
+      $('.page-more').click(loadMore);
+    }
+  });
+  
+  var timeLT = '2017-07-19 16:19:52';
+  var pageNumber = 0;
+
+  function loadMore() {
+    $.ajax({
+      url : '/article',
+      data : {
+        pageNumber : pageNumber + 1,
+        timeLT : timeLT
+      },
+      dataType : 'json',
+      type : 'POST',
+      success : function(result) {
+        if(result.code != 0) {
+          return;
         }
-    </script>
-
-
-    <script src="http://state.zhi-you.net/plugin/laytpl-1.1/laytpl.js"></script>
-    <style>
-        .article img {
-            width: 120px;
-            height: 72px;
+        var page = result.data.page;
+        if (page.data.length) {
+          timeLT = result.data.timeLT;
+          pageNumber = page.pageNumber;
+          var pageData = page.data;
+          for ( var i in pageData) {
+            var row = pageData[i];
+            buildRow(row);
+          }
         }
-
-        .article h2 {
-            max-height: 48px;
+        if (!page.data.length || page.data.length < page.pageSize) {
+          $('.page-more').addClass('disabled').html('<span>没有更多数据了</span>').unbind('click', loadMore);
         }
-    </style>
-    <script type="text/javascript">
-        $(function () {
-            if (!$('.page-more').hasClass('disabled')) {
-                $('.page-more').click(loadMore);
-            }
-        });
-
-        var timeLT = '2017-07-19 16:19:52';
-        var pageNumber = 0;
-
-        function loadMore() {
-            $.ajax({
-                url: '/article',
-                data: {
-                    pageNumber: pageNumber + 1,
-                    timeLT: timeLT
-                },
-                dataType: 'json',
-                type: 'POST',
-                success: function (result) {
-                    if (result.code != 0) {
-                        return;
-                    }
-                    var page = result.data.page;
-                    if (page.data.length) {
-                        timeLT = result.data.timeLT;
-                        pageNumber = page.pageNumber;
-                        var pageData = page.data;
-                        for (var i in pageData) {
-                            var row = pageData[i];
-                            buildRow(row);
-                        }
-                    }
-                    if (!page.data.length || page.data.length < page.pageSize) {
-                        $('.page-more').addClass('disabled').html('<span>没有更多数据了</span>').unbind('click', loadMore);
-                    }
-                }
-            });
-        }
-
-        function buildRow(row) {
-            var rowTpl = document.getElementById('rowTpl').innerHTML;
-            laytpl(rowTpl).render(row, function (html) {
-                $('.list-group').append(html);
-            });
-        }
-    </script>
-    <script id="rowTpl" type="text/html">
-        <a class="list-item article" href="./article/{{ d.id }}">
-            <img class="mr-10" src="{{ d.imageThumbnail }}">
-            <div class="list-text">
-                <h2 class="fs-15 lh-24 o-hidden">{{ d.title }}</h2>
-                <div class="font-777 fs-12">{{ d.releasedTimeLabel }} &nbsp; {{ d.author }}</div>
-            </div>
-        </a>
-    </script>
+      }
+    });
+  }
+  
+  function buildRow(row){
+    var rowTpl = document.getElementById('rowTpl').innerHTML;
+    laytpl(rowTpl).render(row, function(html) {
+      $('.list-group').append(html);
+    });
+  }
+</script>
+<script id="rowTpl" type="text/html">
+  <a class="list-item article" href="./article/{{ d.id }}">
+    <img class="mr-10" src="{{ d.imageThumbnail }}">
+    <div class="list-text">
+      <h2 class="fs-15 lh-24 o-hidden">{{ d.title }}</h2>
+      <div class="font-777 fs-12">{{ d.releasedTimeLabel }} &nbsp; {{ d.author }}</div>
+    </div>
+  </a>
+</script>
 </head>
 <body class="article-list">
 
-<header class="header">
+  <header class="header">
     <a onclick="history.go(-1);" class="button-left"><i class="fa fa-home"></i></a>
     <h1>新闻资讯</h1>
-</header>
+  </header>
 
-<article>
-    <!--     <div class="list-group mb-0">
-
-          <a class="list-item article" href="./article/97">
-            <img class="mr-10" src="http://image.zhi-you.net/image/3c76fb48-22c0-4f20-823d-572ca3e0d4c9@180h_300w_1e_1c.jpg">
-            <div class="list-text">
-              <h2 class="fs-15 lh-24 o-hidden">对不起，在这个炎热的夏天我们让你更热了！</h2>
-              <div class="font-777 fs-12">7月19日 &nbsp; 优检一生</div>
-            </div>
-          </a>
-
-          <a class="list-item article" href="./article/96">
-            <img class="mr-10" src="http://image.zhi-you.net/image/772b5e25-a423-479e-8bd9-63022644e484@180h_300w_1e_1c.jpg">
-            <div class="list-text">
-              <h2 class="fs-15 lh-24 o-hidden">领导人必看！想做好团队领袖，先问问自己这三个问题！</h2>
-              <div class="font-777 fs-12">7月19日 &nbsp; 优检一生</div>
-            </div>
-          </a>
-
-          <a class="list-item article" href="./article/95">
-            <img class="mr-10" src="http://image.zhi-you.net/image/109089b7-85a8-4930-aeb9-f73ca9b1c805@180h_300w_1e_1c.jpg">
-            <div class="list-text">
-              <h2 class="fs-15 lh-24 o-hidden">致敬革命英雄，共赴强国之路！</h2>
-              <div class="font-777 fs-12">7月14日 &nbsp; 优检一生</div>
-            </div>
-          </a>
-
-          <a class="list-item article" href="./article/94">
-            <img class="mr-10" src="http://image.zhi-you.net/image/eadcf6ee-65a4-4800-9029-2c3574114b48@180h_300w_1e_1c.jpg">
-            <div class="list-text">
-              <h2 class="fs-15 lh-24 o-hidden">全国第一家新零售龙头企业诞生了！</h2>
-              <div class="font-777 fs-12">7月14日 &nbsp; 优检一生</div>
-            </div>
-          </a>
-
-          <a class="list-item article" href="./article/93">
-            <img class="mr-10" src="http://image.zhi-you.net/image/47a2ce6d-807e-473c-b74e-a06faf152e93@180h_300w_1e_1c.jpg">
-            <div class="list-text">
-              <h2 class="fs-15 lh-24 o-hidden">【独家揭秘】年薪百万的人都在做什么？背后的真相让人震惊！</h2>
-              <div class="font-777 fs-12">6月27日 &nbsp; 优检一生</div>
-            </div>
-          </a>
-
-          <a class="list-item article" href="./article/92">
-            <img class="mr-10" src="http://image.zhi-you.net/image/9368524c-7c28-49f6-8c51-3e3f28dcf2ad@180h_300w_1e_1c.jpg">
-            <div class="list-text">
-              <h2 class="fs-15 lh-24 o-hidden">80%的人后悔没看到！新经济时代宠儿为你揭秘从小白到大咖的秘籍！</h2>
-              <div class="font-777 fs-12">6月27日 &nbsp; 优检一生</div>
-            </div>
-          </a>
-
-          <a class="list-item article" href="./article/91">
-            <img class="mr-10" src="http://image.zhi-you.net/image/7eaaa9bb-652d-47d5-9b32-7736c9c351a2@180h_300w_1e_1c.jpg">
-            <div class="list-text">
-              <h2 class="fs-15 lh-24 o-hidden">【重磅】再开行业先河，中国企业荣光！德国前总统武尔夫率考察团亲临国创股份，展开跨国合作新篇章</h2>
-              <div class="font-777 fs-12">6月22日 &nbsp; 优检一生</div>
-            </div>
-          </a>
-
-          <a class="list-item article" href="./article/90">
-            <img class="mr-10" src="http://image.zhi-you.net/image/065db661-7f5e-4cd9-8626-f89255fc192a@180h_300w_1e_1c.jpg">
-            <div class="list-text">
-              <h2 class="fs-15 lh-24 o-hidden">【聚焦】与总统探讨世界制造，和旅游集团战略签约，为功臣名将荣耀加冕，新经济风暴席卷西南，智优发展势不可挡！</h2>
-              <div class="font-777 fs-12">6月21日 &nbsp; 优检一生</div>
-            </div>
-          </a>
-
-          <a class="list-item article" href="./article/89">
-            <img class="mr-10" src="http://image.zhi-you.net/image/1eaaf9e6-8422-45bd-b8c9-9d089049fec6@180h_300w_1e_1c.jpg">
-            <div class="list-text">
-              <h2 class="fs-15 lh-24 o-hidden">618来了，你还在忙着买买买？马云大大让你们花钱，我们只用一招就让你们赚钱！</h2>
-              <div class="font-777 fs-12">6月21日 &nbsp; 优检一生</div>
-            </div>
-          </a>
-
-          <a class="list-item article" href="./article/88">
-            <img class="mr-10" src="http://image.zhi-you.net/image/eb18dbe9-bc19-4d1f-8eff-c2f4fedef3f8@180h_300w_1e_1c.jpg">
-            <div class="list-text">
-              <h2 class="fs-15 lh-24 o-hidden">吃惊！国创股份董事长陈军在浙江理工大学120周年华诞上发表演讲引起舆论一片哗然</h2>
-              <div class="font-777 fs-12">6月21日 &nbsp; 优检一生</div>
-            </div>
-          </a>
-
-        </div> -->
-
-
-    <div class="page-more"><span>正在更新中</span></div>
-
-
-</article>
+  <article>
+<!--     <div class="list-group mb-0">
+      
+      <a class="list-item article" href="./article/97">
+        <img class="mr-10" src="http://image.zhi-you.net/image/3c76fb48-22c0-4f20-823d-572ca3e0d4c9@180h_300w_1e_1c.jpg">
+        <div class="list-text">
+          <h2 class="fs-15 lh-24 o-hidden">对不起，在这个炎热的夏天我们让你更热了！</h2>
+          <div class="font-777 fs-12">7月19日 &nbsp; 优检一生</div>
+        </div>
+      </a>
+      
+      <a class="list-item article" href="./article/96">
+        <img class="mr-10" src="http://image.zhi-you.net/image/772b5e25-a423-479e-8bd9-63022644e484@180h_300w_1e_1c.jpg">
+        <div class="list-text">
+          <h2 class="fs-15 lh-24 o-hidden">领导人必看！想做好团队领袖，先问问自己这三个问题！</h2>
+          <div class="font-777 fs-12">7月19日 &nbsp; 优检一生</div>
+        </div>
+      </a>
+      
+      <a class="list-item article" href="./article/95">
+        <img class="mr-10" src="http://image.zhi-you.net/image/109089b7-85a8-4930-aeb9-f73ca9b1c805@180h_300w_1e_1c.jpg">
+        <div class="list-text">
+          <h2 class="fs-15 lh-24 o-hidden">致敬革命英雄，共赴强国之路！</h2>
+          <div class="font-777 fs-12">7月14日 &nbsp; 优检一生</div>
+        </div>
+      </a>
+      
+      <a class="list-item article" href="./article/94">
+        <img class="mr-10" src="http://image.zhi-you.net/image/eadcf6ee-65a4-4800-9029-2c3574114b48@180h_300w_1e_1c.jpg">
+        <div class="list-text">
+          <h2 class="fs-15 lh-24 o-hidden">全国第一家新零售龙头企业诞生了！</h2>
+          <div class="font-777 fs-12">7月14日 &nbsp; 优检一生</div>
+        </div>
+      </a>
+      
+      <a class="list-item article" href="./article/93">
+        <img class="mr-10" src="http://image.zhi-you.net/image/47a2ce6d-807e-473c-b74e-a06faf152e93@180h_300w_1e_1c.jpg">
+        <div class="list-text">
+          <h2 class="fs-15 lh-24 o-hidden">【独家揭秘】年薪百万的人都在做什么？背后的真相让人震惊！</h2>
+          <div class="font-777 fs-12">6月27日 &nbsp; 优检一生</div>
+        </div>
+      </a>
+      
+      <a class="list-item article" href="./article/92">
+        <img class="mr-10" src="http://image.zhi-you.net/image/9368524c-7c28-49f6-8c51-3e3f28dcf2ad@180h_300w_1e_1c.jpg">
+        <div class="list-text">
+          <h2 class="fs-15 lh-24 o-hidden">80%的人后悔没看到！新经济时代宠儿为你揭秘从小白到大咖的秘籍！</h2>
+          <div class="font-777 fs-12">6月27日 &nbsp; 优检一生</div>
+        </div>
+      </a>
+      
+      <a class="list-item article" href="./article/91">
+        <img class="mr-10" src="http://image.zhi-you.net/image/7eaaa9bb-652d-47d5-9b32-7736c9c351a2@180h_300w_1e_1c.jpg">
+        <div class="list-text">
+          <h2 class="fs-15 lh-24 o-hidden">【重磅】再开行业先河，中国企业荣光！德国前总统武尔夫率考察团亲临国创股份，展开跨国合作新篇章</h2>
+          <div class="font-777 fs-12">6月22日 &nbsp; 优检一生</div>
+        </div>
+      </a>
+      
+      <a class="list-item article" href="./article/90">
+        <img class="mr-10" src="http://image.zhi-you.net/image/065db661-7f5e-4cd9-8626-f89255fc192a@180h_300w_1e_1c.jpg">
+        <div class="list-text">
+          <h2 class="fs-15 lh-24 o-hidden">【聚焦】与总统探讨世界制造，和旅游集团战略签约，为功臣名将荣耀加冕，新经济风暴席卷西南，智优发展势不可挡！</h2>
+          <div class="font-777 fs-12">6月21日 &nbsp; 优检一生</div>
+        </div>
+      </a>
+      
+      <a class="list-item article" href="./article/89">
+        <img class="mr-10" src="http://image.zhi-you.net/image/1eaaf9e6-8422-45bd-b8c9-9d089049fec6@180h_300w_1e_1c.jpg">
+        <div class="list-text">
+          <h2 class="fs-15 lh-24 o-hidden">618来了，你还在忙着买买买？马云大大让你们花钱，我们只用一招就让你们赚钱！</h2>
+          <div class="font-777 fs-12">6月21日 &nbsp; 优检一生</div>
+        </div>
+      </a>
+      
+      <a class="list-item article" href="./article/88">
+        <img class="mr-10" src="http://image.zhi-you.net/image/eb18dbe9-bc19-4d1f-8eff-c2f4fedef3f8@180h_300w_1e_1c.jpg">
+        <div class="list-text">
+          <h2 class="fs-15 lh-24 o-hidden">吃惊！国创股份董事长陈军在浙江理工大学120周年华诞上发表演讲引起舆论一片哗然</h2>
+          <div class="font-777 fs-12">6月21日 &nbsp; 优检一生</div>
+        </div>
+      </a>
+      
+    </div> -->
+    
+    
+      <div class="page-more"><span>正在更新中</span></div>
+    
+    
+  </article>
 
 </body>
 </html>
