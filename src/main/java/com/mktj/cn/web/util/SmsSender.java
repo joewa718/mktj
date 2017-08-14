@@ -20,7 +20,7 @@ public class SmsSender {
     @Value("${sms.regTempId}")
     private int regTempId;
 
-    private final static String time = "1";
+    private final static String time = "10";
 
     public void sendRegCode(String phone, String regCode) throws Exception {
         SmsSingleSender singleSender = new SmsSingleSender(appId, appKey);
