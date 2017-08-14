@@ -210,7 +210,6 @@ public class UserController extends BaseController {
         OutputStream os = response.getOutputStream();
         Map<String,Object> map = ImageCode.getImageCode(60, 20, os);
         request.getSession().setAttribute("captcha", map.get("strEnsure").toString().toLowerCase());
-        request.getSession().setAttribute("captchaTime",new Date().getTime());
         try {
             ImageIO.write((BufferedImage) map.get("image"), "JPEG", os);
         } catch (IOException e) {
@@ -220,12 +219,12 @@ public class UserController extends BaseController {
     }
 
     @ApiOperation(value = "发送手机验证码")
-    @RequestMapping(value = "/sendRegCode", method = RequestMethod.GET)
-    public ResponseEntity sendRegCode(@RequestParam("phone") String phone,HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping(value = "/sendRegCode", method = RequestMethod.POST)
+    public ResponseEntity sendRegCode(@RequestParam("phone") String phone,@RequestParam("captcha") String captcha,HttpServletRequest request) {
         String code = "";
         try {
-            code = userService.sendRegCode(phone);
-            HttpSession session =request.getSession();
+            HttpSession session = request.getSession();
+            code = userService.sendRegCode(phone,captcha,session);
             session.setAttribute("regCode",code.toLowerCase());
             session.setAttribute("regCodeTime",new Date().getTime());
         } catch (Exception e) {

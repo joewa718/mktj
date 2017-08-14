@@ -53,5 +53,5 @@ public interface UserService {
 
     DeliveryAddressDTO getDefaultAddressByUser(String phone);
 
-    String sendRegCode(String phone) throws Exception;
+    String sendRegCode(String phone,String captcha,HttpSession session) throws Exception;
 }

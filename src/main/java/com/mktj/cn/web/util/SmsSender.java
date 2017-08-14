@@ -5,19 +5,19 @@ import com.qcloud.sms.SmsSingleSenderResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 
-@Component
+@Service
 public class SmsSender {
 
     private final static Logger log = LoggerFactory.getLogger(SmsSender.class);
-    @Value("sms.appId")
+    @Value("${sms.appId}")
     private int appId;
-    @Value("sms.appKey")
+    @Value("${sms.appKey}")
     private String appKey;
-    @Value("sms.templateId")
+    @Value("${sms.templateId}")
     private int templateId;
 
     private final static String time = "1";

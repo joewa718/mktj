@@ -98,7 +98,7 @@ public class UserServiceImp extends BaseService implements UserService {
         String regCodeTime = (String) session.getAttribute("regCodeTime");
         long cur_time = new Date().getTime();
         if ((cur_time - Long.parseLong(regCodeTime)) / 1000 > 60) {
-            throw new OperationNotSupportedException("手机验证码不正确");
+            throw new OperationNotSupportedException("手机验证码已经过期");
         }
         user = userMapper.userToUserVo(userVo);
         user.setPassword(AESCryptUtil.encrypt(user.getPassword()));
@@ -247,8 +247,12 @@ public class UserServiceImp extends BaseService implements UserService {
     }
 
     @Override
-    public String sendRegCode(String phone) throws Exception {
+    public String sendRegCode(String phone,String captcha,HttpSession session) throws Exception {
         try {
+            String session_captcha = (String) session.getAttribute("captcha");
+            if(captcha == null || !captcha.equals(session_captcha)){
+                throw new OperationNotSupportedException("请输入图片验证码");
+            }
             String code = GenerateRandomCode.getRandNum(6);
             smsSender.sendRegCode(phone, code);
             return code;
