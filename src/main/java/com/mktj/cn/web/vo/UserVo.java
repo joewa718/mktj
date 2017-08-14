@@ -13,6 +13,7 @@ public class UserVo {
     private String phone;
     private String password;
     private String email;
+    private String regCode;
     private RoleType roleType = RoleType.天使;
 
     public String getNickname() {
@@ -55,5 +56,11 @@ public class UserVo {
         this.phone = phone;
     }
 
+    public String getRegCode() {
+        return regCode;
+    }
 
+    public void setRegCode(String regCode) {
+        this.regCode = regCode;
+    }
 }

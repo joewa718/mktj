@@ -15,16 +15,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
+import javax.naming.OperationNotSupportedException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -81,13 +84,17 @@ public class UserController extends BaseController {
 
     @ApiOperation(value = "注册用户")
     @RequestMapping(value = "/regUser", method = RequestMethod.POST)
-    public ResponseEntity<Object> regUser(@ModelAttribute UserVo user) throws ServletException, IOException {
+    public ResponseEntity<Object> regUser(@ModelAttribute UserVo user, HttpServletRequest request) throws ServletException, IOException {
         UserDTO userDTO = null;
         try {
-            userDTO = userService.regUser(user);
+            HttpSession session = request.getSession();
+            userDTO = userService.regUser(user,session);
         } catch (DuplicateAccountException e) {
             log.error(e.getMessage(),e);
             return new ResponseEntity<>("账户已存在", HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (OperationNotSupportedException e) {
+            log.error(e.getMessage(),e);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
@@ -197,13 +204,13 @@ public class UserController extends BaseController {
         return new ResponseEntity<>(deliveryAddressDTO,HttpStatus.OK);
     }
 
+    @ApiOperation(value = "图片验证码")
     @RequestMapping(value = "/captcha", method = RequestMethod.GET)
     public String captcha(HttpServletRequest request, HttpServletResponse response) throws Exception {
         OutputStream os = response.getOutputStream();
         Map<String,Object> map = ImageCode.getImageCode(60, 20, os);
-        String simpleCaptcha = "simpleCaptcha";
-        request.getSession().setAttribute(simpleCaptcha, map.get("strEnsure").toString().toLowerCase());
-        request.getSession().setAttribute("codeTime",new Date().getTime());
+        request.getSession().setAttribute("captcha", map.get("strEnsure").toString().toLowerCase());
+        request.getSession().setAttribute("captchaTime",new Date().getTime());
         try {
             ImageIO.write((BufferedImage) map.get("image"), "JPEG", os);
         } catch (IOException e) {
@@ -212,4 +219,18 @@ public class UserController extends BaseController {
         return null;
     }
 
+    @ApiOperation(value = "发送手机验证码")
+    @RequestMapping(value = "/sendRegCode", method = RequestMethod.GET)
+    public ResponseEntity sendRegCode(@RequestParam("phone") String phone,HttpServletRequest request, HttpServletResponse response) {
+        String code = "";
+        try {
+            code = userService.sendRegCode(phone);
+            HttpSession session =request.getSession();
+            session.setAttribute("regCode",code.toLowerCase());
+            session.setAttribute("regCodeTime",new Date().getTime());
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

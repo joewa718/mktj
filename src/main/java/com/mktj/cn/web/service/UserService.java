@@ -4,6 +4,7 @@ import com.mktj.cn.web.dto.DeliveryAddressDTO;
 import com.mktj.cn.web.dto.RealInfoDTO;
 import com.mktj.cn.web.dto.UserDTO;
 import com.mktj.cn.web.exception.DuplicateAccountException;
+import com.mktj.cn.web.po.User;
 import com.mktj.cn.web.util.RoleType;
 import com.mktj.cn.web.vo.DeliveryAddressVo;
 import com.mktj.cn.web.vo.RealInfoVo;
@@ -11,6 +12,8 @@ import com.mktj.cn.web.vo.UserVo;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.naming.OperationNotSupportedException;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -22,7 +25,7 @@ public interface UserService {
 
     UserDTO regWxUser(WxMpUser user);
 
-    UserDTO regUser(UserVo user) throws DuplicateAccountException;
+    UserDTO regUser(UserVo userVo, HttpSession session) throws DuplicateAccountException, OperationNotSupportedException;
 
     void regRealInfo(String phone,RealInfoVo vo);
 
@@ -49,4 +52,6 @@ public interface UserService {
     void editNickname(String phone,String nickname);
 
     DeliveryAddressDTO getDefaultAddressByUser(String phone);
+
+    String sendRegCode(String phone) throws Exception;
 }

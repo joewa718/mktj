@@ -43,8 +43,9 @@ wechat:
     token: hlwerbv123nsf
     aesKey: u3hX2kQdo1hvQWRkg9MjOahuw3zY7nxmargMNf9TJW7
 sms:
-  app-id: 1400038379
-  app-key: 1b9e33d5acd98689763038c5c347db41
+  appId: 1400038379
+  appKey: 1b9e33d5acd98689763038c5c347db41
+  regTempId: 33761
 ---
 server:
   port: 8080

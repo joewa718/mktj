@@ -15,21 +15,24 @@ import com.mktj.cn.web.repositories.DeliveryAddressRepository;
 import com.mktj.cn.web.repositories.UserRepository;
 import com.mktj.cn.web.service.BaseService;
 import com.mktj.cn.web.service.UserService;
+import com.mktj.cn.web.util.GenerateRandomCode;
 import com.mktj.cn.web.util.RoleType;
+import com.mktj.cn.web.util.SmsSender;
 import com.mktj.cn.web.vo.DeliveryAddressVo;
 import com.mktj.cn.web.vo.RealInfoVo;
 import com.mktj.cn.web.vo.UserVo;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.naming.OperationNotSupportedException;
+import javax.servlet.http.HttpSession;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by zhanwa01 on 2017/4/12.
@@ -37,6 +40,7 @@ import java.util.UUID;
 @Service
 @Scope("prototype")
 public class UserServiceImp extends BaseService implements UserService {
+    private final static Logger log = LoggerFactory.getLogger(UserServiceImp.class);
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -47,6 +51,8 @@ public class UserServiceImp extends BaseService implements UserService {
     RealInfoMapper realInfoMapper;
     @Autowired
     DeliveryAddressMapper deliveryAddressMapper;
+    @Autowired
+    SmsSender smsSender;
 
     public String updateFile(MultipartFile file, String filePath) throws Exception {
         if (!file.isEmpty()) {
@@ -65,7 +71,7 @@ public class UserServiceImp extends BaseService implements UserService {
     }
 
     @Override
-    public UserDTO regWxUser(WxMpUser wxMpUser){
+    public UserDTO regWxUser(WxMpUser wxMpUser) {
         User user = userRepository.findByPhone(wxMpUser.getOpenId());
         if (user == null) {
             user = new User();
@@ -80,10 +86,19 @@ public class UserServiceImp extends BaseService implements UserService {
     }
 
     @Override
-    public UserDTO regUser(UserVo userVo) throws DuplicateAccountException {
+    public UserDTO regUser(UserVo userVo, HttpSession session) throws DuplicateAccountException, OperationNotSupportedException {
         User user = userRepository.findByPhone(userVo.getPhone());
         if (user != null) {
             throw new DuplicateAccountException("duplicate account phone.");
+        }
+        String regCode = (String) session.getAttribute("regCode");
+        if (userVo.getRegCode() == null || !userVo.getRegCode().equals(regCode)) {
+            throw new OperationNotSupportedException("手机验证码不正确");
+        }
+        String regCodeTime = (String) session.getAttribute("regCodeTime");
+        long cur_time = new Date().getTime();
+        if ((cur_time - Long.parseLong(regCodeTime)) / 1000 > 60) {
+            throw new OperationNotSupportedException("手机验证码不正确");
         }
         user = userMapper.userToUserVo(userVo);
         user.setPassword(AESCryptUtil.encrypt(user.getPassword()));
@@ -229,5 +244,17 @@ public class UserServiceImp extends BaseService implements UserService {
         User user = userRepository.findByPhone(phone);
         DeliveryAddress deliveryAddress = deliveryAddressRepository.findOneByIsDefaultAndUser(true, user);
         return deliveryAddressMapper.deliveryAddressToDeliveryAddressDTO(deliveryAddress);
+    }
+
+    @Override
+    public String sendRegCode(String phone) throws Exception {
+        try {
+            String code = GenerateRandomCode.getRandNum(6);
+            smsSender.sendRegCode(phone, code);
+            return code;
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw e;
+        }
     }
 }
