@@ -1,0 +1,26 @@
+/* order-list */
+.order-list {
+  
+}
+.order-list .order {
+  position: relative;
+  display: block;
+  background-color: #fff;
+}
+.order-list .order-sn {
+  height: 36px; line-height: 36px;
+  background-color: #f9eddf;
+}
+.order-list .order-status {
+  position: absolute; right: 15px; top: 6px;
+}
+.order-list .product-title {
+  padding-left: 75px; padding-right: 80px;
+  min-height: 60px;
+}
+.order-list .product-image {
+  width: 60px; height: 60px;
+}
+
+
+
