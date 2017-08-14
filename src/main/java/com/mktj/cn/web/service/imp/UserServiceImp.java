@@ -95,9 +95,9 @@ public class UserServiceImp extends BaseService implements UserService {
         if (userVo.getRegCode() == null || !userVo.getRegCode().equals(regCode)) {
             throw new OperationNotSupportedException("手机验证码不正确");
         }
-        String regCodeTime = (String) session.getAttribute("regCodeTime");
+        Long regCodeTime = (Long) session.getAttribute("regCodeTime");
         long cur_time = new Date().getTime();
-        if ((cur_time - Long.parseLong(regCodeTime)) / 1000 > 60) {
+        if ((cur_time - regCodeTime) / 1000 > 600) {//10分钟
             throw new OperationNotSupportedException("手机验证码已经过期");
         }
         user = userMapper.userToUserVo(userVo);
@@ -251,7 +251,7 @@ public class UserServiceImp extends BaseService implements UserService {
         try {
             String session_captcha = (String) session.getAttribute("captcha");
             if(captcha == null || !captcha.equals(session_captcha)){
-                throw new OperationNotSupportedException("请输入图片验证码");
+                throw new OperationNotSupportedException("图片验证码不正确");
             }
             String code = GenerateRandomCode.getRandNum(6);
             smsSender.sendRegCode(phone, code);

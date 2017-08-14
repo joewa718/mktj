@@ -17,8 +17,8 @@ public class SmsSender {
     private int appId;
     @Value("${sms.appKey}")
     private String appKey;
-    @Value("${sms.templateId}")
-    private int templateId;
+    @Value("${sms.regTempId}")
+    private int regTempId;
 
     private final static String time = "1";
 
@@ -27,7 +27,7 @@ public class SmsSender {
         ArrayList<String> params = new ArrayList<>();
         params.add(regCode);
         params.add(time);
-        SmsSingleSenderResult singleSenderResult = singleSender.sendWithParam("86", phone, templateId, params, "", "", "");
+        SmsSingleSenderResult singleSenderResult = singleSender.sendWithParam("86", phone, regTempId, params, "", "", "");
         log.info(singleSenderResult.toString());
     }
 }
