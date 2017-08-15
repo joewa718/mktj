@@ -38,12 +38,13 @@
 
 <script>
   $(function() {
+
     $('#btnSubmit').click(function(){
       // if(!$('#deliverAddressId').val()) {
       //   messageFlash('请先选择收货地址.');
       //   return false;  
       // }
-      // if($('input[name=isPayToPlatform]:checked').length == 0) {
+      // if($('input[name=payType]:checked').length == 0) {
       //   messageFlash('请先选择收款对象.');
       //   return false;  
       // }
@@ -94,10 +95,11 @@
           },
         })
         .done(function(data) {
-          messageAlert(result);
+          location.href='u---order---37986.html'
         })
         .fail(function(data) {
           console.log("error");
+          messageAlert(JSON.parse(data.responseText).message);
         })
 
         // $.ajax({
@@ -211,12 +213,9 @@
     },
     type : 'POST',
     dataType : 'json',
-    success : function(result) {
-      if (result.code == 0) {
-        var address = result.data;
-        setAddress(address);
-        hideAddressCreate();
-      }
+    success : function(data) {
+      setAddress(data);
+      hideAddressCreate();
     }
   });
   
@@ -273,7 +272,7 @@
   function setAddress(address) {
     $('#deliverAddressId').val(address.id);
     var addressText = address.addressText ? address.addressText 
-        : address.province + ' ' + address.city + ' ' + address.district + ' ' + address.address
+        : areas[address.province] + ' ' + areas[address.province+'_'+address.city] + ' ' + areas[address.province+'_'+address.city+'_'+address.region] + ' ' + address.detailed
     $('.receiver-info').html('<div>' + address.deliveryMan + '<span class="right">' + address.phone + '</span></div>' 
         + '<div class="fs-14 font-777">' + addressText+ '</div>')
   }
@@ -391,11 +390,11 @@
           
           
         </div>
-        <input type="hidden" id="deliverAddressId" name="deliverAddressId" value="1">
+        <input type="hidden" id="deliverAddressId" name="deliverAddressId" value="">
       </div>
     </div>
     
-    <div class="list-group">
+    <div class="list-group productInfo">
       <div class="list-title">商品信息</div>
       <div class="list-item">
         <img class="image-80 block mr-10" alt="" src="images/微信图片_20170726174201.jpg">
@@ -420,10 +419,10 @@
       
       
         <div class="list-item form-radio">
-          <label class="list-text" for="isPayToPlatform1">余额支付</label>
+          <label class="list-text" for="payType1">余额支付</label>
           <div class="list-unit">
-            <!-- <input id="isPayToPlatform1" type="radio" name="isPayToPlatform" value="true"> -->
-            <label class="i-checked" for="isPayToPlatform1"></label>
+            <input id="payType1" type="radio" name="payType" value="余额支付">
+            <label class="i-checked" for="payType1"></label>
           </div>
         </div>
       
@@ -461,5 +460,45 @@
     
   </article>
   </form>
+
+<script id="rowTpl" type="text/html">
+  <div class="list-title">商品信息</div>
+      <div class="list-item">
+        <img class="image-80 block mr-10" alt="" src="images/微信图片_20170726174201.jpg">
+        <div class="list-text relative font-333">
+          <div class="fs-14 lh-24">¥ {{d.productName}}</div>
+          <div class="lh-24 fs-14 text-right font-orange">¥ {{d.retailPrice}}.00</div>
+          <div class="lh-24 fs-12 text-right font-gray">x {{d.piece}}</div>
+          <input type="hidden" name="productId" value="{{d.id}}">
+          <input type="hidden" name="productNum" value="{{d.piece}}">
+        </div>
+      </div>
+      <div class="list-item">
+        <div class="list-text text-right">
+          
+          <div class="fs-14">应付款： <span class="font-orange fs-16 bold">¥ {{d.retailPrice*d.piece}}.00</span></div>
+        </div>
+      </div>
+</script>
+
+<script type="text/javascript">
+
+  $.ajax({
+    url: serviceUrl+'/api/product/getProductById',
+    type: 'POST',
+    data: {id:getQueryString('productId')},
+    xhrFields: {
+      withCredentials:true
+    },
+  })
+  .done(function(data) {
+
+    $('.list-group.productInfo').html(laytpl($('#rowTpl').html()).render(data));
+
+  })
+  .fail(function(data) {
+    console.log("error");
+  })
+</script>
 
 </body></html>
