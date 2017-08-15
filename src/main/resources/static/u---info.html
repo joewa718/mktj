@@ -135,7 +135,7 @@
       $('.nickname').text(data.nickname);
       $('.phone').text(data.phone);
       $('.authorizationCode').text(data.authorizationCode);
-      $('[src="images/avatar.jpg"]').attr('src',imageNginxUrl+data.headPortrait);
+      $('[src="images/avatar.jpg"]').attr('src',data.headPortrait?(imageNginxUrl+data.headPortrait):'images/avatar.jpg');
     })
     .fail(function(data) {
       console.log("error");

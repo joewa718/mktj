@@ -67,7 +67,7 @@ $(function() {
       },
     })
     .done(function(data) {
-      $avatar.attr('src',imageNginxUrl+data.headPortrait);
+      $avatar.attr('src',imageNginxUrl+(data.headPortrait||'images/avatar.jpg'));
     })
     .fail(function(data) {
       console.log("error");
