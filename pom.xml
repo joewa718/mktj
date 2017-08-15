@@ -183,10 +183,9 @@
             <artifactId>sms-sdk</artifactId>
             <version>1.0</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/lib/smssdk.jar</systemPath>
+            <systemPath>${project.basedir}/src/lib/smssdk.jar</systemPath>
         </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
@@ -218,5 +217,18 @@
                 </configuration>
             </plugin>
         </plugins>
+        <resources>
+            <resource>
+                <directory>src/lib</directory>
+                <targetPath>BOOT-INF/lib/</targetPath>
+                <includes>
+                    <include>**/*.jar</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <targetPath>BOOT-INF/classes/</targetPath>
+            </resource>
+        </resources>
     </build>
 </project>
