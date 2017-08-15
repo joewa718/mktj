@@ -68,7 +68,7 @@
 <body>
   <header class="header">
     <h1>修改收货地址</h1>
-    <a href="#" onclick="history.go(-1);" class="button-left"><i class="fa fa-angle-left"></i></a>
+    <a href="#" onclick="location.href='u---address.html';" class="button-left"><i class="fa fa-angle-left"></i></a>
     <a href="javascript:;" id="btnDelete" class="button-right"><i class="fa fa-trash"></i></a>
   </header>
   <article class="address-edit">
@@ -230,7 +230,7 @@
         success: function(data){
           console.log("success");
           console.log(data);
-          history.go(-1);
+          location.href='u---address.html';
         }
       })
       // .done(function(data) {

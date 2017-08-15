@@ -271,7 +271,7 @@
     .done(function(data) {
       $('.bold').text(data.nickname);
       $('.orange').text(data.roleType);
-      $('.avatar').attr('src',imageNginxUrl+data.headPortrait);
+      $('.avatar').attr('src',data.headPortrait?(imageNginxUrl+data.headPortrait):'images/avatar.jpg');
     })
     .fail(function(data) {
       console.log("error");

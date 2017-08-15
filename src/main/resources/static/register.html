@@ -70,7 +70,8 @@
             // 验证码刷新
             if ($('#captchaImage').length > 0) {
                 var refreshCaptcha = function () {
-                    $("#captchaImage:visible").attr("src", Config.ctx + '/captcha?r=' + new Date().getTime());
+                    // $("#captchaImage:visible").attr("src", Config.ctx + '/captcha?r=' + new Date().getTime());
+                    $("#captchaImage:visible").attr('src',serviceUrl+'/api/user/captcha?r=' + new Date().getTime());
                 }
                 $("#captchaImage").click(refreshCaptcha);
             }
@@ -204,7 +205,7 @@
                     <input type="text" id="captcha" name="captcha" class="form-input" placeholder="图形验证码">
                 </div>
                 <div class="list-unit">
-                    <img src="">
+                    <img id="captchaImage" src="">
                 </div>
             </div>
             <div class="list-item phone-captcha">
@@ -260,18 +261,19 @@
             },
             data: data,
         })
-            .done(function (data) {
-                console.log("success");
-                console.log(data);
-                location.href = 'login.html';
-            })
-            .fail(function (data) {
-                messageFlash(data.responseText);
-                console.log("error");
-            })
-            .always(function () {
-                console.log("complete");
-            });
+        .done(function (data) {
+            console.log("success");
+            console.log(data);
+            alert("注册成功");
+            location.href = 'login.html';
+        })
+        .fail(function (data) {
+            messageFlash(data.responseText);
+            console.log("error");
+        })
+        .always(function () {
+            console.log("complete");
+        });
     })
 
 </script>
