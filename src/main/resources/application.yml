@@ -1,26 +1,11 @@
 spring:
   #resources.static-locations: classpath:/dist/
   profiles:
-    active: st
+    active: dev
   data:
     jpa:
       repositories:
         enabled: true
-  druid:
-    initialSize: 5
-    minIdle: 5
-    maxActive: 20
-    maxWait: 60000
-    timeBetweenEvictionRunsMillis: 60000
-    minEvictableIdleTimeMillis: 300000
-    validationQuery: SELECT 1 FROM DUAL
-    testWhileIdle: true
-    testOnBorrow: false
-    testOnReturn: false
-    poolPreparedStatements: true
-    maxPoolPreparedStatementPerConnectionSize: 20
-    filters: stat,wall,log4j
-    connectionProperties: stat.mergeSql:true;stat.slowSqlMillis:5000
   http:
     encoding:
       charset: UTF-8
@@ -72,12 +57,25 @@ spring:
       ddl-auto: update
       dialect: org.hibernate.dialect.MySQL5Dialect
   datasource:
+      type: com.alibaba.druid.pool.DruidDataSource
+      driver-class-name: com.mysql.jdbc.Driver
       url: jdbc:mysql://598af1f083b62.sh.cdb.myqcloud.com:5428/mktj?useUnicode=true&characterEncoding=utf-8&useSSL=false
-      #url: jdbc:mysql://localhost:3306/mktj?useUnicode=true&characterEncoding=utf-8&useSSL=false
       username: root
       password: wz718718
-      #password: 123456
-      driverClassName: com.mysql.jdbc.Driver
+      initialSize: 5
+      minIdle: 5
+      maxActive: 20
+      maxWait: 60000
+      timeBetweenEvictionRunsMillis: 60000
+      minEvictableIdleTimeMillis: 300000
+      validationQuery: SELECT 1 FROM DUAL
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      poolPreparedStatements: true
+      maxPoolPreparedStatementPerConnectionSize: 20
+      filters: stat,wall,log4j
+      connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
   http:
     multipart:
       location: c:/upload_temp
@@ -101,10 +99,25 @@ spring:
       ddl-auto: update
       dialect: org.hibernate.dialect.MySQL5Dialect
   datasource:
-      url: jdbc:mysql://10.66.245.8:3306/mktj?useUnicode=true&characterEncoding=utf-8&useSSL=false
-      username: root
-      password: wz718718
-      driverClassName: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://10.66.245.8:3306/mktj?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: wz718718
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 20
+    filters: stat,wall,log4j
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
   http:
     multipart:
       location: /opt/projects/mktj/temp
