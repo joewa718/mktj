@@ -113,7 +113,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>6.0.3</version>
+            <version>6.0.6</version>
         </dependency>
         <dependency>
             <groupId>com.googlecode.log4jdbc</groupId>
@@ -183,7 +183,7 @@
             <artifactId>sms-sdk</artifactId>
             <version>1.0</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/smssdk.jar</systemPath>
+            <systemPath>${project.basedir}/src/lib/smssdk.jar</systemPath>
         </dependency>
     </dependencies>
 

@@ -230,4 +230,44 @@ public class UserController extends BaseController {
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @ApiOperation(value = "密码找回手机验证")
+    @RequestMapping(value = "/sendPwFoundCode", method = RequestMethod.POST)
+    public ResponseEntity sendPwFoundCode(@RequestParam("phone") String phone, @RequestParam("captcha") String captcha, HttpServletRequest request) {
+        String code = "";
+        try {
+            HttpSession session = request.getSession();
+            code = userService.sendPwFoundCode(phone, captcha, session);
+            session.setAttribute("sendPwFoundCode", code.toLowerCase());
+            session.setAttribute("sendPwFoundTime", new Date().getTime());
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+    @ApiOperation(value = "密码找回手机验证下一步")
+    @RequestMapping(value = "/passwordFoundNext", method = RequestMethod.POST)
+    public ResponseEntity passwordFoundNext(@RequestParam("phone") String phone, @RequestParam("sendPwFoundCode")String sendPwFoundCode, HttpServletRequest request) {
+        try {
+            HttpSession session = request.getSession();
+            userService.foundPasswordNext(phone,sendPwFoundCode,session);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "密码找回手机")
+    @RequestMapping(value = "/passwordFound", method = RequestMethod.POST)
+    public ResponseEntity passwordFoundNext(@RequestParam("password")String password, HttpServletRequest request) {
+        try {
+            HttpSession session = request.getSession();
+            userService.foundPassword(password,session);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
