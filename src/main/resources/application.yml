@@ -6,6 +6,21 @@ spring:
     jpa:
       repositories:
         enabled: true
+  druid:
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 20
+    filters: stat,wall,log4j
+    connectionProperties: stat.mergeSql:true;stat.slowSqlMillis:5000
   http:
     encoding:
       charset: UTF-8
@@ -23,10 +38,6 @@ spring:
           use_query_cache: true
           region:
             factory_class: org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory
-      javax:
-        persistence:
-          sharedCache:
-            mode: ENABLE_SELECTIVE
 security:
   enable-csrf: false
   basic:
