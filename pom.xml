@@ -186,6 +186,11 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/src/lib/smssdk.jar</systemPath>
         </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+            <version>1.0.25</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -220,14 +225,14 @@
         </plugins>
         <resources>
             <resource>
-                <directory>src/lib</directory>
+                <directory>${project.basedir}/src/lib</directory>
                 <targetPath>BOOT-INF/lib/</targetPath>
                 <includes>
-                    <include>**/*.jar</include>
+                    <include>*.jar</include>
                 </includes>
             </resource>
             <resource>
-                <directory>src/main/resources</directory>
+                <directory>${project.basedir}/src/main/resources</directory>
                 <targetPath>BOOT-INF/classes/</targetPath>
             </resource>
         </resources>
