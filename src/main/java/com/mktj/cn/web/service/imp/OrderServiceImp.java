@@ -81,6 +81,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
         }
         saveOrder(user.getPhone(), orderVo, user, product, OrderType.服务订单, deliveryAddress, piece, price, totalCost);
         user.setRoleType(product.getRoleType());
+        user.setAuthorizationCode(generateAuthCode());
         userRepository.save(user);
     }
 

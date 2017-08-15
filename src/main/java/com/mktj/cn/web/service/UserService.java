@@ -58,5 +58,5 @@ public interface UserService {
 
     void foundPasswordNext(String phone,String pwFoundCode,HttpSession session) throws OperationNotSupportedException;
 
-    void foundPassword(String phone, String password,String pwFoundCode,HttpSession session) throws OperationNotSupportedException;
+    void foundPassword(String password,HttpSession session) throws OperationNotSupportedException;
 }

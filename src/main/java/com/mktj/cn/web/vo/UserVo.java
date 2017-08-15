@@ -14,7 +14,7 @@ public class UserVo {
     private String password;
     private String email;
     private String regCode;
-    private RoleType roleType = RoleType.天使;
+    private RoleType roleType;
 
     public String getNickname() {
         return nickname;

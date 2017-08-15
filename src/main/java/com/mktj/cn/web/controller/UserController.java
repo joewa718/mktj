@@ -264,7 +264,7 @@ public class UserController extends BaseController {
     public ResponseEntity passwordFoundNext(@RequestParam("phone") String phone, @RequestParam("sendPwFoundCode")String sendPwFoundCode,@RequestParam("password")String password, HttpServletRequest request) {
         try {
             HttpSession session = request.getSession();
-            userService.foundPassword(phone,password,sendPwFoundCode,session);
+            userService.foundPassword(password,session);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
         }

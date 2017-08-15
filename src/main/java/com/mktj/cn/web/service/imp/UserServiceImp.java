@@ -103,8 +103,9 @@ public class UserServiceImp extends BaseService implements UserService {
         user = userMapper.userToUserVo(userVo);
         user.setPassword(AESCryptUtil.encrypt(user.getPassword()));
         user.setDisable(false);
-        user.setAuthorizationCode(generateAuthCode());
         user = userRepository.save(user);
+        session.removeAttribute("regCode");
+        session.removeAttribute("regCodeTime");
         return userMapper.userToUserDTO(user);
     }
 
@@ -279,9 +280,9 @@ public class UserServiceImp extends BaseService implements UserService {
     }
 
     @Override
-    public void foundPasswordNext(String phone,String pwFoundCode,HttpSession session) throws OperationNotSupportedException {
+    public void foundPasswordNext(String phone, String pwFoundCode, HttpSession session) throws OperationNotSupportedException {
         User user = userRepository.findByPhone(phone);
-        if(user == null){
+        if (user == null) {
             throw new OperationNotSupportedException("未找到用户手机号");
         }
         String session_pwFoundCode = (String) session.getAttribute("sendPwFoundCode");
@@ -292,17 +293,19 @@ public class UserServiceImp extends BaseService implements UserService {
         long cur_time = new Date().getTime();
         if ((cur_time - sendPwFoundTime) / 1000 > 600) {//10分钟
             throw new OperationNotSupportedException("手机验证码已经过期");
-        };
+        }
+        session.setAttribute("foundPhone", phone);
     }
 
     @Override
-    public void foundPassword(String phone, String password,String pwFoundCode,HttpSession session) throws OperationNotSupportedException {
+    public void foundPassword(String password,HttpSession session) throws OperationNotSupportedException {
+        String phone = (String) session.getAttribute("foundPhone");
         User user = userRepository.findByPhone(phone);
-        if(user == null){
+        if (user == null) {
             throw new OperationNotSupportedException("未找到用户手机号");
         }
         String session_pwFoundCode = (String) session.getAttribute("sendPwFoundCode");
-        if (pwFoundCode == null || !pwFoundCode.equals(session_pwFoundCode)) {
+        if (session_pwFoundCode == null) {
             throw new OperationNotSupportedException("手机验证码不正确");
         }
         Long sendPwFoundTime = (Long) session.getAttribute("sendPwFoundTime");
@@ -312,6 +315,8 @@ public class UserServiceImp extends BaseService implements UserService {
         }
         user.setPassword(AESCryptUtil.encrypt(password));
         userRepository.save(user);
+        session.removeAttribute("sendPwFoundCode");
+        session.removeAttribute("sendPwFoundTime");
     }
 
 }
