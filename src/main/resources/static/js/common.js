@@ -55,13 +55,35 @@ window.pullDialog = function(dialog, callback) {
   });
 }
 
+$.ajaxSetup({
+  xhrFields: {
+    withCredentials:true
+  },
+}); 
+
+// $.ajaxTransport(function( options, originalOptions, jqXHR ){
+//   options.url=serviceUrl+options.url;
+// })
+
+// $.ajaxPrefilter(function( options, originalOptions, jqXHR ){
+//   options.url=serviceUrl+options.url;
+// })
+
+// $(document).ajaxSend(function (o, xhr, property) {
+//   // xhr['withCredentials'] = true;
+//   // property.url=serviceUrl+property.url;
+//   // property.xhrFields={
+//   //   withCredentials:true
+//   // };
+// })
+
 $(function() {
   
   /* 处理移动端click事件 */
   if(typeof(FastClick) != 'undefined') {
     FastClick.attach(document.body);
   }
-  
+
   /* 全局的ajax访问，处理ajax清求时sesion超时 */
   $(document).ajaxComplete(function(event, XMLHttpRequest, textStatus) {
     //console.log("XMLHttpRequest.responseText=" + XMLHttpRequest.responseText);
