@@ -106,14 +106,18 @@ public class UserServiceImp extends BaseService implements UserService {
         List<OrderAnalysis> orderAnalysisList =new ArrayList<>();
         OrderAnalysis ordinaryOrderAnalysis =new OrderAnalysis();
         ordinaryOrderAnalysis.setOrderType(OrderType.进货订单);
+        ordinaryOrderAnalysis.setUser(user);
         orderAnalysisList.add(ordinaryOrderAnalysis);
 
         OrderAnalysis serviceOrderAnalysis =new OrderAnalysis();
         serviceOrderAnalysis.setOrderType(OrderType.服务订单);
+        serviceOrderAnalysis.setUser(user);
         orderAnalysisList.add(serviceOrderAnalysis);
         user.setOrderAnalysesList(orderAnalysisList);
         //初始化团队分析
-        user.setTeamAnalysis(new TeamAnalysis());
+        TeamAnalysis teamAnalysis = new TeamAnalysis();
+        teamAnalysis.setUser(user);
+        user.setTeamAnalysis(teamAnalysis);
         user = userRepository.save(user);
         session.removeAttribute("regCode");
         session.removeAttribute("regCodeTime");

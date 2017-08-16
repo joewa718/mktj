@@ -191,6 +191,19 @@
             <artifactId>druid</artifactId>
             <version>1.0.25</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-search-orm -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-search-orm</artifactId>
+            <version>5.5.0.Final</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-analyzers-smartcn -->
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-analyzers-smartcn</artifactId>
+            <version>5.3.0</version>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>
@@ -223,7 +236,7 @@
                 </configuration>
             </plugin>
         </plugins>
-        <!--<resources>
+        <resources>
             <resource>
                 <directory>${project.basedir}/src/lib</directory>
                 <targetPath>BOOT-INF/lib/</targetPath>
@@ -235,6 +248,6 @@
                 <directory>${project.basedir}/src/main/resources</directory>
                 <targetPath>BOOT-INF/classes/</targetPath>
             </resource>
-        </resources>-->
+        </resources>
     </build>
 </project>

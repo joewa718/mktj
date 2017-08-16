@@ -86,7 +86,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
                 orderAnalysis.setUnPay(orderAnalysis.getAlPay() + 1);
             }
         });
-        this.updateTeam(orderVo, user, product);
+        /*this.updateTeamOrganization(orderVo, user, product);*/
         userRepository.save(user);
     }
 
@@ -140,9 +140,8 @@ public class OrderServiceImp extends BaseService implements OrderService {
         orderRepository.save(order);
     }
 
-    @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
-    public void updateTeam(OrderVo orderVo, User user, Product product) {
-
+   /* @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
+    public void updateTeamOrganization(OrderVo orderVo, User user, Product product) {
         User sendUser = userRepository.findByPhone(orderVo.getRecommendPhone());
         if (sendUser != null) {
             throw new RuntimeException("您填写的推荐人手机号码不存在");
@@ -173,29 +172,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
         }
 
         userRepository.save(sendUser);
-    }
-
-    @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
-    public void updateHigherOrder(OrderVo orderVo, User user, Product product) {
-        User sendUser = userRepository.findByPhone(orderVo.getRecommendPhone());
-        if (sendUser != null) {
-            throw new RuntimeException("您填写的推荐人手机号码不存在");
-        }
-        if (product.getRoleType() == RoleType.天使) {
-            sendUser.getTeamAnalysis().setAngle(sendUser.getTeamAnalysis().getAngle() + 1);
-        }
-        if (product.getRoleType() == RoleType.合伙人) {
-            sendUser.getTeamAnalysis().setPartner(sendUser.getTeamAnalysis().getPartner() + 1);
-        }
-        if (product.getRoleType() == RoleType.准合伙人) {
-            sendUser.getTeamAnalysis().setQuasiPartner(sendUser.getTeamAnalysis().getQuasiPartner() + 1);
-        }
-        if (product.getRoleType() == RoleType.高级合伙人) {
-            sendUser.getTeamAnalysis().setSeniorPartner(sendUser.getTeamAnalysis().getSeniorPartner() + 1);
-        }
-        TeamOrganization teamOrganization = new TeamOrganization();
-
-    }
+    }*/
 
     private BigDecimal getProductPrice(RoleType roleType, Product product) {
         if (roleType == RoleType.天使 && product.getPrice1() != null) {
