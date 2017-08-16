@@ -1,11 +1,9 @@
 package com.mktj.cn.web.service.imp;
 
+import com.mktj.cn.web.dto.EntryDTO;
 import com.mktj.cn.web.dto.OrderDTO;
 import com.mktj.cn.web.mapper.OrderMapper;
-import com.mktj.cn.web.po.DeliveryAddress;
-import com.mktj.cn.web.po.Order;
-import com.mktj.cn.web.po.Product;
-import com.mktj.cn.web.po.User;
+import com.mktj.cn.web.po.*;
 import com.mktj.cn.web.repositories.DeliveryAddressRepository;
 import com.mktj.cn.web.repositories.OrderRepository;
 import com.mktj.cn.web.repositories.ProductRepository;
@@ -24,10 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.naming.OperationNotSupportedException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author zhanwang
@@ -79,9 +75,14 @@ public class OrderServiceImp extends BaseService implements OrderService {
             }
             user.setScore(user.getScore().subtract(totalCost));
         }
-        saveOrder(user.getPhone(), orderVo, user, product, OrderType.服务订单, deliveryAddress, piece, price, totalCost);
+        saveOrder(orderVo, user, product, deliveryAddress, piece, price, totalCost);
         user.setRoleType(product.getRoleType());
         user.setAuthorizationCode(generateAuthCode());
+        user.getOrderAnalysesList().forEach(orderAnalysis -> {
+            if (orderAnalysis.getOrderType() == OrderType.服务订单) {
+                orderAnalysis.setUnPay(orderAnalysis.getAlPay() + 1);
+            }
+        });
         userRepository.save(user);
     }
 
@@ -96,19 +97,23 @@ public class OrderServiceImp extends BaseService implements OrderService {
             }
             user.setScore(user.getScore().subtract(totalCost));
         }
-        saveOrder(user.getPhone(), orderVo, user, product, OrderType.普通订单, deliveryAddress, piece, price, totalCost);
+        saveOrder(orderVo, user, product, deliveryAddress, piece, price, totalCost);
+        user.getOrderAnalysesList().forEach(orderAnalysis -> {
+            if (orderAnalysis.getOrderType() == OrderType.进货订单) {
+                orderAnalysis.setUnPay(orderAnalysis.getAlPay() + 1);
+            }
+        });
         userRepository.save(user);
     }
 
     @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
-    private void saveOrder(String phone, OrderVo orderVo, User user, Product product, OrderType orderType, DeliveryAddress deliveryAddress, int piece, BigDecimal price, BigDecimal totalCost) {
+    private void saveOrder(OrderVo orderVo, User user, Product product, DeliveryAddress deliveryAddress, int piece, BigDecimal price, BigDecimal totalCost) {
         Order order = new Order();
         order.setOrderCode(generateOrderCode(String.valueOf(user.getId())));
         order.setUser(user);
         order.setOrderStatus(OrderStatus.待确认);
         order.setOrderTime(new Date());
         order.setOrderComment(orderVo.getOrderComment());
-        order.setOrderType(orderType);
         order.setPayWay(orderVo.getPayType());
         order.setProductName(product.getProductName());
         order.setProductCode(product.getProductCode());
@@ -123,6 +128,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
         order.setReceiverName(deliveryAddress.getDeliveryMan());
         order.setSendName(product.getSendMan());
         order.setSendPhone(product.getSendPhone());
+        order.setRecommendPhone(orderVo.getRecommendPhone());
         Optional<List<Order>> orderList = Optional.ofNullable(user.getOrderList());
         orderList.orElse(new ArrayList<>());
         orderList.get().add(order);
@@ -160,14 +166,45 @@ public class OrderServiceImp extends BaseService implements OrderService {
     @Override
     public List<OrderDTO> findByOrderTypeAndOrderStatusAndUser(OrderType orderType, OrderStatus status, String phone) {
         User user = userRepository.findByPhone(phone);
-        List<Order> orderList = orderRepository.findByOrderTypeAndOrderStatusAndUser(orderType, status, user);
+        List<Order> orderList = orderRepository.findByOrderStatusAndUser(status, user);
         return orderMapper.orderToOrderDTOList(orderList);
     }
 
     @Override
     public Long countByOrderTypeAndUser(String phone, OrderType orderType) {
         User user = userRepository.findByPhone(phone);
-        Long count = orderRepository.countByOrderTypeAndUser(orderType, user);
-        return count;
+        List<OrderAnalysis> list = user.getOrderAnalysesList();
+        List<OrderAnalysis> orderAnalysesList = list.stream().filter(orderAnalysis -> orderAnalysis.getOrderType() != orderType).collect(Collectors.toList());
+        if (orderAnalysesList != null && orderAnalysesList.size() > 0){
+            OrderAnalysis orderAnalysis = orderAnalysesList.get(0);
+            return orderAnalysis.getTotal();
+        }
+        return Long.valueOf(0);
+    }
+
+    @Override
+    public List<EntryDTO<String, Long>> groupOrderStatusCountByAndOrdinaryOrder(String phone) {
+        return getOrderAnalysisByOrderType(phone, OrderType.进货订单);
+    }
+
+    @Override
+    public List<EntryDTO<String, Long>> groupOrderStatusCountByAndServiceOrder(String phone) {
+        return getOrderAnalysisByOrderType(phone, OrderType.进货订单);
+    }
+
+    private List<EntryDTO<String, Long>> getOrderAnalysisByOrderType(String phone, OrderType orderType) {
+        User user = userRepository.findByPhone(phone);
+        List<OrderAnalysis> list = user.getOrderAnalysesList();
+        List<OrderAnalysis> orderAnalysesList = list.stream().filter(orderAnalysis -> orderAnalysis.getOrderType() != orderType).collect(Collectors.toList());
+        List<EntryDTO<String, Long>> result = new ArrayList<>();
+        for (OrderAnalysis orderAnalysis : orderAnalysesList) {
+            result.add(new EntryDTO<>(OrderStatus.待确认.getName(), orderAnalysis.getUnConfirm()));
+            result.add(new EntryDTO<>(OrderStatus.待支付.getName(), orderAnalysis.getUnPay()));
+            result.add(new EntryDTO<>(OrderStatus.已支付.getName(), orderAnalysis.getAlPay()));
+            result.add(new EntryDTO<>(OrderStatus.已发货.getName(), orderAnalysis.getAlSend()));
+            result.add(new EntryDTO<>(OrderStatus.已完成.getName(), orderAnalysis.getAlComplete()));
+            result.add(new EntryDTO<>(OrderStatus.已取消.getName(), orderAnalysis.getAlCancel()));
+        }
+        return result;
     }
 }

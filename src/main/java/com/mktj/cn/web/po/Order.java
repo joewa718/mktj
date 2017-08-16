@@ -10,7 +10,9 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author zhanwang
@@ -58,8 +60,6 @@ public class Order {
     @Column(name = "order_comment")
     private String orderComment;
     @Convert(converter = OrderTypeConverter.class)
-    @Column(name = "order_type")
-    private OrderType orderType;
     @Column(name = "order_time")
     @Temporal(TemporalType.TIMESTAMP)
     private Date orderTime;
@@ -71,6 +71,8 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+    @ManyToMany(mappedBy = "serviceOrder",fetch = FetchType.LAZY)
+    private List<User> higherUser = new ArrayList<>();
 
     public String getProductName() {
         return productName;
@@ -135,15 +137,6 @@ public class Order {
     public void setOrderTime(Date orderTime) {
         this.orderTime = orderTime;
     }
-
-    public OrderType getOrderType() {
-        return orderType;
-    }
-
-    public void setOrderType(OrderType orderType) {
-        this.orderType = orderType;
-    }
-
     public OrderStatus getOrderStatus() {
         return orderStatus;
     }
@@ -247,5 +240,13 @@ public class Order {
 
     public void setRecommendPhone(String recommendPhone) {
         this.recommendPhone = recommendPhone;
+    }
+
+    public List<User> getHigherUser() {
+        return higherUser;
+    }
+
+    public void setHigherUser(List<User> higherUser) {
+        this.higherUser = higherUser;
     }
 }

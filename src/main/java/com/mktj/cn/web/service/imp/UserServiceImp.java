@@ -8,14 +8,13 @@ import com.mktj.cn.web.exception.DuplicateAccountException;
 import com.mktj.cn.web.mapper.DeliveryAddressMapper;
 import com.mktj.cn.web.mapper.RealInfoMapper;
 import com.mktj.cn.web.mapper.UserMapper;
-import com.mktj.cn.web.po.DeliveryAddress;
-import com.mktj.cn.web.po.RealInfo;
-import com.mktj.cn.web.po.User;
+import com.mktj.cn.web.po.*;
 import com.mktj.cn.web.repositories.DeliveryAddressRepository;
 import com.mktj.cn.web.repositories.UserRepository;
 import com.mktj.cn.web.service.BaseService;
 import com.mktj.cn.web.service.UserService;
 import com.mktj.cn.web.util.GenerateRandomCode;
+import com.mktj.cn.web.util.OrderType;
 import com.mktj.cn.web.util.RoleType;
 import com.mktj.cn.web.util.SmsSender;
 import com.mktj.cn.web.vo.DeliveryAddressVo;
@@ -103,6 +102,18 @@ public class UserServiceImp extends BaseService implements UserService {
         user = userMapper.userToUserVo(userVo);
         user.setPassword(AESCryptUtil.encrypt(user.getPassword()));
         user.setDisable(false);
+        //初始化订单分析
+        List<OrderAnalysis> orderAnalysisList =new ArrayList<>();
+        OrderAnalysis ordinaryOrderAnalysis =new OrderAnalysis();
+        ordinaryOrderAnalysis.setOrderType(OrderType.进货订单);
+        orderAnalysisList.add(ordinaryOrderAnalysis);
+
+        OrderAnalysis serviceOrderAnalysis =new OrderAnalysis();
+        serviceOrderAnalysis.setOrderType(OrderType.服务订单);
+        orderAnalysisList.add(serviceOrderAnalysis);
+        user.setOrderAnalysesList(orderAnalysisList);
+        //初始化团队分析
+        user.setTeamAnalysis(new TeamAnalysis());
         user = userRepository.save(user);
         session.removeAttribute("regCode");
         session.removeAttribute("regCodeTime");

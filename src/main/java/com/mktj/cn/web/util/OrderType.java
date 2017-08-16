@@ -1,7 +1,7 @@
 package com.mktj.cn.web.util;
 
 public enum OrderType {
-    普通订单("普通订单", 1), 服务订单("服务订单", 2);
+    进货订单("进货订单", 1), 服务订单("服务订单", 2);
 
     OrderType(String name, int code) {
         this.name = name;
@@ -30,7 +30,7 @@ public enum OrderType {
 
     public static OrderType fromCode(int code) {
         if (code == 1) {
-            return 普通订单;
+            return 进货订单;
         }
         if (code == 2) {
             return 服务订单;
