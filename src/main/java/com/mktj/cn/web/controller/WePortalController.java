@@ -15,12 +15,11 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/api/wechat/portal")
-public class WechatController {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+public class WePortalController {
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private WxMpService wxService;
-
     @Autowired
     private WxMpMessageRouter router;
 
@@ -32,18 +31,14 @@ public class WechatController {
                     required = false) String timestamp,
             @RequestParam(name = "nonce", required = false) String nonce,
             @RequestParam(name = "echostr", required = false) String echostr) {
-
         this.logger.info("\n接收到来自微信服务器的认证消息：[{}, {}, {}, {}]", signature,
                 timestamp, nonce, echostr);
-
         if (StringUtils.isAnyBlank(signature, timestamp, nonce, echostr)) {
             throw new IllegalArgumentException("请求参数非法，请核实!");
         }
-
         if (this.wxService.checkSignature(timestamp, nonce, signature)) {
             return echostr;
         }
-
         return "非法请求";
     }
 
@@ -60,11 +55,9 @@ public class WechatController {
                 "\n接收微信请求：[signature=[{}], encType=[{}], msgSignature=[{}],"
                         + " timestamp=[{}], nonce=[{}], requestBody=[\n{}\n] ",
                 signature, encType, msgSignature, timestamp, nonce, requestBody);
-
         if (!this.wxService.checkSignature(timestamp, nonce, signature)) {
             throw new IllegalArgumentException("非法请求，可能属于伪造的请求！");
         }
-
         String out = null;
         if (encType == null) {
             // 明文传输的消息
