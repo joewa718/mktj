@@ -85,7 +85,7 @@
         <i class="list-arrow"></i>
       </a> -->
       
-      <a class="list-item" href="code---image.html">
+      <a class="list-item authorizationCodeHref" href="code---image.html">
         <div class="list-text">我的授权码</div>
         <div class="list-unit authorizationCode">我的授权码</div>
       </a>
@@ -135,6 +135,7 @@
       $('.nickname').text(data.nickname);
       $('.phone').text(data.phone);
       $('.authorizationCode').text(data.authorizationCode);
+      $('.authorizationCodeHref').attr('href','code---image.html?nickname='+encodeURI(encodeURI(data.nickname))+'&authorizationCode='+data.authorizationCode)
       $('[src="images/avatar.jpg"]').attr('src',data.headPortrait?(imageNginxUrl+data.headPortrait):'images/avatar.jpg');
     })
     .fail(function(data) {
