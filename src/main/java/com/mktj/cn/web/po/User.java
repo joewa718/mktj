@@ -4,6 +4,9 @@ import com.mktj.cn.web.converter.RoleTypeConverter;
 import com.mktj.cn.web.util.RoleType;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.Store;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,16 +15,19 @@ import java.util.List;
 
 @Entity
 @Table(name = "t_user")
+@Indexed
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE, region = "entityCache")
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+    @Field
     @Column(name = "nickname")
     private String nickname;
     @Column(name = "head_Portrait")
     private String headPortrait;
+    @Field(store = Store.NO)
     @Column(name = "phone", nullable = false, unique = true)
     private String phone;
     @Column(name = "password", nullable = false)
