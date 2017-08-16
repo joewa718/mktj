@@ -261,7 +261,7 @@ public class UserController extends BaseController {
 
     @ApiOperation(value = "密码找回手机")
     @RequestMapping(value = "/passwordFound", method = RequestMethod.POST)
-    public ResponseEntity passwordFoundNext(@RequestParam("phone") String phone, @RequestParam("sendPwFoundCode")String sendPwFoundCode,@RequestParam("password")String password, HttpServletRequest request) {
+    public ResponseEntity passwordFoundNext(@RequestParam("password")String password, HttpServletRequest request) {
         try {
             HttpSession session = request.getSession();
             userService.foundPassword(password,session);

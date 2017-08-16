@@ -72,22 +72,9 @@
           messageFlash('请选择合伙人套餐');
           return false;
         }
-
-// 148
-// 168
-// 128
-// 198
-
-        var obj = {};
-        $.each($('#form').serializeArray(),function(i,v){
-          obj[v.name] = v.value;
-        });
-        obj.priceAll=128*obj.quantity;
-        sessionStorage.setItem('agentLevel',JSON.stringify(obj));
         
-        location.href='./u---order---create1.html';
+        location.href='./u---order---create1.html?productId='+$('[name="productId"]').val();
 
-        // $('#form').submit();
       });
 
     });
@@ -114,40 +101,40 @@
     <div class="list-group">
       <!-- form-radio -->
       
-        <div class="list-item form-radio" data-id="2">
+        <div class="list-item form-radio" data-id="5">
           <div class="list-icon">
             <input id="agentLevel4New" type="radio" name="agentLevel" value="V1">
             <label class="i-checked" for="agentLevel4New"></label>
           </div>
           <img class="image-80 block mr-10" src="images/微信图片_20170726174201.jpg">
           <div class="list-text">
-            <h2 class="font-777 fs-15 lh-24">民康优检合伙人套餐 <span class="quantity">3600</span>次</h2>
+            <h2 class="font-777 fs-15 lh-24">民康优检合伙人套餐 <span class="quantity">1800</span>次</h2>
             <div class="lh-30"><label class="label blue">高级合伙人</label></div>
             <div class="font-orange lh-24">¥ 158400.00</div>
           </div>
         </div>      
 
-        <div class="list-item form-radio" data-id="2">
+        <div class="list-item form-radio" data-id="4">
           <div class="list-icon">
             <input id="agentLevel1New" type="radio" name="agentLevel" value="V3">
             <label class="i-checked" for="agentLevel1New"></label>
           </div>
           <img class="image-80 block mr-10" src="images/微信图片_20170726174201.jpg">
           <div class="list-text">
-            <h2 class="font-777 fs-15 lh-24">民康优检合伙人套餐 <span class="quantity">240</span>次</h2>
+            <h2 class="font-777 fs-15 lh-24">民康优检合伙人套餐 <span class="quantity">150</span>次</h2>
             <div class="lh-30"><label class="label red">合伙人</label></div>
             <div class="font-orange lh-24">¥ 16200.00</div>
           </div>
         </div>
 
-        <div class="list-item form-radio" data-id="2">
+        <div class="list-item form-radio" data-id="3">
           <div class="list-icon">
             <input id="agentLevel2New" type="radio" name="agentLevel" value="V2">
             <label class="i-checked" for="agentLevel2New"></label>
           </div>
           <img class="image-80 block mr-10" src="images/微信图片_20170726174201.jpg">
           <div class="list-text">
-            <h2 class="font-777 fs-15 lh-24">民康优检合伙人套餐 <span class="quantity">80</span>次</h2>
+            <h2 class="font-777 fs-15 lh-24">民康优检合伙人套餐 <span class="quantity">50</span>次</h2>
             <div class="lh-30"><label class="label yellow">准合伙人</label></div>
             <div class="font-orange lh-24">¥ 6900.00</div>
           </div>
@@ -165,7 +152,7 @@
             <div class="font-orange lh-24">¥ 840.00</div>
           </div>
         </div>
-   
+
     </div>
 
     <div class="form-btn">
