@@ -1,18 +1,15 @@
 package com.mktj.cn.web.po;
 
 import com.mktj.cn.web.converter.RoleTypeConverter;
-import com.mktj.cn.web.util.OrderType;
 import com.mktj.cn.web.util.RoleType;
-import org.apache.lucene.analysis.cn.smart.SmartChineseAnalyzer;
-import org.hibernate.annotations.*;
 import org.hibernate.annotations.Cache;
-import org.hibernate.search.annotations.*;
-import org.hibernate.search.annotations.Index;
-
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
+import org.hibernate.search.annotations.DocumentId;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
 import javax.persistence.*;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;

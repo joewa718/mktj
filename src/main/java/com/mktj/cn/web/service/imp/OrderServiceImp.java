@@ -22,7 +22,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.naming.OperationNotSupportedException;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -83,6 +86,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
                 orderAnalysis.setUnPay(orderAnalysis.getAlPay() + 1);
             }
         });
+        this.updateTeam(orderVo, user, product);
         userRepository.save(user);
     }
 
@@ -136,6 +140,63 @@ public class OrderServiceImp extends BaseService implements OrderService {
         orderRepository.save(order);
     }
 
+    @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
+    public void updateTeam(OrderVo orderVo, User user, Product product) {
+
+        User sendUser = userRepository.findByPhone(orderVo.getRecommendPhone());
+        if (sendUser != null) {
+            throw new RuntimeException("您填写的推荐人手机号码不存在");
+        }
+
+        if (product.getRoleType() == RoleType.天使) {
+            sendUser.getTeamAnalysis().setAngle(sendUser.getTeamAnalysis().getAngle() + 1);
+        }
+
+        if (product.getRoleType() == RoleType.合伙人) {
+            sendUser.getTeamAnalysis().setPartner(sendUser.getTeamAnalysis().getPartner() + 1);
+        }
+
+        if (product.getRoleType() == RoleType.准合伙人) {
+            sendUser.getTeamAnalysis().setQuasiPartner(sendUser.getTeamAnalysis().getQuasiPartner() + 1);
+        }
+
+        if (product.getRoleType() == RoleType.高级合伙人) {
+            sendUser.getTeamAnalysis().setSeniorPartner(sendUser.getTeamAnalysis().getSeniorPartner() + 1);
+        }
+
+        List<TeamOrganization> teamOrganizationList = sendUser.getLowerList().stream().filter(teamOrganization -> teamOrganization.getLowerUser().getId() == user.getId()).collect(Collectors.toList());
+        if(teamOrganizationList.size() == 0){
+            TeamOrganization teamOrganization = new TeamOrganization();
+            teamOrganization.setHigherUser(sendUser);
+            teamOrganization.setLowerUser(user);
+            sendUser.getLowerList().add(teamOrganization);
+        }
+
+        userRepository.save(sendUser);
+    }
+
+    @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
+    public void updateHigherOrder(OrderVo orderVo, User user, Product product) {
+        User sendUser = userRepository.findByPhone(orderVo.getRecommendPhone());
+        if (sendUser != null) {
+            throw new RuntimeException("您填写的推荐人手机号码不存在");
+        }
+        if (product.getRoleType() == RoleType.天使) {
+            sendUser.getTeamAnalysis().setAngle(sendUser.getTeamAnalysis().getAngle() + 1);
+        }
+        if (product.getRoleType() == RoleType.合伙人) {
+            sendUser.getTeamAnalysis().setPartner(sendUser.getTeamAnalysis().getPartner() + 1);
+        }
+        if (product.getRoleType() == RoleType.准合伙人) {
+            sendUser.getTeamAnalysis().setQuasiPartner(sendUser.getTeamAnalysis().getQuasiPartner() + 1);
+        }
+        if (product.getRoleType() == RoleType.高级合伙人) {
+            sendUser.getTeamAnalysis().setSeniorPartner(sendUser.getTeamAnalysis().getSeniorPartner() + 1);
+        }
+        TeamOrganization teamOrganization = new TeamOrganization();
+
+    }
+
     private BigDecimal getProductPrice(RoleType roleType, Product product) {
         if (roleType == RoleType.天使 && product.getPrice1() != null) {
             return product.getPrice1();
@@ -166,7 +227,12 @@ public class OrderServiceImp extends BaseService implements OrderService {
     @Override
     public List<OrderDTO> findByOrderTypeAndOrderStatusAndUser(OrderType orderType, OrderStatus status, String phone) {
         User user = userRepository.findByPhone(phone);
-        List<Order> orderList = orderRepository.findByOrderStatusAndUser(status, user);
+        List<Order> orderList = null;
+        if (OrderType.进货订单 == orderType) {
+            orderList = user.getOrderList().stream().filter(order -> order.getOrderStatus() == status).collect(Collectors.toList());
+        } else {
+            orderList = user.getServiceOrder().stream().filter(order -> order.getOrderStatus() == status).collect(Collectors.toList());
+        }
         return orderMapper.orderToOrderDTOList(orderList);
     }
 
@@ -175,7 +241,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
         User user = userRepository.findByPhone(phone);
         List<OrderAnalysis> list = user.getOrderAnalysesList();
         List<OrderAnalysis> orderAnalysesList = list.stream().filter(orderAnalysis -> orderAnalysis.getOrderType() != orderType).collect(Collectors.toList());
-        if (orderAnalysesList != null && orderAnalysesList.size() > 0){
+        if (orderAnalysesList != null && orderAnalysesList.size() > 0) {
             OrderAnalysis orderAnalysis = orderAnalysesList.get(0);
             return orderAnalysis.getTotal();
         }

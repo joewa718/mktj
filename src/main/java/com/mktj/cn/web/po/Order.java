@@ -72,7 +72,7 @@ public class Order {
     @JoinColumn(name = "user_id")
     private User user;
     @ManyToMany(mappedBy = "serviceOrder",fetch = FetchType.LAZY)
-    private List<User> higherUser = new ArrayList<>();
+    private List<User> higherUserList = new ArrayList<>();
 
     public String getProductName() {
         return productName;
@@ -185,7 +185,6 @@ public class Order {
         this.productCode = productCode;
     }
 
-
     public BigDecimal getProductCost() {
         return productCost;
     }
@@ -242,11 +241,12 @@ public class Order {
         this.recommendPhone = recommendPhone;
     }
 
-    public List<User> getHigherUser() {
-        return higherUser;
+    public List<User> getHigherUserList() {
+        return higherUserList;
     }
 
-    public void setHigherUser(List<User> higherUser) {
-        this.higherUser = higherUser;
+    public void setHigherUserList(List<User> higherUserList) {
+        this.higherUserList = higherUserList;
     }
+
 }

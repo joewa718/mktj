@@ -20,8 +20,6 @@ public interface OrderRepository extends CrudRepository<Order, Long>, JpaSpecifi
     @Query("update Order o set o.orderStatus = ?1 where o.id = ?2 and o.user =?3")
     void updateOrderStatusByIdAndUser(OrderStatus status, long id, User user);
 
-    List<Order> findByOrOrderStatusAndUser(OrderStatus orderStatus, User user);
-
     List<Order> findByOrderStatusAndUser(OrderStatus orderStatus, User user);
 
     Order findOneByIdAndUser(long id, User user);
