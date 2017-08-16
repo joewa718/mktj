@@ -2,9 +2,11 @@ package com.mktj.cn.web.po;
 
 import com.mktj.cn.web.converter.RoleTypeConverter;
 import com.mktj.cn.web.util.RoleType;
+import org.apache.lucene.analysis.cn.smart.SmartChineseAnalyzer;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.search.annotations.*;
+import org.hibernate.search.annotations.Index;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -19,17 +21,19 @@ import java.util.List;
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @DocumentId
     private long id;
     @Field
     @Column(name = "nickname")
     private String nickname;
     @Column(name = "head_Portrait")
     private String headPortrait;
-    @Field(store = Store.NO)
+    @Field
     @Column(name = "phone", nullable = false, unique = true)
     private String phone;
     @Column(name = "password", nullable = false)
     private String password;
+    @Field
     @Column(name = "email")
     private String email;
     @Column(name = "score")
@@ -43,7 +47,6 @@ public class User implements Serializable {
     private String authorizationCode;
     @Column(name = "isReceiveMessage")
     private Boolean isReceiveMessage = false;
-    @IndexedEmbedded
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private RealInfo realInfo;

@@ -63,10 +63,12 @@ spring:
     hibernate:
       ddl-auto: update
       dialect: org.hibernate.dialect.MySQL5Dialect
-      search:
-        default:
-          directory_provider: filesystem
-          indexBase: c:/project/mktj/lucene/indexes/
+    properties:
+      hibernate:
+        search:
+          default:
+            directory_provider: filesystem
+            indexBase: C:\project\mktj\lucene\indexes
   datasource:
       type: com.alibaba.druid.pool.DruidDataSource
       driver-class-name: com.mysql.jdbc.Driver
@@ -110,10 +112,12 @@ spring:
     hibernate:
       ddl-auto: update
       dialect: org.hibernate.dialect.MySQL5Dialect
-      search:
-        default:
-          directory_provider: filesystem
-          indexBase: /opt/projects/mktj/lucene/indexes/
+    properties:
+      hibernate:
+        search:
+          default:
+            directory_provider: filesystem
+            indexBase: /opt/projects/mktj/lucene/indexes/
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.jdbc.Driver
@@ -141,4 +145,3 @@ web:
   maximumSessions: 1
 photo:
   path: /opt/projects/mktj/photo/
-

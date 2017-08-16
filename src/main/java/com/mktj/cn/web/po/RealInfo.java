@@ -20,7 +20,6 @@ public class RealInfo implements Serializable {
     private long id;
     @Column(name = "idCard", unique = true)
     private String idCard;
-    @Field(index = Index.YES, analyze = Analyze.NO, store = Store.YES)
     @Column(name = "real_name")
     private String realName;
     @Column(name = "sex")

@@ -13,27 +13,26 @@ import java.util.List;
 @Repository
 @Transactional
 public class UserSearch {
-    @PersistenceContext
-    private EntityManager entityManager;
-
-    public List search(String text) {
-        FullTextEntityManager fullTextEntityManager =
-                org.hibernate.search.jpa.Search.
-                        getFullTextEntityManager(entityManager);
-        QueryBuilder queryBuilder =
-                fullTextEntityManager.getSearchFactory()
-                        .buildQueryBuilder().forEntity(User.class).get();
-        org.apache.lucene.search.Query query =
-                queryBuilder
-                        .keyword()
-                        .onFields("nickName","realName", "phone")
-                        .matching(text)
-                        .createQuery();
-        org.hibernate.search.jpa.FullTextQuery jpaQuery =
-                fullTextEntityManager.createFullTextQuery(query, User.class);
-        @SuppressWarnings("unchecked")
-        List results = jpaQuery.getResultList();
-        return results;
-    }
+  @PersistenceContext
+  private EntityManager entityManager;
+  public List search(String text) {
+    FullTextEntityManager fullTextEntityManager =
+        org.hibernate.search.jpa.Search.
+        getFullTextEntityManager(entityManager);
+    QueryBuilder queryBuilder =
+        fullTextEntityManager.getSearchFactory()
+        .buildQueryBuilder().forEntity(User.class).get();
+    org.apache.lucene.search.Query query =
+        queryBuilder
+          .keyword()
+          .onFields("nickname", "phone","email")
+          .matching(text)
+          .createQuery();
+    org.hibernate.search.jpa.FullTextQuery jpaQuery =
+        fullTextEntityManager.createFullTextQuery(query, User.class);
+    @SuppressWarnings("unchecked")
+    List results = jpaQuery.getResultList();
+    return results;
+  }
 
 }

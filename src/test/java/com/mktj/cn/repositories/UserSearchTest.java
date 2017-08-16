@@ -30,7 +30,7 @@ public class UserSearchTest extends AbstractTransactionalTestNGSpringContextTest
 
     @Test
     public void testSave() {
-        List list = userSearch.search("汪湛");
+        List list = userSearch.search("18930983718");
         System.out.print(list);
     }
 }
