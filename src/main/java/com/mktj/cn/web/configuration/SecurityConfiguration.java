@@ -90,7 +90,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         });
         http.logout().invalidateHttpSession(true).logoutSuccessHandler(logoutSuccessHandler);
         http.authorizeRequests()
-                .antMatchers("/css/**", "/js/**", "/tpl/**", "/plugin/**", "/imageupload/**", "/images/**", "/vendor/**",
+                .antMatchers("/css/**", "/js/**", "/tpl/**", "/plugin/**", "/imageupload/**", "/images/**","/image/**", "/vendor/**",
                         "/*.html", "/", "/fonts/**", "/l10n/**", "/**/favicon.ico", "/webjars/springfox-swagger-ui/**", "/swagger-resources/**", "/v2/**",
                         "/api/user/login", "/api/user/regUser", "/api/user/sendRegCode", "/api/user/captcha","/api/user/sendPwFoundCode",
                         "/api/user/passwordFoundNext","/api/user/passwordFound", "/api/wechat/portal/**", "/api/wechat/user/**","/druid/**").permitAll()
