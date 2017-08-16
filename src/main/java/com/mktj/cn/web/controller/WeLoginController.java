@@ -30,8 +30,8 @@ import java.io.IOException;
  */
 @Controller
 @RequestMapping("/api/wechat/user/")
-public class WxLoginController extends WxMpUserQuery {
-    private final static Logger log = LoggerFactory.getLogger(WxLoginController.class);
+public class WeLoginController extends WxMpUserQuery {
+    private final static Logger log = LoggerFactory.getLogger(WeLoginController.class);
     @Autowired
     private WechatMpProperties wechatMpProperties;
     @Autowired
@@ -42,13 +42,13 @@ public class WxLoginController extends WxMpUserQuery {
     @ApiOperation(value = "用户登录")
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public void login(HttpServletResponse response) throws IOException {
-        String authorizationUrl = wxService.oauth2buildAuthorizationUrl("http://122.152.208.113/api/wechat/user/login_callback", "snsapi_userinfo", "123456");
+        String authorizationUrl = wxService.oauth2buildAuthorizationUrl("http://122.152.208.113/api/wechat/user/weLoginCallback", "snsapi_userinfo", "123456");
         response.sendRedirect(authorizationUrl);
     }
 
     @ApiOperation(value = "用户登录回调")
-    @RequestMapping(value = "/login_callback", method = RequestMethod.GET)
-    public void callback(@RequestParam("code") String code, @RequestParam("state") String state, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    @RequestMapping(value = "/weLoginCallback", method = RequestMethod.GET)
+    public void weLoginCallback(@RequestParam("code") String code, @RequestParam("state") String state, HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             WxMpOAuth2AccessToken wxMpOAuth2AccessToken = wxService.oauth2getAccessToken(code);
             WxMpUser wxMpUser = wxService.oauth2getUserInfo(wxMpOAuth2AccessToken, null);

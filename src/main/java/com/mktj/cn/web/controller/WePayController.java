@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/api/wechat/pay/")
-public class WxPayController{
+public class WePayController{
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Resource(name = "wxPayService")
     private WxPayService wxService;

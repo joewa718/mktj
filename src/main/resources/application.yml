@@ -39,7 +39,7 @@ wechat:
     token: hlwerbv123nsf
     aesKey: u3hX2kQdo1hvQWRkg9MjOahuw3zY7nxmargMNf9TJW7
   pay:
-    appId:
+    appId: wxd45ea849e28c0d42
     mchId:
     mchKey:
     subAppId:
