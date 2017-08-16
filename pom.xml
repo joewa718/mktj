@@ -177,7 +177,7 @@
         <dependency>
             <groupId>com.github.binarywang</groupId>
             <artifactId>weixin-java-pay</artifactId>
-            <version>2.7.0</version>
+            <version>2.7.8.BETA</version>
         </dependency>
         <dependency>
             <groupId>org.richard</groupId>
@@ -223,7 +223,7 @@
                 </configuration>
             </plugin>
         </plugins>
-        <resources>
+        <!--<resources>
             <resource>
                 <directory>${project.basedir}/src/lib</directory>
                 <targetPath>BOOT-INF/lib/</targetPath>
@@ -235,6 +235,6 @@
                 <directory>${project.basedir}/src/main/resources</directory>
                 <targetPath>BOOT-INF/classes/</targetPath>
             </resource>
-        </resources>
+        </resources>-->
     </build>
 </project>

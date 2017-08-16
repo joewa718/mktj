@@ -1,5 +1,6 @@
 package com.mktj.cn.web.controller;
 
+import com.mktj.cn.web.dto.EntryDTO;
 import com.mktj.cn.web.dto.OrderDTO;
 import com.mktj.cn.web.service.OrderService;
 import com.mktj.cn.web.util.OrderStatus;
@@ -38,6 +39,20 @@ public class OrderController extends BaseController {
         String phone = super.getCurrentUser().getUsername();
         OrderDTO orderDTO = orderService.getOrder(phone, orderId);
         return new ResponseEntity<>(orderDTO, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "根据订单的类型汇总订单各种状态的量")
+    @RequestMapping(value = "/groupByOrderTypeAndOrderStatusAndUser", method = RequestMethod.POST)
+    public ResponseEntity<List<EntryDTO<String,Long>>> groupByOrderTypeAndOrderStatusAndUser(@RequestParam OrderType orderType, @RequestParam OrderStatus orderStatus) {
+        String phone = super.getCurrentUser().getUsername();
+        List<EntryDTO<String,Long>> orderDTOList = null;
+        if(orderType == OrderType.进货订单){
+            orderDTOList = orderService.groupOrderStatusCountByAndOrdinaryOrder(phone);
+        }else{
+            orderDTOList = orderService.groupOrderStatusCountByAndServiceOrder(phone);
+        }
+
+        return new ResponseEntity<>(orderDTOList, HttpStatus.OK);
     }
 
     @ApiOperation(value = "根据订单状态查询订单")

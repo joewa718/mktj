@@ -21,12 +21,12 @@ import java.util.Map;
  * @author Binary Wang(https://github.com/binarywang)
  */
 @Controller
-public class WxErrorController implements ErrorController {
+public class WeErrorController implements ErrorController {
 
     private static final Logger logger = LoggerFactory
-            .getLogger(WxErrorController.class);
+            .getLogger(WeErrorController.class);
     private final static String ERROR_PATH = "/error";
-    private static WxErrorController appErrorController;
+    private static WeErrorController appErrorController;
     /**
      * Error Attributes in the Application
      */
@@ -39,13 +39,13 @@ public class WxErrorController implements ErrorController {
      * @param errorAttributes
      */
 
-    public WxErrorController(ErrorAttributes errorAttributes) {
+    public WeErrorController(ErrorAttributes errorAttributes) {
         this.errorAttributes = errorAttributes;
     }
 
-    public WxErrorController() {
+    public WeErrorController() {
         if (appErrorController == null) {
-            appErrorController = new WxErrorController(this.errorAttributes);
+            appErrorController = new WeErrorController(this.errorAttributes);
         }
     }
 
