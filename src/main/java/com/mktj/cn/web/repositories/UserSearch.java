@@ -26,7 +26,7 @@ public class UserSearch {
         org.apache.lucene.search.Query query =
                 queryBuilder
                         .keyword()
-                        .onFields("nickname", "phone")
+                        .onFields("nickName","realName", "phone")
                         .matching(text)
                         .createQuery();
         org.hibernate.search.jpa.FullTextQuery jpaQuery =

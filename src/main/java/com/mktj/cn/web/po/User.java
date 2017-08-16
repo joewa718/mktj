@@ -4,9 +4,7 @@ import com.mktj.cn.web.converter.RoleTypeConverter;
 import com.mktj.cn.web.util.RoleType;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.Store;
+import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -45,6 +43,7 @@ public class User implements Serializable {
     private String authorizationCode;
     @Column(name = "isReceiveMessage")
     private Boolean isReceiveMessage = false;
+    @IndexedEmbedded
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private RealInfo realInfo;
