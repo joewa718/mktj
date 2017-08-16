@@ -10,7 +10,7 @@
 
   <title>服务详情</title>
   
-<link rel="shortcut icon" href="http://state.zhi-you.net/favicon.ico">
+<!-- <link rel="shortcut icon" href="favicon.ico"> -->
 <link rel="stylesheet" href="css/common.css">
 <link rel="stylesheet" href="css/components.css">
 <link rel="stylesheet" href="css/custom.css">
@@ -18,7 +18,7 @@
 <link rel="stylesheet" href="plugin/font-awesome-4.6.3/css/font-awesome.min.css">
 <link rel="stylesheet" href="plugin/miui-1.0/jquery.miui.css">
 <script src="plugin/jquery-1.11.0/jquery.min.js"></script>
-<script src="plugin/layer-mobile-2.0/layer.js"></script><link href="http://state.zhi-you.net/plugin/layer-mobile-2.0/need/layer.css?2.0" type="text/css" rel="styleSheet" id="layermcss">
+<script src="plugin/layer-mobile-2.0/layer.js"></script><link href="plugin/layer-mobile-2.0/need/layer.css?2.0" type="text/css" rel="styleSheet" id="layermcss">
 <script src="plugin/miui-1.0/jquery.miui.js"></script>
 <script src="plugin/fastclick-1.0/fastclick.js "></script>
 <script src="js/common.js"></script>
@@ -33,11 +33,11 @@
 
 
 
-  <link href="http://state.zhi-you.net/css/product.css" rel="stylesheet">
+  <link href="css/product.css" rel="stylesheet">
   <script>
     $(function() {
 
-      var MIN_QUANTITY = 80;
+      var MIN_QUANTITY = 1;
       var MAX_QUANTITY = 10000;
 
       function editQuantity(quantity) {
@@ -62,10 +62,10 @@
       }
 
       //商品数量 加减
-      $('#quantity').blur(function() {
-        var quantity = $("#quantity").val();
-        editQuantity(parseInt(quantity));
-      });
+      // $('#quantity').blur(function() {
+      //   var quantity = $("#quantity").val();
+      //   editQuantity(parseInt(quantity));
+      // });
 
       $('.fa-plus').click(function() {
         var quantity = $("#quantity").val();
@@ -92,7 +92,7 @@
 </head>
 
 <body class="product-detail footer-fixed">
-<a class="header-back" href="/product"><i class="fa fa-angle-left"></i></a>
+<a class="header-back" onclick="history.go(-1);"><i class="fa fa-angle-left"></i></a>
 
 <form id="form" action="/u---order---create" method="get">
   <input type="hidden" name="productId" value="2">
@@ -166,7 +166,7 @@
     var order={};
     order.productNum=$('#quantity').val();
     sessionStorage.setItem('order',JSON.stringify(order));
-    location.href='u---order---create.html';
+    location.href='u---order---create.html?productId=1';
   })
 </script>
 

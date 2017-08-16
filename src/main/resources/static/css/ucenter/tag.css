@@ -1,0 +1,28 @@
+.tag-wrap .label {
+  margin-left: 5px; margin-bottom: 5px; padding: 4px 10px;
+  display: inline-block; line-height: 20px;
+  cursor: pointer; white-space: nowrap; font-size: 13px;
+}
+
+.tag-select {
+  background-color: #fff;
+}
+.tag-select .group-title {
+  padding: 0 15px;
+  color: #555; font-size: 14px; line-height: 36px;
+  border-bottom: 1px solid #eee;
+}
+.tag-select .tag-group {
+  padding: 5px 15px 15px 5px;
+}
+.tag-select .tag-option {
+  margin-left: 10px; margin-top: 10px; padding: 4px 12px;
+  display: inline-block; line-height: 24px;
+  color: #777; font-size: 15px;
+  border: 1px solid #eee;
+  border-radius: 8px; -webkit-border-radius: 8px; -moz-border-radius: 8px;
+}
+.tag-select .tag-option.checked {
+  color: #f0732f;
+  border: 1px solid #f0732f;
+}
