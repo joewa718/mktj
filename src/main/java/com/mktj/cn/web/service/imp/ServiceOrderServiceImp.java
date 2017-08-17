@@ -23,26 +23,24 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.naming.OperationNotSupportedException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
  * @author zhanwang
  * @create 2017-08-09 13:27
  **/
-@Qualifier("serviceOrderService")
+@Qualifier("serviceOrderServiceImp")
 @Service
-public class ServiceOrderServiceImp extends OrderServiceImp{
+public class ServiceOrderServiceImp extends  OrderServiceImp{
     @Autowired
     DeliveryAddressRepository deliveryAddressRepository;
     @Autowired
     UserRepository userRepository;
 
+    @Override
     @Transactional(value = "transactionManager")
-    public void transactionOrder(String phone, OrderVo orderVo,Product product) throws OperationNotSupportedException {
+    public Order transactionOrder(String phone, OrderVo orderVo,Product product) throws OperationNotSupportedException {
         User user = userRepository.findByPhone(phone);
         DeliveryAddress deliveryAddress = deliveryAddressRepository.findOneByIdAndUser(orderVo.getDeliverAddressId(), user);
         if (deliveryAddress == null) {
@@ -72,6 +70,7 @@ public class ServiceOrderServiceImp extends OrderServiceImp{
         recommend_man.getServiceOrderAnalysis().setUnPay(recommend_man.getServiceOrderAnalysis().getUnPay() + 1);
         recommend_man.getServiceOrderList().add(order);
         userRepository.save(recommend_man);
+        return order;
     }
 
     @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
@@ -149,17 +148,19 @@ public class ServiceOrderServiceImp extends OrderServiceImp{
         List<Order> orderList = user.getServiceOrderList().stream().filter(order -> order.getOrderStatus() == status).collect(Collectors.toList());
         return orderMapper.orderToOrderDTOList(orderList);
     }
-
+    @Override
     public List<EntryDTO<String, Long>> groupOrderStatusCountByAndOrder(String phone) {
         User user = userRepository.findByPhone(phone);
+        List<Order> orderList = user.getServiceOrderList();
+        Map<Integer,Long> groupResult  = orderList.stream().collect( Collectors.groupingBy(order -> order.getOrderStatus().getCode(), Collectors.counting()));
         List<EntryDTO<String, Long>> result = new ArrayList<>();
         if (user.getOrderAnalysis() != null) {
-            result.add(new EntryDTO<>(OrderStatus.待确认.getName(), user.getServiceOrderAnalysis().getUnConfirm()));
-            result.add(new EntryDTO<>(OrderStatus.待支付.getName(), user.getServiceOrderAnalysis().getUnPay()));
-            result.add(new EntryDTO<>(OrderStatus.已支付.getName(), user.getServiceOrderAnalysis().getAlPay()));
-            result.add(new EntryDTO<>(OrderStatus.已发货.getName(), user.getServiceOrderAnalysis().getAlSend()));
-            result.add(new EntryDTO<>(OrderStatus.已完成.getName(), user.getServiceOrderAnalysis().getAlComplete()));
-            result.add(new EntryDTO<>(OrderStatus.已取消.getName(), user.getServiceOrderAnalysis().getAlCancel()));
+            result.add(new EntryDTO<>(OrderStatus.待确认.getName(), groupResult.get(OrderStatus.待确认.getCode())));
+            result.add(new EntryDTO<>(OrderStatus.待支付.getName(), groupResult.get(OrderStatus.待支付.getCode())));
+            result.add(new EntryDTO<>(OrderStatus.已支付.getName(), groupResult.get(OrderStatus.已支付.getCode())));
+            result.add(new EntryDTO<>(OrderStatus.已发货.getName(), groupResult.get(OrderStatus.已发货.getCode())));
+            result.add(new EntryDTO<>(OrderStatus.已完成.getName(), groupResult.get(OrderStatus.已完成.getCode())));
+            result.add(new EntryDTO<>(OrderStatus.已取消.getName(), groupResult.get(OrderStatus.已取消.getCode())));
         }
         return result;
     }

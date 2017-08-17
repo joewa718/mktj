@@ -11,6 +11,7 @@ import com.mktj.cn.web.service.ProductService;
 import com.mktj.cn.web.util.ProductType;
 import com.mktj.cn.web.util.RoleType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class ProductServiceImp implements ProductService {
     @Autowired
     ProductMapper productMapper;
     @Autowired
-    OrderService orderService;
+    OrderService ordinaryOrderServiceImp;
     @Autowired
     UserRepository userRepository;
 
@@ -34,7 +35,7 @@ public class ProductServiceImp implements ProductService {
         User user = userRepository.findByPhone(phone);
         List<Product> productList =productRepository.getProductListByProductType(ProductType.普通产品);
         productList.forEach(product -> {
-            product.setRetailPrice(orderService.getProductPrice(user.getRoleType(),product));
+            product.setRetailPrice(ordinaryOrderServiceImp.getProductPrice(user.getRoleType(),product));
         });
         return productMapper.productToProductDTOList(productList);
     }
@@ -45,7 +46,12 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
-    public ProductDTO getProductById(long id) {
+    public ProductDTO getProductDtoById(long id) {
         return productMapper.productToProductDTO(productRepository.findOne(id));
+    }
+
+    @Override
+    public Product getProductById(long id) {
+        return productRepository.findOne(id);
     }
 }

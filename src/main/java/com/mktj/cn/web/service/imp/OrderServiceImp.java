@@ -3,18 +3,21 @@ package com.mktj.cn.web.service.imp;
 import com.mktj.cn.web.dto.EntryDTO;
 import com.mktj.cn.web.dto.OrderDTO;
 import com.mktj.cn.web.mapper.OrderMapper;
-import com.mktj.cn.web.po.*;
-import com.mktj.cn.web.repositories.DeliveryAddressRepository;
+import com.mktj.cn.web.po.DeliveryAddress;
+import com.mktj.cn.web.po.Order;
+import com.mktj.cn.web.po.Product;
+import com.mktj.cn.web.po.User;
 import com.mktj.cn.web.repositories.OrderRepository;
 import com.mktj.cn.web.repositories.ProductRepository;
 import com.mktj.cn.web.repositories.UserRepository;
 import com.mktj.cn.web.service.BaseService;
 import com.mktj.cn.web.service.OrderService;
-import com.mktj.cn.web.util.*;
+import com.mktj.cn.web.util.OrderStatus;
+import com.mktj.cn.web.util.OrderType;
+import com.mktj.cn.web.util.ProductType;
+import com.mktj.cn.web.util.RoleType;
 import com.mktj.cn.web.vo.OrderVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,11 +33,7 @@ import java.util.stream.Collectors;
  * @author zhanwang
  * @create 2017-08-09 13:27
  **/
-@Qualifier("orderService")
-@Service
-public class OrderServiceImp extends BaseService implements OrderService{
-    @Autowired
-    DeliveryAddressRepository deliveryAddressRepository;
+public abstract class OrderServiceImp extends BaseService implements OrderService{
     @Autowired
     ProductRepository productRepository;
     @Autowired
@@ -43,26 +42,25 @@ public class OrderServiceImp extends BaseService implements OrderService{
     OrderRepository orderRepository;
     @Autowired
     OrderMapper orderMapper;
-    @Qualifier("ordinaryOrderService")
-    @Autowired
-    OrdinaryOrderServiceImp ordinaryOrderServiceImp;
-    @Qualifier("serviceOrderService")
-    @Autowired
-    ServiceOrderServiceImp serviceOrderServiceImp;
 
-
+    public abstract Order transactionOrder(String phone, OrderVo orderVo,Product product) throws OperationNotSupportedException;
+    public abstract List<EntryDTO<String, Long>> groupOrderStatusCountByAndOrder(String phone);
     @Override
     @Transactional(value = "transactionManager")
-    public void transactionOrder(String phone, OrderVo orderVo) throws OperationNotSupportedException {
+    public OrderDTO transactionOrder(String phone, OrderVo orderVo) throws OperationNotSupportedException {
         Product product = productRepository.findOne(orderVo.getProductId());
         if (product == null) {
             throw new OperationNotSupportedException("无法找到对应的商品");
         }
+        transactionOrder(phone,orderVo,product);
         if(product.getProductType() == ProductType.普通产品){
-            ordinaryOrderServiceImp.transactionOrder(phone,orderVo,product);
+            Order order = transactionOrder(phone,orderVo,product);
+            return  orderMapper.orderToOrderDTO(order);
         }else{
-            serviceOrderServiceImp.transactionOrder(phone,orderVo,product);
+            Order order = transactionOrder(phone,orderVo,product);
+            return  orderMapper.orderToOrderDTO(order);
         }
+
     }
 
     @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
@@ -103,12 +101,6 @@ public class OrderServiceImp extends BaseService implements OrderService{
     }
 
     @Override
-    public void updateOrderStatusByIdAndUser(OrderStatus status, long id, String phone) {
-        User user = userRepository.findByPhone(phone);
-        orderRepository.updateOrderStatusByIdAndUser(status, id, user);
-    }
-
-    @Override
     public List<OrderDTO> findByOrderTypeAndOrderStatusAndUser(OrderType orderType, OrderStatus status, String phone) {
         User user = userRepository.findByPhone(phone);
         List<Order>  orderList = user.getOrderList().stream().filter(order -> order.getOrderStatus() == status).collect(Collectors.toList());
@@ -123,11 +115,7 @@ public class OrderServiceImp extends BaseService implements OrderService{
 
     @Override
     public List<EntryDTO<String, Long>> groupOrderStatusCountByAndOrder(String phone,OrderType orderType) {
-        if(orderType == OrderType.进货订单){
-            return ordinaryOrderServiceImp.groupOrderStatusCountByAndOrder(phone);
-        }else{
-            return serviceOrderServiceImp.groupOrderStatusCountByAndOrder(phone);
-        }
+        return groupOrderStatusCountByAndOrder(phone);
     }
 
     @Override
