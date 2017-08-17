@@ -103,17 +103,12 @@ public class UserServiceImp extends BaseService implements UserService {
         user.setPassword(AESCryptUtil.encrypt(user.getPassword()));
         user.setDisable(false);
         //初始化订单分析
-        List<OrderAnalysis> orderAnalysisList =new ArrayList<>();
         OrderAnalysis ordinaryOrderAnalysis =new OrderAnalysis();
-        ordinaryOrderAnalysis.setOrderType(OrderType.进货订单);
         ordinaryOrderAnalysis.setUser(user);
-        orderAnalysisList.add(ordinaryOrderAnalysis);
-
-        OrderAnalysis serviceOrderAnalysis =new OrderAnalysis();
-        serviceOrderAnalysis.setOrderType(OrderType.服务订单);
+        user.setOrderAnalysis(ordinaryOrderAnalysis);
+        ServiceOrderAnalysis serviceOrderAnalysis =new ServiceOrderAnalysis();
         serviceOrderAnalysis.setUser(user);
-        orderAnalysisList.add(serviceOrderAnalysis);
-        user.setOrderAnalysesList(orderAnalysisList);
+        user.setServiceOrderAnalysis(serviceOrderAnalysis);
         //初始化团队分析
         TeamAnalysis teamAnalysis = new TeamAnalysis();
         teamAnalysis.setUser(user);

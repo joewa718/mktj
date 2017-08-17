@@ -57,8 +57,12 @@ public class OrderServiceImp extends BaseService implements OrderService {
         if (deliveryAddress == null) {
             throw new OperationNotSupportedException("无法找到对应的收货地址");
         }
+        User sendUser = userRepository.findByPhone(orderVo.getRecommendPhone());
+        if (sendUser == null) {
+            throw new RuntimeException("您填写的推荐人手机号码不存在");
+        }
         if (product.getRoleType() != null && product.getRoleType().getCode() > 0) {
-            transactionPackageOrder(user, orderVo, deliveryAddress, product);
+            transactionPackageOrder(sendUser, user, orderVo, deliveryAddress, product);
         } else {
             if (orderVo.getProductNum() == 0) {
                 throw new OperationNotSupportedException("购买订单量不能为 0 件");
@@ -67,28 +71,6 @@ public class OrderServiceImp extends BaseService implements OrderService {
         }
     }
 
-    @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
-    private void transactionPackageOrder(User user, OrderVo orderVo, DeliveryAddress deliveryAddress, Product product) {
-        int piece = product.getPiece();
-        BigDecimal price = product.getRetailPrice();
-        BigDecimal totalCost = price.multiply(BigDecimal.valueOf(piece));
-        if (orderVo.getPayType() == PayType.余额支付) {
-            if (totalCost.compareTo(user.getScore()) == 1) {
-                throw new RuntimeException("对不起，您的积分不足，无法购买");
-            }
-            user.setScore(user.getScore().subtract(totalCost));
-        }
-        saveOrder(orderVo, user, product, deliveryAddress, piece, price, totalCost);
-        user.setRoleType(product.getRoleType());
-        user.setAuthorizationCode(generateAuthCode());
-        user.getOrderAnalysesList().forEach(orderAnalysis -> {
-            if (orderAnalysis.getOrderType() == OrderType.服务订单) {
-                orderAnalysis.setUnPay(orderAnalysis.getAlPay() + 1);
-            }
-        });
-        /*this.updateTeamOrganization(orderVo, user, product);*/
-        userRepository.save(user);
-    }
 
     @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
     private void transactionOrdinaryOrder(User user, OrderVo orderVo, DeliveryAddress deliveryAddress, Product product) {
@@ -102,16 +84,31 @@ public class OrderServiceImp extends BaseService implements OrderService {
             user.setScore(user.getScore().subtract(totalCost));
         }
         saveOrder(orderVo, user, product, deliveryAddress, piece, price, totalCost);
-        user.getOrderAnalysesList().forEach(orderAnalysis -> {
-            if (orderAnalysis.getOrderType() == OrderType.进货订单) {
-                orderAnalysis.setUnPay(orderAnalysis.getAlPay() + 1);
-            }
-        });
+        user.getOrderAnalysis().setUnPay(user.getOrderAnalysis().getAlPay() + 1);
         userRepository.save(user);
     }
 
     @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
-    private void saveOrder(OrderVo orderVo, User user, Product product, DeliveryAddress deliveryAddress, int piece, BigDecimal price, BigDecimal totalCost) {
+    private void transactionPackageOrder(User sendUser, User user, OrderVo orderVo, DeliveryAddress deliveryAddress, Product product) {
+        int piece = product.getPiece();
+        BigDecimal price = product.getRetailPrice();
+        BigDecimal totalCost = price.multiply(BigDecimal.valueOf(piece));
+        if (orderVo.getPayType() == PayType.余额支付) {
+            if (totalCost.compareTo(user.getScore()) == 1) {
+                throw new RuntimeException("对不起，您的积分不足，无法购买");
+            }
+            user.setScore(user.getScore().subtract(totalCost));
+        }
+        Order order = saveOrder(orderVo, user, product, deliveryAddress, piece, price, totalCost);
+        user.setRoleType(product.getRoleType());
+        user.setAuthorizationCode(generateAuthCode());
+        user.getOrderAnalysis().setUnPay(user.getOrderAnalysis().getAlPay() + 1);
+        userRepository.save(user);
+        updateHigherLevel(sendUser, user, product, order, 0);
+    }
+
+    @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
+    private Order saveOrder(OrderVo orderVo, User user, Product product, DeliveryAddress deliveryAddress, int piece, BigDecimal price, BigDecimal totalCost) {
         Order order = new Order();
         order.setOrderCode(generateOrderCode(String.valueOf(user.getId())));
         order.setUser(user);
@@ -137,14 +134,60 @@ public class OrderServiceImp extends BaseService implements OrderService {
         orderList.orElse(new ArrayList<>());
         orderList.get().add(order);
         order.setUser(user);
-        orderRepository.save(order);
+        return orderRepository.save(order);
     }
 
-   /* @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
-    public void updateTeamOrganization(OrderVo orderVo, User user, Product product) {
-        User sendUser = userRepository.findByPhone(orderVo.getRecommendPhone());
-        if (sendUser != null) {
-            throw new RuntimeException("您填写的推荐人手机号码不存在");
+    @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
+    public void updateHigherLevel(User sendUser, User user, Product product, Order order, int level) {
+        if (level == 3) {
+            return;
+        }
+        User curUser = sendUser;
+        if (sendUser == null) {
+            curUser = user;
+        }
+        curUser.getServiceOrderAnalysis().setUnPay(user.getServiceOrderAnalysis().getAlPay() + 1);
+        if (product.getRoleType().getCode() > user.getRoleType().getCode()) {
+            calTeamAnalysis(user, product, curUser);
+        }
+        List<TeamOrganization> teamOrganizationList = curUser.getLowerList().stream().filter(teamOrganization -> teamOrganization.getLowerUser().getId() == user.getId()).collect(Collectors.toList());
+        if (teamOrganizationList.size() == 0) {
+            TeamOrganization teamOrganization = new TeamOrganization();
+            teamOrganization.setHigherUser(curUser);
+            teamOrganization.setLowerUser(user);
+            curUser.getLowerList().add(teamOrganization);
+        }
+        curUser.getServiceOrderList().add(order);
+        order.getHigherUserList().add(curUser);
+        userRepository.save(curUser);
+        List<TeamOrganization> userList = curUser.getHigherUserList();
+        for (TeamOrganization higherUser : userList) {
+            updateHigherLevel(higherUser.getHigherUser(), user, product, order, ++level);
+        }
+    }
+
+    /**
+     * 计算团队人员成分
+     *
+     * @param user
+     * @param product
+     * @param sendUser
+     */
+    private void calTeamAnalysis(User user, Product product, User sendUser) {
+        if (user.getRoleType() == RoleType.天使) {
+            sendUser.getTeamAnalysis().setAngle(sendUser.getTeamAnalysis().getAngle() - 1);
+        }
+
+        if (user.getRoleType() == RoleType.合伙人) {
+            sendUser.getTeamAnalysis().setPartner(sendUser.getTeamAnalysis().getPartner() - 1);
+        }
+
+        if (user.getRoleType() == RoleType.准合伙人) {
+            sendUser.getTeamAnalysis().setQuasiPartner(sendUser.getTeamAnalysis().getQuasiPartner() - 1);
+        }
+
+        if (user.getRoleType() == RoleType.高级合伙人) {
+            sendUser.getTeamAnalysis().setSeniorPartner(sendUser.getTeamAnalysis().getSeniorPartner() - 1);
         }
 
         if (product.getRoleType() == RoleType.天使) {
@@ -162,17 +205,8 @@ public class OrderServiceImp extends BaseService implements OrderService {
         if (product.getRoleType() == RoleType.高级合伙人) {
             sendUser.getTeamAnalysis().setSeniorPartner(sendUser.getTeamAnalysis().getSeniorPartner() + 1);
         }
+    }
 
-        List<TeamOrganization> teamOrganizationList = sendUser.getLowerList().stream().filter(teamOrganization -> teamOrganization.getLowerUser().getId() == user.getId()).collect(Collectors.toList());
-        if(teamOrganizationList.size() == 0){
-            TeamOrganization teamOrganization = new TeamOrganization();
-            teamOrganization.setHigherUser(sendUser);
-            teamOrganization.setLowerUser(user);
-            sendUser.getLowerList().add(teamOrganization);
-        }
-
-        userRepository.save(sendUser);
-    }*/
 
     private BigDecimal getProductPrice(RoleType roleType, Product product) {
         if (roleType == RoleType.天使 && product.getPrice1() != null) {
@@ -208,7 +242,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
         if (OrderType.进货订单 == orderType) {
             orderList = user.getOrderList().stream().filter(order -> order.getOrderStatus() == status).collect(Collectors.toList());
         } else {
-            orderList = user.getServiceOrder().stream().filter(order -> order.getOrderStatus() == status).collect(Collectors.toList());
+            orderList = user.getServiceOrderList().stream().filter(order -> order.getOrderStatus() == status).collect(Collectors.toList());
         }
         return orderMapper.orderToOrderDTOList(orderList);
     }
@@ -216,37 +250,35 @@ public class OrderServiceImp extends BaseService implements OrderService {
     @Override
     public Long countByOrderTypeAndUser(String phone, OrderType orderType) {
         User user = userRepository.findByPhone(phone);
-        List<OrderAnalysis> list = user.getOrderAnalysesList();
-        List<OrderAnalysis> orderAnalysesList = list.stream().filter(orderAnalysis -> orderAnalysis.getOrderType() != orderType).collect(Collectors.toList());
-        if (orderAnalysesList != null && orderAnalysesList.size() > 0) {
-            OrderAnalysis orderAnalysis = orderAnalysesList.get(0);
-            return orderAnalysis.getTotal();
-        }
-        return Long.valueOf(0);
+        return user.getOrderAnalysis().getTotal();
     }
 
     @Override
     public List<EntryDTO<String, Long>> groupOrderStatusCountByAndOrdinaryOrder(String phone) {
-        return getOrderAnalysisByOrderType(phone, OrderType.进货订单);
+        User user = userRepository.findByPhone(phone);
+        List<EntryDTO<String, Long>> result = new ArrayList<>();
+        if (user.getOrderAnalysis() != null) {
+            result.add(new EntryDTO<>(OrderStatus.待确认.getName(), user.getOrderAnalysis().getUnConfirm()));
+            result.add(new EntryDTO<>(OrderStatus.待支付.getName(), user.getOrderAnalysis().getUnPay()));
+            result.add(new EntryDTO<>(OrderStatus.已支付.getName(), user.getOrderAnalysis().getAlPay()));
+            result.add(new EntryDTO<>(OrderStatus.已发货.getName(), user.getOrderAnalysis().getAlSend()));
+            result.add(new EntryDTO<>(OrderStatus.已完成.getName(), user.getOrderAnalysis().getAlComplete()));
+            result.add(new EntryDTO<>(OrderStatus.已取消.getName(), user.getOrderAnalysis().getAlCancel()));
+        }
+        return result;
     }
 
     @Override
     public List<EntryDTO<String, Long>> groupOrderStatusCountByAndServiceOrder(String phone) {
-        return getOrderAnalysisByOrderType(phone, OrderType.进货订单);
-    }
-
-    private List<EntryDTO<String, Long>> getOrderAnalysisByOrderType(String phone, OrderType orderType) {
         User user = userRepository.findByPhone(phone);
-        List<OrderAnalysis> list = user.getOrderAnalysesList();
-        List<OrderAnalysis> orderAnalysesList = list.stream().filter(orderAnalysis -> orderAnalysis.getOrderType() != orderType).collect(Collectors.toList());
         List<EntryDTO<String, Long>> result = new ArrayList<>();
-        for (OrderAnalysis orderAnalysis : orderAnalysesList) {
-            result.add(new EntryDTO<>(OrderStatus.待确认.getName(), orderAnalysis.getUnConfirm()));
-            result.add(new EntryDTO<>(OrderStatus.待支付.getName(), orderAnalysis.getUnPay()));
-            result.add(new EntryDTO<>(OrderStatus.已支付.getName(), orderAnalysis.getAlPay()));
-            result.add(new EntryDTO<>(OrderStatus.已发货.getName(), orderAnalysis.getAlSend()));
-            result.add(new EntryDTO<>(OrderStatus.已完成.getName(), orderAnalysis.getAlComplete()));
-            result.add(new EntryDTO<>(OrderStatus.已取消.getName(), orderAnalysis.getAlCancel()));
+        if (user.getOrderAnalysis() != null) {
+            result.add(new EntryDTO<>(OrderStatus.待确认.getName(), user.getServiceOrderAnalysis().getUnConfirm()));
+            result.add(new EntryDTO<>(OrderStatus.待支付.getName(), user.getServiceOrderAnalysis().getUnPay()));
+            result.add(new EntryDTO<>(OrderStatus.已支付.getName(), user.getServiceOrderAnalysis().getAlPay()));
+            result.add(new EntryDTO<>(OrderStatus.已发货.getName(), user.getServiceOrderAnalysis().getAlSend()));
+            result.add(new EntryDTO<>(OrderStatus.已完成.getName(), user.getServiceOrderAnalysis().getAlComplete()));
+            result.add(new EntryDTO<>(OrderStatus.已取消.getName(), user.getServiceOrderAnalysis().getAlCancel()));
         }
         return result;
     }

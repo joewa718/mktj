@@ -9,9 +9,11 @@ import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.search.annotations.DocumentId;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -53,26 +55,28 @@ public class User implements Serializable {
     private RealInfo realInfo;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<DeliveryAddress> deliveryAddressList;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Order> orderList;
-    @NotFound ( action = NotFoundAction.IGNORE )
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<OrderAnalysis> orderAnalysesList;
-    @NotFound ( action = NotFoundAction.IGNORE )
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @NotFound(action = NotFoundAction.IGNORE)
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    private OrderAnalysis orderAnalysis;
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    private ServiceOrderAnalysis serviceOrderAnalysis;
+    @NotFound(action = NotFoundAction.IGNORE)
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
     private TeamAnalysis teamAnalysis;
-    @NotFound ( action = NotFoundAction.IGNORE )
-    @OneToMany(mappedBy = "lowerUser", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<TeamOrganization> lowerList;
-    @NotFound ( action = NotFoundAction.IGNORE )
-    @OneToMany(mappedBy = "higherUser", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<TeamOrganization> higherUser;
+    @NotFound(action = NotFoundAction.IGNORE)
+    @OneToMany(mappedBy = "lowerUser", fetch = FetchType.LAZY)
+    private List<TeamOrganization> lowerList =new ArrayList<>();
+    @NotFound(action = NotFoundAction.IGNORE)
+    @OneToMany(mappedBy = "higherUser", fetch = FetchType.LAZY)
+    private List<TeamOrganization> higherUserList = new ArrayList<>();
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name="t_user_service_order",
-            joinColumns={@JoinColumn(name="user_id")},
-            inverseJoinColumns={@JoinColumn(name="order_id")}
+    @JoinTable(name = "t_user_service_order",
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "order_id")}
     )
-    private List<Order> serviceOrder;
+    private List<Order> serviceOrderList = new ArrayList<>();
 
     public long getId() {
         return id;
@@ -186,12 +190,21 @@ public class User implements Serializable {
         this.orderList = orderList;
     }
 
-    public List<OrderAnalysis> getOrderAnalysesList() {
-        return orderAnalysesList;
+
+    public OrderAnalysis getOrderAnalysis() {
+        return orderAnalysis;
     }
 
-    public void setOrderAnalysesList(List<OrderAnalysis> orderAnalysesList) {
-        this.orderAnalysesList = orderAnalysesList;
+    public void setOrderAnalysis(OrderAnalysis orderAnalysis) {
+        this.orderAnalysis = orderAnalysis;
+    }
+
+    public ServiceOrderAnalysis getServiceOrderAnalysis() {
+        return serviceOrderAnalysis;
+    }
+
+    public void setServiceOrderAnalysis(ServiceOrderAnalysis serviceOrderAnalysis) {
+        this.serviceOrderAnalysis = serviceOrderAnalysis;
     }
 
     public TeamAnalysis getTeamAnalysis() {
@@ -210,19 +223,22 @@ public class User implements Serializable {
         this.lowerList = lowerList;
     }
 
-    public List<TeamOrganization> getHigherUser() {
-        return higherUser;
+
+    public List<Order> getServiceOrderList() {
+        return serviceOrderList;
     }
 
-    public void setHigherUser(List<TeamOrganization> higherUser) {
-        this.higherUser = higherUser;
+    public void setServiceOrderList(List<Order> serviceOrderList) {
+        this.serviceOrderList = serviceOrderList;
     }
 
-    public List<Order> getServiceOrder() {
-        return serviceOrder;
+
+    public List<TeamOrganization> getHigherUserList() {
+        return higherUserList;
     }
 
-    public void setServiceOrder(List<Order> serviceOrder) {
-        this.serviceOrder = serviceOrder;
+    public void setHigherUserList(List<TeamOrganization> higherUserList) {
+        this.higherUserList = higherUserList;
     }
+
 }

@@ -2,7 +2,6 @@ package com.mktj.cn.web.po;
 
 import com.mktj.cn.web.util.OrderType;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.ManyToAny;
 
 import javax.persistence.*;
 
@@ -11,10 +10,10 @@ import javax.persistence.*;
  * @create 2017-08-16 20:02
  **/
 @Entity
-@Table(name = "t_order_analysis")
+@Table(name = "t_service_order_analysis")
 @Cacheable
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE, region = "entityCache")
-public class OrderAnalysis {
+public class ServiceOrderAnalysis {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;

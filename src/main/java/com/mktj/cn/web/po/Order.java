@@ -71,7 +71,7 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-    @ManyToMany(mappedBy = "serviceOrder",fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "serviceOrderList",fetch = FetchType.LAZY)
     private List<User> higherUserList = new ArrayList<>();
 
     public String getProductName() {
