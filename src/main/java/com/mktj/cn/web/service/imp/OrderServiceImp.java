@@ -57,12 +57,8 @@ public class OrderServiceImp extends BaseService implements OrderService {
         if (deliveryAddress == null) {
             throw new OperationNotSupportedException("无法找到对应的收货地址");
         }
-        User sendUser = userRepository.findByPhone(orderVo.getRecommendPhone());
-        if (sendUser == null) {
-            throw new RuntimeException("您填写的推荐人手机号码不存在");
-        }
         if (product.getRoleType() != null && product.getRoleType().getCode() > 0) {
-            transactionPackageOrder(sendUser, user, orderVo, deliveryAddress, product);
+            transactionPackageOrder(user, orderVo, deliveryAddress, product);
         } else {
             if (orderVo.getProductNum() == 0) {
                 throw new OperationNotSupportedException("购买订单量不能为 0 件");
@@ -89,7 +85,11 @@ public class OrderServiceImp extends BaseService implements OrderService {
     }
 
     @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
-    private void transactionPackageOrder(User sendUser, User user, OrderVo orderVo, DeliveryAddress deliveryAddress, Product product) {
+    private void transactionPackageOrder(User user, OrderVo orderVo, DeliveryAddress deliveryAddress, Product product) {
+        User recommend_man = userRepository.findByPhone(orderVo.getRecommendPhone());
+        if (recommend_man == null) {
+            throw new RuntimeException("您填写的推荐人手机号码不存在");
+        }
         int piece = product.getPiece();
         BigDecimal price = product.getRetailPrice();
         BigDecimal totalCost = price.multiply(BigDecimal.valueOf(piece));
@@ -99,12 +99,17 @@ public class OrderServiceImp extends BaseService implements OrderService {
             }
             user.setScore(user.getScore().subtract(totalCost));
         }
+        //更新订单信息
         Order order = saveOrder(orderVo, user, product, deliveryAddress, piece, price, totalCost);
         user.setRoleType(product.getRoleType());
         user.setAuthorizationCode(generateAuthCode());
         user.getOrderAnalysis().setUnPay(user.getOrderAnalysis().getAlPay() + 1);
         userRepository.save(user);
-        updateHigherLevel(sendUser, user, product, order, 0);
+        //更新推荐人服务订单
+        order.getHigherUserList().add(recommend_man);
+        recommend_man.getServiceOrderAnalysis().setUnPay(recommend_man.getServiceOrderAnalysis().getUnPay() + 1);
+        recommend_man.getServiceOrderList().add(order);
+        userRepository.save(recommend_man);
     }
 
     @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
@@ -137,13 +142,14 @@ public class OrderServiceImp extends BaseService implements OrderService {
         return orderRepository.save(order);
     }
 
+
     @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
-    public void updateHigherLevel(User sendUser, User user, Product product, Order order, int level) {
+    public void updateHigherLevel(User recommend_man, User user, Product product, Order order, int level) {
         if (level == 3) {
             return;
         }
-        User curUser = sendUser;
-        if (sendUser == null) {
+        User curUser = recommend_man;
+        if (recommend_man == null) {
             curUser = user;
         }
         curUser.getServiceOrderAnalysis().setUnPay(user.getServiceOrderAnalysis().getAlPay() + 1);
@@ -155,6 +161,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
             TeamOrganization teamOrganization = new TeamOrganization();
             teamOrganization.setHigherUser(curUser);
             teamOrganization.setLowerUser(user);
+            teamOrganization.setHigherUser(recommend_man);
             curUser.getLowerList().add(teamOrganization);
         }
         curUser.getServiceOrderList().add(order);
