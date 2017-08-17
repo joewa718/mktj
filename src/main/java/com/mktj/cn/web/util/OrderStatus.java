@@ -2,7 +2,7 @@ package com.mktj.cn.web.util;
 
 public enum OrderStatus {
 
-    待支付("待支付", 92), 已取消("已取消", 94), 已支付("已支付", 96), 已发货("已发货", 98), 已完成("已完成", 100);
+    全部订单("全部订单", 100), 待支付("待支付", 92), 已取消("已取消", 94), 已支付("已支付", 96), 已发货("已发货", 98), 已完成("已完成", 100);
 
     OrderStatus(String name, int code) {
         this.name = name;
@@ -22,6 +22,9 @@ public enum OrderStatus {
     private int code;
 
     public static OrderStatus fromCode(int code) {
+        if (code == 100) {
+            return 全部订单;
+        }
         if (code == 92) {
             return 待支付;
         }

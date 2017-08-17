@@ -71,7 +71,7 @@ public class User implements Serializable {
     @NotFound(action = NotFoundAction.IGNORE)
     @OneToMany(mappedBy = "higherUser", fetch = FetchType.LAZY)
     private List<TeamOrganization> higherUserList = new ArrayList<>();
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinTable(name = "t_user_service_order",
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "order_id")}

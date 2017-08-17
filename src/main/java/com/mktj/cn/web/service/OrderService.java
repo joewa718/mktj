@@ -73,7 +73,7 @@ public interface OrderService {
      * @param orderType
      * @return
      */
-    List<EntryDTO<String, Long>> summaryOrderCount(String phone, OrderType orderType);
+    Map<String, Long> summaryOrderCount(String phone, OrderType orderType);
 
 
     BigDecimal getProductPrice(RoleType roleType, Product product);

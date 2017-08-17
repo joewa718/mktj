@@ -73,6 +73,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
             }
             user.setScore(user.getScore().subtract(totalCost));
         }
+        order.setOrderStatus(OrderStatus.已支付);
         orderRepository.updateOrderStatusByIdAndUser(OrderStatus.已支付, orderId, user);
         Product product = productRepository.getProductByproductCode(order.getProductCode());
         if (product == null) {
@@ -92,7 +93,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
                 }
             }
         }
-        return orderMapper.orderToOrderDTO(orderRepository.findOne(orderId));
+        return orderMapper.orderToOrderDTO(order);
     }
     @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
     private Order saveOrder(OrderVo orderVo, User user, Product product, DeliveryAddress deliveryAddress, int piece, BigDecimal price, BigDecimal totalCost) {
@@ -235,12 +236,14 @@ public class OrderServiceImp extends BaseService implements OrderService {
         } else {
             orderList = user.getServiceOrderList();
         }
-        orderList = orderList.stream().filter(order -> order.getOrderStatus() == status).collect(Collectors.toList());
+        if(status != OrderStatus.全部订单){
+            orderList = orderList.stream().filter(order -> order.getOrderStatus() == status).collect(Collectors.toList());
+        }
         return orderMapper.orderToOrderDTOList(orderList);
     }
 
     @Override
-    public List<EntryDTO<String, Long>> summaryOrderCount(String phone, OrderType orderType) {
+    public Map<String, Long> summaryOrderCount(String phone, OrderType orderType) {
         User user = userRepository.findByPhone(phone);
         List<Order> orderList = null;
         if (orderType == OrderType.进货订单) {
@@ -249,20 +252,20 @@ public class OrderServiceImp extends BaseService implements OrderService {
             orderList = user.getServiceOrderList();
         }
         Map<Integer, Long> groupResult = orderList.stream().collect(Collectors.groupingBy(order -> order.getOrderStatus().getCode(), Collectors.counting()));
-        List<EntryDTO<String, Long>> result = new ArrayList<>();
+        Map<String, Long> map =new HashMap<>();
         if (user.getOrderAnalysis() != null) {
             long unPay = groupResult.get(OrderStatus.待支付.getCode()) == null ? Long.valueOf(0) : groupResult.get(OrderStatus.待支付.getCode());
             long alPay = groupResult.get(OrderStatus.已支付.getCode()) == null ? Long.valueOf(0) : groupResult.get(OrderStatus.已支付.getCode());
             long alSend = groupResult.get(OrderStatus.已发货.getCode()) == null ? Long.valueOf(0) : groupResult.get(OrderStatus.已发货.getCode());
             long complete = groupResult.get(OrderStatus.已完成.getCode()) == null ? Long.valueOf(0) : groupResult.get(OrderStatus.已完成.getCode());
             long cancel = groupResult.get(OrderStatus.已取消.getCode()) == null ? Long.valueOf(0) : groupResult.get(OrderStatus.已取消.getCode());
-            result.add(new EntryDTO<>("全部订单",Long.valueOf(unPay+alPay+alSend+complete+cancel)));
-            result.add(new EntryDTO<>(OrderStatus.待支付.getName(), unPay));
-            result.add(new EntryDTO<>(OrderStatus.已支付.getName(), alPay));
-            result.add(new EntryDTO<>(OrderStatus.已发货.getName(), alSend));
-            result.add(new EntryDTO<>(OrderStatus.已完成.getName(), complete));
-            result.add(new EntryDTO<>(OrderStatus.已取消.getName(), cancel));
+            map.put("全部订单",Long.valueOf(unPay+alPay+alSend+complete+cancel));
+            map.put(OrderStatus.待支付.getName(),unPay);
+            map.put(OrderStatus.已支付.getName(),alPay);
+            map.put(OrderStatus.已发货.getName(),alSend);
+            map.put(OrderStatus.已完成.getName(),complete);
+            map.put(OrderStatus.已取消.getName(),cancel);
         }
-        return result;
+        return map;
     }
 }

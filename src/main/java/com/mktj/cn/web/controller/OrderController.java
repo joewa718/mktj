@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.naming.OperationNotSupportedException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/order")
@@ -64,10 +65,10 @@ public class OrderController extends BaseController {
 
     @ApiOperation(value = "根据订单的类型汇总订单各种状态的量")
     @RequestMapping(value = "/groupByOrderTypeAndOrderStatusAndUser", method = RequestMethod.POST)
-    public ResponseEntity<List<EntryDTO<String,Long>>> groupByOrderTypeAndOrderStatusAndUser(@RequestParam OrderType orderType) {
+    public ResponseEntity<Map<String,Long>> groupByOrderTypeAndOrderStatusAndUser(@RequestParam OrderType orderType) {
         String phone = super.getCurrentUser().getUsername();
-        List<EntryDTO<String,Long>> orderDTOList =  orderService.summaryOrderCount(phone,orderType);
-        return new ResponseEntity<>(orderDTOList, HttpStatus.OK);
+        Map<String,Long> map =  orderService.summaryOrderCount(phone,orderType);
+        return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
     @ApiOperation(value = "根据订单状态查询订单")

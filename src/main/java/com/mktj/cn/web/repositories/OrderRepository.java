@@ -21,6 +21,6 @@ public interface OrderRepository extends CrudRepository<Order, Long>, JpaSpecifi
     void updateOrderStatusByIdAndUser(OrderStatus status, long id, User user);
 
     List<Order> findByOrderStatusAndUser(OrderStatus orderStatus, User user);
-
+    
     Order findOneByIdAndUser(long id, User user);
 }
