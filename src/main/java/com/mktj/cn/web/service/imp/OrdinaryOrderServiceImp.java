@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
  * @create 2017-08-09 13:27
  **/
 @Service
-public class OrderServiceImp extends BaseService implements OrderService {
+public class OrdinaryOrderServiceImp extends BaseService implements OrderService {
     @Autowired
     DeliveryAddressRepository deliveryAddressRepository;
     @Autowired
@@ -60,7 +60,6 @@ public class OrderServiceImp extends BaseService implements OrderService {
         if (orderVo.getProductNum() == 0) {
             throw new OperationNotSupportedException("购买订单量不能为 0 件");
         }
-
         int piece = orderVo.getProductNum();
         BigDecimal price = getProductPrice(user.getRoleType(), product);
         BigDecimal totalCost = price.multiply(BigDecimal.valueOf(piece));
@@ -70,7 +69,6 @@ public class OrderServiceImp extends BaseService implements OrderService {
             }
             user.setScore(user.getScore().subtract(totalCost));
         }
-
         saveOrder(orderVo, user, product, deliveryAddress, piece, price, totalCost);
         user.getOrderAnalysis().setUnPay(user.getOrderAnalysis().getAlPay() + 1);
         userRepository.save(user);
@@ -127,7 +125,6 @@ public class OrderServiceImp extends BaseService implements OrderService {
         return orderMapper.orderToOrderDTO(order);
     }
 
-
     @Override
     public void updateOrderStatusByIdAndUser(OrderStatus status, long id, String phone) {
         User user = userRepository.findByPhone(phone);
@@ -137,12 +134,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
     @Override
     public List<OrderDTO> findByOrderTypeAndOrderStatusAndUser(OrderType orderType, OrderStatus status, String phone) {
         User user = userRepository.findByPhone(phone);
-        List<Order> orderList = null;
-        if (OrderType.进货订单 == orderType) {
-            orderList = user.getOrderList().stream().filter(order -> order.getOrderStatus() == status).collect(Collectors.toList());
-        } else {
-            orderList = user.getServiceOrderList().stream().filter(order -> order.getOrderStatus() == status).collect(Collectors.toList());
-        }
+        List<Order>  orderList = user.getOrderList().stream().filter(order -> order.getOrderStatus() == status).collect(Collectors.toList());
         return orderMapper.orderToOrderDTOList(orderList);
     }
 

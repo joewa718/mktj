@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
  * @create 2017-08-09 13:27
  **/
 @Service
-public class ServiceOrderServiceImp extends OrderServiceImp{
+public class ServiceOrderServiceImp extends OrdinaryOrderServiceImp{
     @Autowired
     DeliveryAddressRepository deliveryAddressRepository;
     @Autowired
@@ -79,8 +79,6 @@ public class ServiceOrderServiceImp extends OrderServiceImp{
         userRepository.save(recommend_man);
     }
 
-
-
     @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
     public void updateHigherLevel(User recommend_man, User user, Product product, Order order, int level) {
         if (level == 3) {
@@ -113,7 +111,6 @@ public class ServiceOrderServiceImp extends OrderServiceImp{
 
     /**
      * 计算团队人员成分
-     *
      * @param user
      * @param product
      * @param sendUser
@@ -150,5 +147,11 @@ public class ServiceOrderServiceImp extends OrderServiceImp{
         if (product.getRoleType() == RoleType.高级合伙人) {
             sendUser.getTeamAnalysis().setSeniorPartner(sendUser.getTeamAnalysis().getSeniorPartner() + 1);
         }
+    }
+    @Override
+    public List<OrderDTO> findByOrderTypeAndOrderStatusAndUser(OrderType orderType, OrderStatus status, String phone) {
+        User user = userRepository.findByPhone(phone);
+        List<Order> orderList = user.getServiceOrderList().stream().filter(order -> order.getOrderStatus() == status).collect(Collectors.toList());
+        return orderMapper.orderToOrderDTOList(orderList);
     }
 }
