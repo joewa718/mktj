@@ -16,6 +16,7 @@ import com.mktj.cn.web.util.PayType;
 import com.mktj.cn.web.util.RoleType;
 import com.mktj.cn.web.vo.OrderVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,23 +33,17 @@ import java.util.stream.Collectors;
  * @author zhanwang
  * @create 2017-08-09 13:27
  **/
+@Qualifier("serviceOrderService")
 @Service
-public class ServiceOrderServiceImp extends OrdinaryOrderServiceImp{
+public class ServiceOrderServiceImp extends OrderServiceImp{
     @Autowired
     DeliveryAddressRepository deliveryAddressRepository;
-    @Autowired
-    ProductRepository productRepository;
     @Autowired
     UserRepository userRepository;
 
     @Transactional(value = "transactionManager")
-    @Override
-    public void transactionOrder(String phone, OrderVo orderVo) throws OperationNotSupportedException {
+    public void transactionOrder(String phone, OrderVo orderVo,Product product) throws OperationNotSupportedException {
         User user = userRepository.findByPhone(phone);
-        Product product = productRepository.findOne(orderVo.getProductId());
-        if (product == null) {
-            throw new OperationNotSupportedException("无法找到对应的商品");
-        }
         DeliveryAddress deliveryAddress = deliveryAddressRepository.findOneByIdAndUser(orderVo.getDeliverAddressId(), user);
         if (deliveryAddress == null) {
             throw new OperationNotSupportedException("无法找到对应的收货地址");
@@ -153,5 +148,19 @@ public class ServiceOrderServiceImp extends OrdinaryOrderServiceImp{
         User user = userRepository.findByPhone(phone);
         List<Order> orderList = user.getServiceOrderList().stream().filter(order -> order.getOrderStatus() == status).collect(Collectors.toList());
         return orderMapper.orderToOrderDTOList(orderList);
+    }
+
+    public List<EntryDTO<String, Long>> groupOrderStatusCountByAndOrder(String phone) {
+        User user = userRepository.findByPhone(phone);
+        List<EntryDTO<String, Long>> result = new ArrayList<>();
+        if (user.getOrderAnalysis() != null) {
+            result.add(new EntryDTO<>(OrderStatus.待确认.getName(), user.getServiceOrderAnalysis().getUnConfirm()));
+            result.add(new EntryDTO<>(OrderStatus.待支付.getName(), user.getServiceOrderAnalysis().getUnPay()));
+            result.add(new EntryDTO<>(OrderStatus.已支付.getName(), user.getServiceOrderAnalysis().getAlPay()));
+            result.add(new EntryDTO<>(OrderStatus.已发货.getName(), user.getServiceOrderAnalysis().getAlSend()));
+            result.add(new EntryDTO<>(OrderStatus.已完成.getName(), user.getServiceOrderAnalysis().getAlComplete()));
+            result.add(new EntryDTO<>(OrderStatus.已取消.getName(), user.getServiceOrderAnalysis().getAlCancel()));
+        }
+        return result;
     }
 }

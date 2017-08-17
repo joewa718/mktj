@@ -29,9 +29,7 @@ public interface OrderService {
 
     Long countByOrderTypeAndUser(String phone, OrderType orderType);
 
-    List<EntryDTO<String,Long>> groupOrderStatusCountByAndOrdinaryOrder(String phone);
-
-    List<EntryDTO<String,Long>> groupOrderStatusCountByAndServiceOrder(String phone);
+    List<EntryDTO<String,Long>> groupOrderStatusCountByAndOrder(String phone,OrderType orderType);
 
     BigDecimal getProductPrice(RoleType roleType, Product product);
 }

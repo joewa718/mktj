@@ -16,6 +16,7 @@ import com.mktj.cn.web.util.PayType;
 import com.mktj.cn.web.util.RoleType;
 import com.mktj.cn.web.vo.OrderVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,27 +33,17 @@ import java.util.stream.Collectors;
  * @author zhanwang
  * @create 2017-08-09 13:27
  **/
+@Qualifier("ordinaryOrderService")
 @Service
-public class OrdinaryOrderServiceImp extends BaseService implements OrderService {
+public class OrdinaryOrderServiceImp extends OrderServiceImp{
     @Autowired
     DeliveryAddressRepository deliveryAddressRepository;
     @Autowired
-    OrderRepository orderRepository;
-    @Autowired
-    ProductRepository productRepository;
-    @Autowired
     UserRepository userRepository;
-    @Autowired
-    OrderMapper orderMapper;
 
     @Transactional(value = "transactionManager")
-    @Override
-    public void transactionOrder(String phone, OrderVo orderVo) throws OperationNotSupportedException {
+    public void transactionOrder(String phone, OrderVo orderVo,Product product) throws OperationNotSupportedException {
         User user = userRepository.findByPhone(phone);
-        Product product = productRepository.findOne(orderVo.getProductId());
-        if (product == null) {
-            throw new OperationNotSupportedException("无法找到对应的商品");
-        }
         DeliveryAddress deliveryAddress = deliveryAddressRepository.findOneByIdAndUser(orderVo.getDeliverAddressId(), user);
         if (deliveryAddress == null) {
             throw new OperationNotSupportedException("无法找到对应的收货地址");
@@ -74,78 +65,7 @@ public class OrdinaryOrderServiceImp extends BaseService implements OrderService
         userRepository.save(user);
     }
 
-
-    @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
-    protected Order saveOrder(OrderVo orderVo, User user, Product product, DeliveryAddress deliveryAddress, int piece, BigDecimal price, BigDecimal totalCost) {
-        Order order = new Order();
-        order.setOrderCode(generateOrderCode(String.valueOf(user.getId())));
-        order.setUser(user);
-        order.setOrderStatus(OrderStatus.待确认);
-        order.setOrderTime(new Date());
-        order.setOrderComment(orderVo.getOrderComment());
-        order.setPayWay(orderVo.getPayType());
-        order.setProductName(product.getProductName());
-        order.setProductCode(product.getProductCode());
-        order.setProductNum(piece);
-        order.setProductPrice(price);
-        order.setProductCost(totalCost);
-        order.setReceiverProvince(deliveryAddress.getProvince());
-        order.setReceiverCity(deliveryAddress.getCity());
-        order.setReceiverRegion(deliveryAddress.getRegion());
-        order.setReceiverDetailed(deliveryAddress.getDetailed());
-        order.setReceiverPhone(deliveryAddress.getPhone());
-        order.setReceiverName(deliveryAddress.getDeliveryMan());
-        order.setSendName(product.getSendMan());
-        order.setSendPhone(product.getSendPhone());
-        order.setRecommendPhone(orderVo.getRecommendPhone());
-        Optional<List<Order>> orderList = Optional.ofNullable(user.getOrderList());
-        orderList.orElse(new ArrayList<>());
-        orderList.get().add(order);
-        order.setUser(user);
-        return orderRepository.save(order);
-    }
-
-    public BigDecimal getProductPrice(RoleType roleType, Product product) {
-        if (roleType == RoleType.天使 && product.getPrice1() != null) {
-            return product.getPrice1();
-        } else if (roleType == RoleType.准合伙人 && product.getPrice2() != null) {
-            return product.getPrice2();
-        } else if (roleType == RoleType.合伙人 && product.getPrice3() != null) {
-            return product.getPrice3();
-        } else if (roleType == RoleType.高级合伙人 && product.getPrice4() != null) {
-            return product.getPrice4();
-        }
-        return product.getRetailPrice();
-    }
-
-    @Override
-    public OrderDTO getOrder(String phone, long orderId) {
-        User user = userRepository.findByPhone(phone);
-        Order order = orderRepository.findOneByIdAndUser(orderId, user);
-        return orderMapper.orderToOrderDTO(order);
-    }
-
-    @Override
-    public void updateOrderStatusByIdAndUser(OrderStatus status, long id, String phone) {
-        User user = userRepository.findByPhone(phone);
-        orderRepository.updateOrderStatusByIdAndUser(status, id, user);
-    }
-
-    @Override
-    public List<OrderDTO> findByOrderTypeAndOrderStatusAndUser(OrderType orderType, OrderStatus status, String phone) {
-        User user = userRepository.findByPhone(phone);
-        List<Order>  orderList = user.getOrderList().stream().filter(order -> order.getOrderStatus() == status).collect(Collectors.toList());
-        return orderMapper.orderToOrderDTOList(orderList);
-    }
-
-    @Override
-    public Long countByOrderTypeAndUser(String phone, OrderType orderType) {
-        User user = userRepository.findByPhone(phone);
-        return user.getOrderAnalysis().getTotal();
-    }
-
-    @Override
-    public List<EntryDTO<String, Long>> groupOrderStatusCountByAndOrdinaryOrder(String phone) {
+    public List<EntryDTO<String, Long>> groupOrderStatusCountByAndOrder(String phone) {
         User user = userRepository.findByPhone(phone);
         List<EntryDTO<String, Long>> result = new ArrayList<>();
         if (user.getOrderAnalysis() != null) {
@@ -155,21 +75,6 @@ public class OrdinaryOrderServiceImp extends BaseService implements OrderService
             result.add(new EntryDTO<>(OrderStatus.已发货.getName(), user.getOrderAnalysis().getAlSend()));
             result.add(new EntryDTO<>(OrderStatus.已完成.getName(), user.getOrderAnalysis().getAlComplete()));
             result.add(new EntryDTO<>(OrderStatus.已取消.getName(), user.getOrderAnalysis().getAlCancel()));
-        }
-        return result;
-    }
-
-    @Override
-    public List<EntryDTO<String, Long>> groupOrderStatusCountByAndServiceOrder(String phone) {
-        User user = userRepository.findByPhone(phone);
-        List<EntryDTO<String, Long>> result = new ArrayList<>();
-        if (user.getOrderAnalysis() != null) {
-            result.add(new EntryDTO<>(OrderStatus.待确认.getName(), user.getServiceOrderAnalysis().getUnConfirm()));
-            result.add(new EntryDTO<>(OrderStatus.待支付.getName(), user.getServiceOrderAnalysis().getUnPay()));
-            result.add(new EntryDTO<>(OrderStatus.已支付.getName(), user.getServiceOrderAnalysis().getAlPay()));
-            result.add(new EntryDTO<>(OrderStatus.已发货.getName(), user.getServiceOrderAnalysis().getAlSend()));
-            result.add(new EntryDTO<>(OrderStatus.已完成.getName(), user.getServiceOrderAnalysis().getAlComplete()));
-            result.add(new EntryDTO<>(OrderStatus.已取消.getName(), user.getServiceOrderAnalysis().getAlCancel()));
         }
         return result;
     }
