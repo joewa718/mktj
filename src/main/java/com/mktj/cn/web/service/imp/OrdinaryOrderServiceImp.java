@@ -69,12 +69,12 @@ public class OrdinaryOrderServiceImp extends  OrderServiceImp{
         Map<Integer,Long> groupResult  = orderList.stream().collect( Collectors.groupingBy(order -> order.getOrderStatus().getCode(), Collectors.counting()));
         List<EntryDTO<String, Long>> result = new ArrayList<>();
         if (user.getOrderAnalysis() != null) {
-            result.add(new EntryDTO<>(OrderStatus.待确认.getName(), groupResult.get(OrderStatus.待确认.getCode())));
-            result.add(new EntryDTO<>(OrderStatus.待支付.getName(), groupResult.get(OrderStatus.待支付.getCode())));
-            result.add(new EntryDTO<>(OrderStatus.已支付.getName(), groupResult.get(OrderStatus.已支付.getCode())));
-            result.add(new EntryDTO<>(OrderStatus.已发货.getName(), groupResult.get(OrderStatus.已发货.getCode())));
-            result.add(new EntryDTO<>(OrderStatus.已完成.getName(), groupResult.get(OrderStatus.已完成.getCode())));
-            result.add(new EntryDTO<>(OrderStatus.已取消.getName(), groupResult.get(OrderStatus.已取消.getCode())));
+            result.add(new EntryDTO<String, Long>(OrderStatus.待确认.getName(), groupResult.get(OrderStatus.待确认.getCode())==null ? Long.valueOf(0) : groupResult.get(OrderStatus.待确认.getCode())));
+            result.add(new EntryDTO<String, Long>(OrderStatus.待支付.getName(), groupResult.get(OrderStatus.待支付.getCode())==null ? Long.valueOf(0) : groupResult.get(OrderStatus.待支付.getCode())));
+            result.add(new EntryDTO<String, Long>(OrderStatus.已支付.getName(), groupResult.get(OrderStatus.已支付.getCode())==null ? Long.valueOf(0) : groupResult.get(OrderStatus.已支付.getCode())));
+            result.add(new EntryDTO<String, Long>(OrderStatus.已发货.getName(), groupResult.get(OrderStatus.已发货.getCode())==null ? Long.valueOf(0) : groupResult.get(OrderStatus.已发货.getCode())));
+            result.add(new EntryDTO<String, Long>(OrderStatus.已完成.getName(), groupResult.get(OrderStatus.已完成.getCode())==null ? Long.valueOf(0) : groupResult.get(OrderStatus.已完成.getCode())));
+            result.add(new EntryDTO<String, Long>(OrderStatus.已取消.getName(), groupResult.get(OrderStatus.已取消.getCode())==null ? Long.valueOf(0) : groupResult.get(OrderStatus.已取消.getCode())));
         }
         return result;
     }
