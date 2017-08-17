@@ -3,37 +3,31 @@ package com.mktj.cn.web.service.imp;
 import com.mktj.cn.web.dto.EntryDTO;
 import com.mktj.cn.web.dto.OrderDTO;
 import com.mktj.cn.web.mapper.OrderMapper;
-import com.mktj.cn.web.po.DeliveryAddress;
-import com.mktj.cn.web.po.Order;
-import com.mktj.cn.web.po.Product;
-import com.mktj.cn.web.po.User;
+import com.mktj.cn.web.po.*;
+import com.mktj.cn.web.repositories.DeliveryAddressRepository;
 import com.mktj.cn.web.repositories.OrderRepository;
 import com.mktj.cn.web.repositories.ProductRepository;
 import com.mktj.cn.web.repositories.UserRepository;
 import com.mktj.cn.web.service.BaseService;
 import com.mktj.cn.web.service.OrderService;
-import com.mktj.cn.web.util.OrderStatus;
-import com.mktj.cn.web.util.OrderType;
-import com.mktj.cn.web.util.ProductType;
-import com.mktj.cn.web.util.RoleType;
+import com.mktj.cn.web.util.*;
 import com.mktj.cn.web.vo.OrderVo;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.naming.OperationNotSupportedException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
  * @author zhanwang
  * @create 2017-08-09 13:27
  **/
-public abstract class OrderServiceImp extends BaseService implements OrderService{
+@Service
+public class OrderServiceImp extends BaseService implements OrderService {
     @Autowired
     ProductRepository productRepository;
     @Autowired
@@ -42,33 +36,70 @@ public abstract class OrderServiceImp extends BaseService implements OrderServic
     OrderRepository orderRepository;
     @Autowired
     OrderMapper orderMapper;
+    @Autowired
+    DeliveryAddressRepository deliveryAddressRepository;
 
-    public abstract Order transactionOrder(String phone, OrderVo orderVo,Product product) throws OperationNotSupportedException;
-    public abstract List<EntryDTO<String, Long>> groupOrderStatusCountByAndOrder(String phone);
     @Override
-    @Transactional(value = "transactionManager")
-    public OrderDTO transactionOrder(String phone, OrderVo orderVo) throws OperationNotSupportedException {
+    @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
+    public OrderDTO applyOrder(String phone, OrderVo orderVo) {
         Product product = productRepository.findOne(orderVo.getProductId());
         if (product == null) {
-            throw new OperationNotSupportedException("无法找到对应的商品");
+            throw new RuntimeException("无法找到对应的商品");
         }
-        transactionOrder(phone,orderVo,product);
-        if(product.getProductType() == ProductType.普通产品){
-            Order order = transactionOrder(phone,orderVo,product);
-            return  orderMapper.orderToOrderDTO(order);
-        }else{
-            Order order = transactionOrder(phone,orderVo,product);
-            return  orderMapper.orderToOrderDTO(order);
+        User user = userRepository.findByPhone(phone);
+        DeliveryAddress deliveryAddress = deliveryAddressRepository.findOneByIdAndUser(orderVo.getDeliverAddressId(), user);
+        if (deliveryAddress == null) {
+            throw new RuntimeException("无法找到对应的收货地址");
         }
-
+        int piece = product.getPiece();
+        BigDecimal price = product.getRetailPrice();
+        BigDecimal totalCost = price.multiply(BigDecimal.valueOf(piece));
+        //新增订单信息
+        Order order = saveOrder(orderVo, user, product, deliveryAddress, piece, price, totalCost);
+        return orderMapper.orderToOrderDTO(order);
     }
 
+    @Override
     @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
-    protected Order saveOrder(OrderVo orderVo, User user, Product product, DeliveryAddress deliveryAddress, int piece, BigDecimal price, BigDecimal totalCost) {
+    public OrderDTO payOrder(String phone, long orderId){
+        User user = userRepository.findByPhone(phone);
+        Order order = orderRepository.findOne(orderId);
+        int piece = order.getProductNum();
+        BigDecimal price = order.getProductPrice();
+        BigDecimal totalCost = price.multiply(BigDecimal.valueOf(piece));
+        if (order.getPayWay() == PayType.余额支付) {
+            if (totalCost.compareTo(user.getScore()) == 1) {
+                throw new RuntimeException("对不起，您的积分不足，无法购买");
+            }
+            user.setScore(user.getScore().subtract(totalCost));
+        }
+        orderRepository.updateOrderStatusByIdAndUser(OrderStatus.已支付, orderId, user);
+        Product product = productRepository.getProductByproductCode(order.getProductCode());
+        if (product == null) {
+            throw new RuntimeException("无法找到对应的商品");
+        }
+        if(product.getProductType() == ProductType.套餐产品){
+            user.setAuthorizationCode(generateAuthCode());
+            user.setRoleType(product.getRoleType());
+            userRepository.save(user);
+            //更新推荐人服务订单
+            if (!StringUtils.isBlank(order.getRecommendPhone())) {
+                User recommend_man = userRepository.findByPhone(order.getRecommendPhone());
+                if (recommend_man != null) {
+                    order.getHigherUserList().add(recommend_man);
+                    recommend_man.getServiceOrderList().add(order);
+                    userRepository.save(recommend_man);
+                }
+            }
+        }
+        return orderMapper.orderToOrderDTO(orderRepository.findOne(orderId));
+    }
+    @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
+    private Order saveOrder(OrderVo orderVo, User user, Product product, DeliveryAddress deliveryAddress, int piece, BigDecimal price, BigDecimal totalCost) {
         Order order = new Order();
         order.setOrderCode(generateOrderCode(String.valueOf(user.getId())));
         order.setUser(user);
-        order.setOrderStatus(OrderStatus.待确认);
+        order.setOrderStatus(OrderStatus.待支付);
         order.setOrderTime(new Date());
         order.setOrderComment(orderVo.getOrderComment());
         order.setPayWay(orderVo.getPayType());
@@ -92,7 +123,6 @@ public abstract class OrderServiceImp extends BaseService implements OrderServic
         order.setUser(user);
         return orderRepository.save(order);
     }
-
     @Override
     public OrderDTO getOrder(String phone, long orderId) {
         User user = userRepository.findByPhone(phone);
@@ -101,21 +131,15 @@ public abstract class OrderServiceImp extends BaseService implements OrderServic
     }
 
     @Override
-    public List<OrderDTO> findByOrderTypeAndOrderStatusAndUser(OrderType orderType, OrderStatus status, String phone) {
+    public Integer getOrderCount(String phone, OrderType orderType) {
         User user = userRepository.findByPhone(phone);
-        List<Order>  orderList = user.getOrderList().stream().filter(order -> order.getOrderStatus() == status).collect(Collectors.toList());
-        return orderMapper.orderToOrderDTOList(orderList);
-    }
-
-    @Override
-    public Long countByOrderTypeAndUser(String phone, OrderType orderType) {
-        User user = userRepository.findByPhone(phone);
-        return user.getOrderAnalysis().getTotal();
-    }
-
-    @Override
-    public List<EntryDTO<String, Long>> groupOrderStatusCountByAndOrder(String phone,OrderType orderType) {
-        return groupOrderStatusCountByAndOrder(phone);
+        List<Order> orderList = null;
+        if (orderType == OrderType.进货订单) {
+            orderList = user.getOrderList();
+        } else {
+            orderList = user.getServiceOrderList();
+        }
+        return orderList.size();
     }
 
     @Override
@@ -130,5 +154,115 @@ public abstract class OrderServiceImp extends BaseService implements OrderServic
             return product.getPrice4();
         }
         return product.getRetailPrice();
+    }
+
+    @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
+    public void updateHigherLevel(User recommend_man, User user, Product product, Order order, int level) {
+        if (level == 3) {
+            return;
+        }
+        User curUser = recommend_man;
+        if (recommend_man == null) {
+            curUser = user;
+        }
+        curUser.getServiceOrderAnalysis().setUnPay(user.getServiceOrderAnalysis().getAlPay() + 1);
+        if (product.getRoleType().getCode() > user.getRoleType().getCode()) {
+            calTeamAnalysis(user, product, curUser);
+        }
+        List<TeamOrganization> teamOrganizationList = curUser.getLowerList().stream().filter(teamOrganization -> teamOrganization.getLowerUser().getId() == user.getId()).collect(Collectors.toList());
+        if (teamOrganizationList.size() == 0) {
+            TeamOrganization teamOrganization = new TeamOrganization();
+            teamOrganization.setHigherUser(curUser);
+            teamOrganization.setLowerUser(user);
+            teamOrganization.setHigherUser(recommend_man);
+            curUser.getLowerList().add(teamOrganization);
+        }
+        curUser.getServiceOrderList().add(order);
+        order.getHigherUserList().add(curUser);
+        userRepository.save(curUser);
+        List<TeamOrganization> userList = curUser.getHigherUserList();
+        for (TeamOrganization higherUser : userList) {
+            updateHigherLevel(higherUser.getHigherUser(), user, product, order, ++level);
+        }
+    }
+
+    /**
+     * 计算团队人员成分
+     * @param user
+     * @param product
+     * @param sendUser
+     */
+    private void calTeamAnalysis(User user, Product product, User sendUser) {
+        if (user.getRoleType() == RoleType.天使) {
+            sendUser.getTeamAnalysis().setAngle(sendUser.getTeamAnalysis().getAngle() - 1);
+        }
+
+        if (user.getRoleType() == RoleType.合伙人) {
+            sendUser.getTeamAnalysis().setPartner(sendUser.getTeamAnalysis().getPartner() - 1);
+        }
+
+        if (user.getRoleType() == RoleType.准合伙人) {
+            sendUser.getTeamAnalysis().setQuasiPartner(sendUser.getTeamAnalysis().getQuasiPartner() - 1);
+        }
+
+        if (user.getRoleType() == RoleType.高级合伙人) {
+            sendUser.getTeamAnalysis().setSeniorPartner(sendUser.getTeamAnalysis().getSeniorPartner() - 1);
+        }
+
+        if (product.getRoleType() == RoleType.天使) {
+            sendUser.getTeamAnalysis().setAngle(sendUser.getTeamAnalysis().getAngle() + 1);
+        }
+
+        if (product.getRoleType() == RoleType.合伙人) {
+            sendUser.getTeamAnalysis().setPartner(sendUser.getTeamAnalysis().getPartner() + 1);
+        }
+
+        if (product.getRoleType() == RoleType.准合伙人) {
+            sendUser.getTeamAnalysis().setQuasiPartner(sendUser.getTeamAnalysis().getQuasiPartner() + 1);
+        }
+
+        if (product.getRoleType() == RoleType.高级合伙人) {
+            sendUser.getTeamAnalysis().setSeniorPartner(sendUser.getTeamAnalysis().getSeniorPartner() + 1);
+        }
+    }
+
+    @Override
+    public List<OrderDTO> getOrderList(OrderType orderType, OrderStatus status, String phone) {
+        User user = userRepository.findByPhone(phone);
+        List<Order> orderList = null;
+        if (orderType == OrderType.进货订单) {
+            orderList = user.getOrderList();
+        } else {
+            orderList = user.getServiceOrderList();
+        }
+        orderList = orderList.stream().filter(order -> order.getOrderStatus() == status).collect(Collectors.toList());
+        return orderMapper.orderToOrderDTOList(orderList);
+    }
+
+    @Override
+    public List<EntryDTO<String, Long>> summaryOrderCount(String phone, OrderType orderType) {
+        User user = userRepository.findByPhone(phone);
+        List<Order> orderList = null;
+        if (orderType == OrderType.进货订单) {
+            orderList = user.getOrderList();
+        } else {
+            orderList = user.getServiceOrderList();
+        }
+        Map<Integer, Long> groupResult = orderList.stream().collect(Collectors.groupingBy(order -> order.getOrderStatus().getCode(), Collectors.counting()));
+        List<EntryDTO<String, Long>> result = new ArrayList<>();
+        if (user.getOrderAnalysis() != null) {
+            long unPay = groupResult.get(OrderStatus.待支付.getCode()) == null ? Long.valueOf(0) : groupResult.get(OrderStatus.待支付.getCode());
+            long alPay = groupResult.get(OrderStatus.已支付.getCode()) == null ? Long.valueOf(0) : groupResult.get(OrderStatus.已支付.getCode());
+            long alSend = groupResult.get(OrderStatus.已发货.getCode()) == null ? Long.valueOf(0) : groupResult.get(OrderStatus.已发货.getCode());
+            long complete = groupResult.get(OrderStatus.已完成.getCode()) == null ? Long.valueOf(0) : groupResult.get(OrderStatus.已完成.getCode());
+            long cancel = groupResult.get(OrderStatus.已取消.getCode()) == null ? Long.valueOf(0) : groupResult.get(OrderStatus.已取消.getCode());
+            result.add(new EntryDTO<>("全部订单",Long.valueOf(unPay+alPay+alSend+complete+cancel)));
+            result.add(new EntryDTO<>(OrderStatus.待支付.getName(), unPay));
+            result.add(new EntryDTO<>(OrderStatus.已支付.getName(), alPay));
+            result.add(new EntryDTO<>(OrderStatus.已发货.getName(), alSend));
+            result.add(new EntryDTO<>(OrderStatus.已完成.getName(), complete));
+            result.add(new EntryDTO<>(OrderStatus.已取消.getName(), cancel));
+        }
+        return result;
     }
 }

@@ -15,4 +15,7 @@ public interface ProductRepository extends CrudRepository<Product, Long>, JpaSpe
     @Query("select p from Product p where isOffShelf = false and productType =?1")
     List<Product> getProductListByProductType(ProductType productType);
 
+    @Query("select p from Product p where isOffShelf = false and productCode =?1")
+    Product getProductByproductCode(String productCode);
+
 }

@@ -2,12 +2,9 @@ package com.mktj.cn.web.controller;
 
 import com.mktj.cn.web.dto.EntryDTO;
 import com.mktj.cn.web.dto.OrderDTO;
-import com.mktj.cn.web.dto.ProductDTO;
 import com.mktj.cn.web.po.Product;
 import com.mktj.cn.web.service.OrderService;
 import com.mktj.cn.web.service.ProductService;
-import com.mktj.cn.web.service.imp.OrdinaryOrderServiceImp;
-import com.mktj.cn.web.service.imp.ServiceOrderServiceImp;
 import com.mktj.cn.web.util.OrderStatus;
 import com.mktj.cn.web.util.OrderType;
 import com.mktj.cn.web.util.ProductType;
@@ -25,32 +22,34 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/order")
 public class OrderController extends BaseController {
-    @Qualifier("ordinaryOrderServiceImp")
     @Autowired
-    OrderService ordinaryOrderServiceImp;
-    @Qualifier("serviceOrderServiceImp")
-    @Autowired
-    OrderService serviceOrderServiceImp;
+    OrderService orderService;
     @Autowired
     ProductService productService;
     @ApiOperation(value = "下订单")
     @RequestMapping(value = "/applyOrder", method = RequestMethod.POST)
     public ResponseEntity<Object> applyOrder(@ModelAttribute OrderVo orderVo) {
         String phone = super.getCurrentUser().getUsername();
-        OrderService orderService = null;
         try {
             Product product = productService.getProductById(orderVo.getProductId());
             if (product == null) {
                 throw new OperationNotSupportedException("无法找到对应的商品");
             }
-            if(product.getProductType() == ProductType.普通产品){
-                orderService = ordinaryOrderServiceImp;
-            }else{
-                orderService = serviceOrderServiceImp;
-            }
-            OrderDTO order = orderService.transactionOrder(phone, orderVo);
+            OrderDTO order = orderService.applyOrder(phone, orderVo);
             return new ResponseEntity<>(order,HttpStatus.OK);
-        } catch (OperationNotSupportedException e) {
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @ApiOperation(value = "支付订单")
+    @RequestMapping(value = "/payOrder", method = RequestMethod.POST)
+    public ResponseEntity<Object> payOrder(@RequestParam long orderId) {
+        String phone = super.getCurrentUser().getUsername();
+        try {
+            OrderDTO orderDTO = orderService.payOrder(phone,orderId);
+            return new ResponseEntity<>(orderDTO, HttpStatus.OK);
+        } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -59,7 +58,7 @@ public class OrderController extends BaseController {
     @RequestMapping(value = "/getOrder", method = RequestMethod.POST)
     public ResponseEntity<OrderDTO> getOrder(@RequestParam long orderId) {
         String phone = super.getCurrentUser().getUsername();
-        OrderDTO orderDTO = ordinaryOrderServiceImp.getOrder(phone, orderId);
+        OrderDTO orderDTO = orderService.getOrder(phone, orderId);
         return new ResponseEntity<>(orderDTO, HttpStatus.OK);
     }
 
@@ -67,13 +66,7 @@ public class OrderController extends BaseController {
     @RequestMapping(value = "/groupByOrderTypeAndOrderStatusAndUser", method = RequestMethod.POST)
     public ResponseEntity<List<EntryDTO<String,Long>>> groupByOrderTypeAndOrderStatusAndUser(@RequestParam OrderType orderType) {
         String phone = super.getCurrentUser().getUsername();
-        OrderService orderService = null;
-        if(orderType == OrderType.进货订单){
-            orderService = ordinaryOrderServiceImp;
-        }else{
-            orderService = serviceOrderServiceImp;
-        }
-        List<EntryDTO<String,Long>> orderDTOList =  orderService.groupOrderStatusCountByAndOrder(phone,orderType);
+        List<EntryDTO<String,Long>> orderDTOList =  orderService.summaryOrderCount(phone,orderType);
         return new ResponseEntity<>(orderDTOList, HttpStatus.OK);
     }
 
@@ -81,27 +74,15 @@ public class OrderController extends BaseController {
     @RequestMapping(value = "/findByOrderTypeAndOrderStatusAndUser", method = RequestMethod.POST)
     public ResponseEntity<List<OrderDTO>> findByOrderTypeAndOrderStatusAndUser(@RequestParam OrderType orderType, @RequestParam OrderStatus orderStatus) {
         String phone = super.getCurrentUser().getUsername();
-        OrderService orderService = null;
-        if(orderType == OrderType.进货订单){
-            orderService = ordinaryOrderServiceImp;
-        }else{
-            orderService = serviceOrderServiceImp;
-        }
-        List<OrderDTO> orderDTOList = orderService.findByOrderTypeAndOrderStatusAndUser(orderType, orderStatus, phone);
+        List<OrderDTO> orderDTOList = orderService.getOrderList(orderType, orderStatus, phone);
         return new ResponseEntity<>(orderDTOList, HttpStatus.OK);
     }
 
     @ApiOperation(value = "根据订单类型获取订单总量")
     @RequestMapping(value = "/countByOrderTypeAndUser", method = RequestMethod.POST)
-    public ResponseEntity<Long> countByOrderTypeAndUser(@RequestParam OrderType orderType) {
+    public ResponseEntity<Integer> countByOrderTypeAndUser(@RequestParam OrderType orderType) {
         String phone = super.getCurrentUser().getUsername();
-        OrderService orderService = null;
-        if(orderType == OrderType.进货订单){
-            orderService = ordinaryOrderServiceImp;
-        }else{
-            orderService = serviceOrderServiceImp;
-        }
-        Long count = orderService.countByOrderTypeAndUser(phone, orderType);
+        Integer count = orderService.getOrderCount(phone, orderType);
         return new ResponseEntity<>(count, HttpStatus.OK);
     }
 }
