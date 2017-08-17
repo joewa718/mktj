@@ -90,7 +90,7 @@ public class UserServiceImp extends BaseService implements UserService {
         if (user != null) {
             throw new DuplicateAccountException("duplicate account phone.");
         }
-        String regCode = (String) session.getAttribute("regCode");
+       /* String regCode = (String) session.getAttribute("regCode");
         if (userVo.getRegCode() == null || !userVo.getRegCode().equals(regCode)) {
             throw new OperationNotSupportedException("手机验证码不正确");
         }
@@ -98,7 +98,7 @@ public class UserServiceImp extends BaseService implements UserService {
         long cur_time = new Date().getTime();
         if ((cur_time - regCodeTime) / 1000 > 600) {//10分钟
             throw new OperationNotSupportedException("手机验证码已经过期");
-        }
+        }*/
         user = userMapper.userToUserVo(userVo);
         user.setPassword(AESCryptUtil.encrypt(user.getPassword()));
         user.setDisable(false);

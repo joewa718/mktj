@@ -21,7 +21,8 @@ public class ProductController extends BaseController {
     @ApiOperation(value = "获取普通产品列表")
     @RequestMapping(value = "/getProductOrdinaryList", method = RequestMethod.POST)
     public ResponseEntity<Iterable<ProductDTO>> getProductOrdinaryList() {
-        Iterable<ProductDTO> productDTOList = productService.getProductOrdinaryList();
+        String phone = super.getCurrentUser().getUsername();
+        Iterable<ProductDTO> productDTOList = productService.getProductOrdinaryList(phone);
         return new ResponseEntity<>(productDTOList, HttpStatus.OK);
     }
 
