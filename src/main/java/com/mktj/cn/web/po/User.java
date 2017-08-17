@@ -58,12 +58,12 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Order> orderList;
     @NotFound(action = NotFoundAction.IGNORE)
-    @OneToOne(mappedBy = "user", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private OrderAnalysis orderAnalysis;
-    @OneToOne(mappedBy = "user", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private ServiceOrderAnalysis serviceOrderAnalysis;
     @NotFound(action = NotFoundAction.IGNORE)
-    @OneToOne(mappedBy = "user", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private TeamAnalysis teamAnalysis;
     @NotFound(action = NotFoundAction.IGNORE)
     @OneToMany(mappedBy = "lowerUser", fetch = FetchType.LAZY)
