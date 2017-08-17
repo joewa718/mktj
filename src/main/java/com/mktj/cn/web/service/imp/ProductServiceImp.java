@@ -2,11 +2,17 @@ package com.mktj.cn.web.service.imp;
 
 import com.mktj.cn.web.dto.ProductDTO;
 import com.mktj.cn.web.mapper.ProductMapper;
+import com.mktj.cn.web.po.Product;
+import com.mktj.cn.web.po.User;
 import com.mktj.cn.web.repositories.ProductRepository;
+import com.mktj.cn.web.repositories.UserRepository;
+import com.mktj.cn.web.service.OrderService;
 import com.mktj.cn.web.service.ProductService;
 import com.mktj.cn.web.util.ProductType;
+import com.mktj.cn.web.util.RoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 /**
  * @author zhanwang
@@ -18,10 +24,19 @@ public class ProductServiceImp implements ProductService {
     ProductRepository productRepository;
     @Autowired
     ProductMapper productMapper;
+    @Autowired
+    OrderService orderService;
+    @Autowired
+    UserRepository userRepository;
 
     @Override
-    public Iterable<ProductDTO> getProductOrdinaryList() {
-        return productMapper.productToProductDTOList(productRepository.getProductListByProductType(ProductType.普通产品));
+    public Iterable<ProductDTO> getProductOrdinaryList(String phone) {
+        User user = userRepository.findByPhone(phone);
+        List<Product> productList =productRepository.getProductListByProductType(ProductType.普通产品);
+        productList.forEach(product -> {
+            product.setRetailPrice(orderService.getProductPrice(user.getRoleType(),product));
+        });
+        return productMapper.productToProductDTOList(productList);
     }
 
     @Override

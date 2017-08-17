@@ -2,12 +2,15 @@ package com.mktj.cn.web.service;
 
 import com.mktj.cn.web.dto.EntryDTO;
 import com.mktj.cn.web.dto.OrderDTO;
+import com.mktj.cn.web.po.Product;
 import com.mktj.cn.web.util.OrderStatus;
 import com.mktj.cn.web.util.OrderType;
+import com.mktj.cn.web.util.RoleType;
 import com.mktj.cn.web.vo.OrderVo;
 import org.springframework.data.jpa.repository.Query;
 
 import javax.naming.OperationNotSupportedException;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -30,4 +33,5 @@ public interface OrderService {
 
     List<EntryDTO<String,Long>> groupOrderStatusCountByAndServiceOrder(String phone);
 
+    BigDecimal getProductPrice(RoleType roleType, Product product);
 }

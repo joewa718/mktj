@@ -208,7 +208,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
     }
 
 
-    private BigDecimal getProductPrice(RoleType roleType, Product product) {
+    public BigDecimal getProductPrice(RoleType roleType, Product product) {
         if (roleType == RoleType.天使 && product.getPrice1() != null) {
             return product.getPrice1();
         } else if (roleType == RoleType.准合伙人 && product.getPrice2() != null) {

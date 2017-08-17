@@ -7,7 +7,7 @@ import com.mktj.cn.web.dto.ProductDTO;
  */
 public interface ProductService {
 
-    Iterable<ProductDTO> getProductOrdinaryList();
+    Iterable<ProductDTO> getProductOrdinaryList(String phone);
 
     Iterable<ProductDTO> getProductPackageList();
 
