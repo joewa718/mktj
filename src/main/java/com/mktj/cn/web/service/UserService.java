@@ -5,6 +5,7 @@ import com.mktj.cn.web.dto.RealInfoDTO;
 import com.mktj.cn.web.dto.UserDTO;
 import com.mktj.cn.web.exception.DuplicateAccountException;
 import com.mktj.cn.web.enu.RoleType;
+import com.mktj.cn.web.po.User;
 import com.mktj.cn.web.vo.DeliveryAddressVo;
 import com.mktj.cn.web.vo.RealInfoVo;
 import com.mktj.cn.web.vo.UserVo;
@@ -59,4 +60,6 @@ public interface UserService {
     void foundPasswordNext(String phone,String pwFoundCode,HttpSession session) throws OperationNotSupportedException;
 
     void foundPassword(String password,HttpSession session) throws OperationNotSupportedException;
+
+    UserDTO getByAuthorizationCode(String authorizationCode);
 }

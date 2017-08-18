@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 import javax.imageio.ImageIO;
 import javax.naming.OperationNotSupportedException;
 import javax.servlet.RequestDispatcher;
@@ -226,7 +227,7 @@ public class UserController extends BaseController {
             session.setAttribute("regCode", code.toLowerCase());
             session.setAttribute("regCodeTime", new Date().getTime());
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -241,7 +242,7 @@ public class UserController extends BaseController {
             session.setAttribute("sendPwFoundCode", code.toLowerCase());
             session.setAttribute("sendPwFoundTime", new Date().getTime());
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -249,25 +250,36 @@ public class UserController extends BaseController {
 
     @ApiOperation(value = "密码找回手机验证下一步")
     @RequestMapping(value = "/passwordFoundNext", method = RequestMethod.POST)
-    public ResponseEntity passwordFoundNext(@RequestParam("phone") String phone, @RequestParam("sendPwFoundCode")String sendPwFoundCode, HttpServletRequest request) {
+    public ResponseEntity passwordFoundNext(@RequestParam("phone") String phone, @RequestParam("sendPwFoundCode") String sendPwFoundCode, HttpServletRequest request) {
         try {
             HttpSession session = request.getSession();
-            userService.foundPasswordNext(phone,sendPwFoundCode,session);
+            userService.foundPasswordNext(phone, sendPwFoundCode, session);
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @ApiOperation(value = "密码找回手机")
     @RequestMapping(value = "/passwordFound", method = RequestMethod.POST)
-    public ResponseEntity passwordFoundNext(@RequestParam("password")String password, HttpServletRequest request) {
+    public ResponseEntity passwordFoundNext(@RequestParam("password") String password, HttpServletRequest request) {
         try {
             HttpSession session = request.getSession();
-            userService.foundPassword(password,session);
+            userService.foundPassword(password, session);
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "根据授权码获取用户信息")
+    @RequestMapping(value = "/getUserByAuthorizationCode", method = RequestMethod.POST)
+    public ResponseEntity<Object> getUserByAuthorizationCode(String authorizationCode) {
+        try {
+            UserDTO userDTO = userService.getByAuthorizationCode(authorizationCode);
+            return new ResponseEntity<>(userDTO, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

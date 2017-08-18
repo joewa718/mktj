@@ -238,7 +238,9 @@ public class OrderServiceImp extends BaseService implements OrderService {
         if(status != OrderStatus.全部订单){
             orderList = orderList.stream().filter(order -> order.getOrderStatus() == status).collect(Collectors.toList());
         }
-        return orderMapper.orderToOrderDTOList(orderList);
+        List<OrderDTO> orderDTOList =orderMapper.orderToOrderDTOList(orderList);
+        orderDTOList.forEach(orderDTO -> orderDTO.setOrderType(orderType.getName()));
+        return orderDTOList;
     }
 
     @Override

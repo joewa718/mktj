@@ -165,11 +165,6 @@
             <version>${hibernate-validator-version}</version>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-redis</artifactId>
-            <version>1.4.6.RELEASE</version>
-        </dependency>
-        <dependency>
             <groupId>com.github.binarywang</groupId>
             <artifactId>weixin-java-mp</artifactId>
             <version>${weixin-java-mp.version}</version>
@@ -183,8 +178,6 @@
             <groupId>org.richard</groupId>
             <artifactId>sms-sdk</artifactId>
             <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/lib/smssdk.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
@@ -234,14 +227,8 @@
                 </configuration>
             </plugin>
         </plugins>
-        <!--<resources>
-            <resource>
-                <directory>${project.basedir}/src/lib</directory>
-                <targetPath>BOOT-INF/lib/</targetPath>
-                <includes>
-                    <include>*.jar</include>
-                </includes>
-            </resource>
+        <!--
+        <resources>
             <resource>
                 <directory>${project.basedir}/src/main/resources</directory>
                 <targetPath>BOOT-INF/classes/</targetPath>
