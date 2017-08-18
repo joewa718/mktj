@@ -47,7 +47,7 @@ public class UserController extends BaseController {
     @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
     public ResponseEntity<ImageDTO> uploadFile(@RequestParam(value = "file") MultipartFile file) throws ServletException, IOException {
         ImageDTO imageDTO = new ImageDTO();
-        String fileName = null;
+        String fileName;
         try {
             fileName = userService.updateFile(file, filePath);
         } catch (Exception e) {
@@ -66,7 +66,7 @@ public class UserController extends BaseController {
     public ResponseEntity<ImageDTO> uploadPhoto(@RequestParam(value = "file") MultipartFile file) throws ServletException, IOException {
         ImageDTO imageDTO = new ImageDTO();
         String phone = super.getCurrentUser().getUsername();
-        String photo = null;
+        String photo;
         try {
             photo = userService.updateFile(file, filePath);
         } catch (Exception e) {
@@ -84,7 +84,7 @@ public class UserController extends BaseController {
     @ApiOperation(value = "注册用户")
     @RequestMapping(value = "/regUser", method = RequestMethod.POST)
     public ResponseEntity<Object> regUser(@ModelAttribute UserVo user, HttpServletRequest request) throws ServletException, IOException {
-        UserDTO userDTO = null;
+        UserDTO userDTO;
         try {
             HttpSession session = request.getSession();
             userDTO = userService.regUser(user, session);
@@ -282,4 +282,5 @@ public class UserController extends BaseController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 }
