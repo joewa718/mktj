@@ -227,15 +227,5 @@
                 </configuration>
             </plugin>
         </plugins>
-        <!--
-        <resources>
-            <resource>
-                <directory>${project.basedir}/src/main/resources</directory>
-                <targetPath>BOOT-INF/classes/</targetPath>
-                <excludes>
-                    <exclude>static/**</exclude>
-                </excludes>
-            </resource>
-        </resources>-->
     </build>
 </project>
