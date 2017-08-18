@@ -5,6 +5,7 @@ import com.mktj.cn.web.po.Product;
 import com.mktj.cn.web.enu.OrderStatus;
 import com.mktj.cn.web.enu.OrderType;
 import com.mktj.cn.web.enu.RoleType;
+import com.mktj.cn.web.po.User;
 import com.mktj.cn.web.vo.OrderVo;
 
 import javax.naming.OperationNotSupportedException;
@@ -66,13 +67,18 @@ public interface OrderService {
 
     /**
      * 汇总订单量
-     *
      * @param phone
      * @param orderType
      * @return
      */
     Map<String, Long> summaryOrderCount(String phone, OrderType orderType);
 
+    /**
+     * 加入团队
+     * @param recommend_man
+     * @param user
+     */
+    void joinTeam(User recommend_man, User user);
 
     BigDecimal getProductPrice(RoleType roleType, Product product);
 }

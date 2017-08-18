@@ -14,7 +14,9 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "t_user")
@@ -65,12 +67,13 @@ public class User implements Serializable {
     @NotFound(action = NotFoundAction.IGNORE)
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private TeamAnalysis teamAnalysis;
+
     @NotFound(action = NotFoundAction.IGNORE)
     @OneToMany(mappedBy = "lowerUser", fetch = FetchType.LAZY)
-    private List<TeamOrganization> lowerList =new ArrayList<>();
+    private Set<TeamOrganization> lowerList =new HashSet<>();
     @NotFound(action = NotFoundAction.IGNORE)
     @OneToMany(mappedBy = "higherUser", fetch = FetchType.LAZY)
-    private List<TeamOrganization> higherUserList = new ArrayList<>();
+    private Set<TeamOrganization> higherUserList = new HashSet<>();
     @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinTable(name = "t_user_service_order",
             joinColumns = {@JoinColumn(name = "user_id")},
@@ -215,13 +218,6 @@ public class User implements Serializable {
         this.teamAnalysis = teamAnalysis;
     }
 
-    public List<TeamOrganization> getLowerList() {
-        return lowerList;
-    }
-
-    public void setLowerList(List<TeamOrganization> lowerList) {
-        this.lowerList = lowerList;
-    }
 
 
     public List<Order> getServiceOrderList() {
@@ -232,13 +228,19 @@ public class User implements Serializable {
         this.serviceOrderList = serviceOrderList;
     }
 
+    public Set<TeamOrganization> getLowerList() {
+        return lowerList;
+    }
 
-    public List<TeamOrganization> getHigherUserList() {
+    public void setLowerList(Set<TeamOrganization> lowerList) {
+        this.lowerList = lowerList;
+    }
+
+    public Set<TeamOrganization> getHigherUserList() {
         return higherUserList;
     }
 
-    public void setHigherUserList(List<TeamOrganization> higherUserList) {
+    public void setHigherUserList(Set<TeamOrganization> higherUserList) {
         this.higherUserList = higherUserList;
     }
-
 }

@@ -4,10 +4,7 @@ import com.mktj.cn.web.dto.OrderDTO;
 import com.mktj.cn.web.enu.*;
 import com.mktj.cn.web.mapper.OrderMapper;
 import com.mktj.cn.web.po.*;
-import com.mktj.cn.web.repositories.DeliveryAddressRepository;
-import com.mktj.cn.web.repositories.OrderRepository;
-import com.mktj.cn.web.repositories.ProductRepository;
-import com.mktj.cn.web.repositories.UserRepository;
+import com.mktj.cn.web.repositories.*;
 import com.mktj.cn.web.service.BaseService;
 import com.mktj.cn.web.service.OrderService;
 import com.mktj.cn.web.vo.OrderVo;
@@ -37,7 +34,8 @@ public class OrderServiceImp extends BaseService implements OrderService {
     OrderMapper orderMapper;
     @Autowired
     DeliveryAddressRepository deliveryAddressRepository;
-
+    @Autowired
+    TeamOrganizationRepository teamOrganizationRepository;
     @Override
     @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
     public OrderDTO applyOrder(String phone, OrderVo orderVo) {
@@ -89,11 +87,28 @@ public class OrderServiceImp extends BaseService implements OrderService {
                     order.getHigherUserList().add(recommend_man);
                     recommend_man.getServiceOrderList().add(order);
                     userRepository.save(recommend_man);
+                    joinTeam(recommend_man,user);
                 }
             }
         }
         return orderMapper.orderToOrderDTO(order);
     }
+
+    @Override
+    @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
+    public void joinTeam(User recommend_man, User user) {
+        final User curUser = recommend_man;
+        Set<TeamOrganization> higherUserSet = recommend_man.getHigherUserList();
+        higherUserSet.forEach(team -> {
+            TeamOrganization teamOrganization = new TeamOrganization();
+            teamOrganization.setHigherUser(curUser);
+            teamOrganization.setLowerUser(user);
+            teamOrganization.setHigherUser(recommend_man);
+            teamOrganization.setTeamCode(team.getTeamCode());
+            teamOrganizationRepository.save(team);
+        });
+    }
+
     @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
     private Order saveOrder(OrderVo orderVo, User user, Product product, DeliveryAddress deliveryAddress, int piece, BigDecimal price, BigDecimal totalCost) {
         Order order = new Order();
@@ -133,7 +148,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
     @Override
     public Integer getOrderCount(String phone, OrderType orderType) {
         User user = userRepository.findByPhone(phone);
-        List<Order> orderList = null;
+        List<Order> orderList;
         if (orderType == OrderType.进货订单) {
             orderList = user.getOrderList();
         } else {
@@ -156,80 +171,10 @@ public class OrderServiceImp extends BaseService implements OrderService {
         return product.getRetailPrice();
     }
 
-    @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
-    public void updateHigherLevel(User recommend_man, User user, Product product, Order order, int level) {
-        if (level == 3) {
-            return;
-        }
-        User curUser = recommend_man;
-        if (recommend_man == null) {
-            curUser = user;
-        }
-        curUser.getServiceOrderAnalysis().setUnPay(user.getServiceOrderAnalysis().getAlPay() + 1);
-        if (product.getRoleType().getCode() > user.getRoleType().getCode()) {
-            calTeamAnalysis(user, product, curUser);
-        }
-        List<TeamOrganization> teamOrganizationList = curUser.getLowerList().stream().filter(teamOrganization -> teamOrganization.getLowerUser().getId() == user.getId()).collect(Collectors.toList());
-        if (teamOrganizationList.size() == 0) {
-            TeamOrganization teamOrganization = new TeamOrganization();
-            teamOrganization.setHigherUser(curUser);
-            teamOrganization.setLowerUser(user);
-            teamOrganization.setHigherUser(recommend_man);
-            curUser.getLowerList().add(teamOrganization);
-        }
-        curUser.getServiceOrderList().add(order);
-        order.getHigherUserList().add(curUser);
-        userRepository.save(curUser);
-        List<TeamOrganization> userList = curUser.getHigherUserList();
-        for (TeamOrganization higherUser : userList) {
-            updateHigherLevel(higherUser.getHigherUser(), user, product, order, ++level);
-        }
-    }
-
-    /**
-     * 计算团队人员成分
-     * @param user
-     * @param product
-     * @param sendUser
-     */
-    private void calTeamAnalysis(User user, Product product, User sendUser) {
-        if (user.getRoleType() == RoleType.天使) {
-            sendUser.getTeamAnalysis().setAngle(sendUser.getTeamAnalysis().getAngle() - 1);
-        }
-
-        if (user.getRoleType() == RoleType.合伙人) {
-            sendUser.getTeamAnalysis().setPartner(sendUser.getTeamAnalysis().getPartner() - 1);
-        }
-
-        if (user.getRoleType() == RoleType.准合伙人) {
-            sendUser.getTeamAnalysis().setQuasiPartner(sendUser.getTeamAnalysis().getQuasiPartner() - 1);
-        }
-
-        if (user.getRoleType() == RoleType.高级合伙人) {
-            sendUser.getTeamAnalysis().setSeniorPartner(sendUser.getTeamAnalysis().getSeniorPartner() - 1);
-        }
-
-        if (product.getRoleType() == RoleType.天使) {
-            sendUser.getTeamAnalysis().setAngle(sendUser.getTeamAnalysis().getAngle() + 1);
-        }
-
-        if (product.getRoleType() == RoleType.合伙人) {
-            sendUser.getTeamAnalysis().setPartner(sendUser.getTeamAnalysis().getPartner() + 1);
-        }
-
-        if (product.getRoleType() == RoleType.准合伙人) {
-            sendUser.getTeamAnalysis().setQuasiPartner(sendUser.getTeamAnalysis().getQuasiPartner() + 1);
-        }
-
-        if (product.getRoleType() == RoleType.高级合伙人) {
-            sendUser.getTeamAnalysis().setSeniorPartner(sendUser.getTeamAnalysis().getSeniorPartner() + 1);
-        }
-    }
-
     @Override
     public List<OrderDTO> getOrderList(OrderType orderType, OrderStatus status, String phone) {
         User user = userRepository.findByPhone(phone);
-        List<Order> orderList = null;
+        List<Order> orderList;
         if (orderType == OrderType.进货订单) {
             orderList = user.getOrderList();
         } else {
@@ -246,7 +191,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
     @Override
     public Map<String, Long> summaryOrderCount(String phone, OrderType orderType) {
         User user = userRepository.findByPhone(phone);
-        List<Order> orderList = null;
+        List<Order> orderList;
         if (orderType == OrderType.进货订单) {
             orderList = user.getOrderList();
         } else {

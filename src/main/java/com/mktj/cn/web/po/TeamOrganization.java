@@ -13,14 +13,32 @@ public class TeamOrganization {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-
     @ManyToOne
     @JoinColumn(name = "l_uid")
     private User lowerUser;
-
     @ManyToOne
     @JoinColumn(name = "h_uid")
     private User higherUser;
+    @Column(name = "phone", nullable = false)
+    private String teamCode;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TeamOrganization that = (TeamOrganization) o;
+
+        if (!lowerUser.equals(that.lowerUser)) return false;
+        return higherUser.equals(that.higherUser);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = lowerUser.hashCode();
+        result = 31 * result + higherUser.hashCode();
+        return result;
+    }
 
     public User getLowerUser() {
         return lowerUser;
@@ -38,23 +56,20 @@ public class TeamOrganization {
         this.higherUser = higherUser;
     }
 
-    @Column(name = "level") //级别
-    private long level;
-
-    public long getLevel() {
-        return level;
-    }
-
-    public void setLevel(long level) {
-        this.level = level;
-    }
-
     public long getId() {
         return id;
     }
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getTeamCode() {
+        return teamCode;
+    }
+
+    public void setTeamCode(String teamCode) {
+        this.teamCode = teamCode;
     }
 
 }
