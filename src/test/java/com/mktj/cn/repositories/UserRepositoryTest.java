@@ -5,7 +5,7 @@ import com.mktj.cn.web.po.DeliveryAddress;
 import com.mktj.cn.web.po.RealInfo;
 import com.mktj.cn.web.po.User;
 import com.mktj.cn.web.repositories.UserRepository;
-import com.mktj.cn.web.util.RoleType;
+import com.mktj.cn.web.enu.RoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.testng.AbstractTransactionalTestNGSpringContextTests;

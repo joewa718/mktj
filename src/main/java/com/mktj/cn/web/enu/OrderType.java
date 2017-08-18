@@ -1,4 +1,4 @@
-package com.mktj.cn.web.util;
+package com.mktj.cn.web.enu;
 
 public enum OrderType {
     进货订单("进货订单", 1), 服务订单("服务订单", 2);

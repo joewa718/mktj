@@ -1,4 +1,4 @@
-package com.mktj.cn.web.util;
+package com.mktj.cn.web.enu;
 
 public enum RoleType {
     普通("普通", 0), 天使("天使", 1), 准合伙人("准合伙人", 2), 合伙人("合伙人", 3), 高级合伙人("高级合伙人", 4);

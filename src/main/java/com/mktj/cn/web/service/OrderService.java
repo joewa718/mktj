@@ -1,13 +1,11 @@
 package com.mktj.cn.web.service;
 
-import com.mktj.cn.web.dto.EntryDTO;
 import com.mktj.cn.web.dto.OrderDTO;
 import com.mktj.cn.web.po.Product;
-import com.mktj.cn.web.util.OrderStatus;
-import com.mktj.cn.web.util.OrderType;
-import com.mktj.cn.web.util.RoleType;
+import com.mktj.cn.web.enu.OrderStatus;
+import com.mktj.cn.web.enu.OrderType;
+import com.mktj.cn.web.enu.RoleType;
 import com.mktj.cn.web.vo.OrderVo;
-import org.springframework.data.jpa.repository.Query;
 
 import javax.naming.OperationNotSupportedException;
 import java.math.BigDecimal;

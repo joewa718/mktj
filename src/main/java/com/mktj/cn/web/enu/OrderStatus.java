@@ -1,4 +1,4 @@
-package com.mktj.cn.web.util;
+package com.mktj.cn.web.enu;
 
 public enum OrderStatus {
 

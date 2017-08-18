@@ -1,8 +1,6 @@
 package com.mktj.cn.web.po;
 
-import com.mktj.cn.web.util.OrderType;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.ManyToAny;
 
 import javax.persistence.*;
 

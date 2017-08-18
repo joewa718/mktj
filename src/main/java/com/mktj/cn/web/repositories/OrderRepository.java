@@ -2,8 +2,7 @@ package com.mktj.cn.web.repositories;
 
 import com.mktj.cn.web.po.Order;
 import com.mktj.cn.web.po.User;
-import com.mktj.cn.web.util.OrderStatus;
-import com.mktj.cn.web.util.OrderType;
+import com.mktj.cn.web.enu.OrderStatus;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -11,7 +10,6 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Map;
 
 @Repository
 public interface OrderRepository extends CrudRepository<Order, Long>, JpaSpecificationExecutor<Order> {

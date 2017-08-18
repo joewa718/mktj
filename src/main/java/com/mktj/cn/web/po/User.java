@@ -1,7 +1,7 @@
 package com.mktj.cn.web.po;
 
 import com.mktj.cn.web.converter.RoleTypeConverter;
-import com.mktj.cn.web.util.RoleType;
+import com.mktj.cn.web.enu.RoleType;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.NotFound;

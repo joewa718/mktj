@@ -1,7 +1,6 @@
 package com.mktj.cn.web.vo;
 
-import com.mktj.cn.web.util.OrderType;
-import com.mktj.cn.web.util.PayType;
+import com.mktj.cn.web.enu.PayType;
 
 /**
  * @author zhanwang

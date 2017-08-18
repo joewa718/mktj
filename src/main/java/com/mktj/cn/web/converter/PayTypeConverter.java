@@ -1,6 +1,6 @@
 package com.mktj.cn.web.converter;
 
-import com.mktj.cn.web.util.PayType;
+import com.mktj.cn.web.enu.PayType;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;

@@ -1,7 +1,7 @@
 package com.mktj.cn.web.repositories;
 
 import com.mktj.cn.web.po.Product;
-import com.mktj.cn.web.util.ProductType;
+import com.mktj.cn.web.enu.ProductType;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
