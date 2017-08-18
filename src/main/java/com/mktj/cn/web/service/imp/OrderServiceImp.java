@@ -77,9 +77,14 @@ public class OrderServiceImp extends BaseService implements OrderService {
             throw new RuntimeException("无法找到对应的商品");
         }
         if(product.getProductType() == ProductType.套餐产品){
-            user.setAuthorizationCode(generateAuthCode());
-            user.setRoleType(product.getRoleType());
-            userRepository.save(user);
+            if(user.getAuthorizationCode() == null){
+                user.setAuthorizationCode(generateAuthCode());
+                userRepository.save(user);
+            }
+            if(product.getRoleType().getCode() > user.getRoleType().getCode()){
+                user.setRoleType(product.getRoleType());
+                userRepository.save(user);
+            }
             //更新推荐人服务订单
             if (!StringUtils.isBlank(order.getRecommendPhone())) {
                 User recommend_man = userRepository.findByPhone(order.getRecommendPhone());
@@ -97,16 +102,23 @@ public class OrderServiceImp extends BaseService implements OrderService {
     @Override
     @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
     public void joinTeam(User recommend_man, User user) {
-        final User curUser = recommend_man;
         Set<TeamOrganization> higherUserSet = recommend_man.getHigherUserList();
-        higherUserSet.forEach(team -> {
+        if(higherUserSet.size() > 0){
+            higherUserSet.forEach(team -> {
+                TeamOrganization teamOrganization = new TeamOrganization();
+                teamOrganization.setHigherUser(recommend_man);
+                teamOrganization.setLowerUser(user);
+                teamOrganization.setTeamCode(team.getTeamCode());
+                teamOrganizationRepository.save(teamOrganization);
+            });
+        }else{
             TeamOrganization teamOrganization = new TeamOrganization();
-            teamOrganization.setHigherUser(curUser);
             teamOrganization.setLowerUser(user);
             teamOrganization.setHigherUser(recommend_man);
-            teamOrganization.setTeamCode(team.getTeamCode());
-            teamOrganizationRepository.save(team);
-        });
+            teamOrganization.setTeamCode(recommend_man.getPhone());
+            teamOrganizationRepository.save(teamOrganization);
+        }
+
     }
 
     @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
@@ -140,8 +152,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
     }
     @Override
     public OrderDTO getOrder(String phone, long orderId) {
-        User user = userRepository.findByPhone(phone);
-        Order order = orderRepository.findOneByIdAndUser(orderId, user);
+        Order order = orderRepository.findOneById(orderId);
         return orderMapper.orderToOrderDTO(order);
     }
 

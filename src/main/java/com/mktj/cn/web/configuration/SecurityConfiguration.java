@@ -92,7 +92,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/css/**", "/js/**", "/tpl/**", "/plugin/**", "/imageupload/**", "/images/**","/extend/**","/image/**", "/vendor/**",
                         "/*.html", "/", "/fonts/**", "/l10n/**", "/**/favicon.ico", "/webjars/springfox-swagger-ui/**", "/swagger-resources/**", "/v2/**",
-                        "/api/user/login", "/api/user/regUser", "/api/user/sendRegCode", "/api/user/captcha","/api/user/sendPwFoundCode",
+                        "/api/user/login", "/api/user/regUser","/api/user/getUserByAuthorizationCode",  "/api/user/sendRegCode", "/api/user/captcha","/api/user/sendPwFoundCode",
                         "/api/user/passwordFoundNext","/api/user/passwordFound", "/api/wechat/portal/**", "/api/wechat/user/**","/druid/**").permitAll()
                 .antMatchers("/api/user/**", "/api/product/**", "/api/order/**").hasAnyRole("USER")
                 .anyRequest().authenticated()
