@@ -15,11 +15,6 @@ public class ProductDTO {
     private String description;
     private BigDecimal retailPrice;
     private Integer piece;
-    private BigDecimal price1;
-    private BigDecimal price2;
-    private BigDecimal price3;
-    private BigDecimal price4;
-    private BigDecimal price5;
     private String releaseTime;
     private Boolean isOffShelf;
     private String roleType;
@@ -78,46 +73,6 @@ public class ProductDTO {
 
     public void setRetailPrice(BigDecimal retailPrice) {
         this.retailPrice = retailPrice;
-    }
-
-    public BigDecimal getPrice1() {
-        return price1;
-    }
-
-    public void setPrice1(BigDecimal price1) {
-        this.price1 = price1;
-    }
-
-    public BigDecimal getPrice2() {
-        return price2;
-    }
-
-    public void setPrice2(BigDecimal price2) {
-        this.price2 = price2;
-    }
-
-    public BigDecimal getPrice3() {
-        return price3;
-    }
-
-    public void setPrice3(BigDecimal price3) {
-        this.price3 = price3;
-    }
-
-    public BigDecimal getPrice4() {
-        return price4;
-    }
-
-    public void setPrice4(BigDecimal price4) {
-        this.price4 = price4;
-    }
-
-    public BigDecimal getPrice5() {
-        return price5;
-    }
-
-    public void setPrice5(BigDecimal price5) {
-        this.price5 = price5;
     }
 
     public String getReleaseTime() {

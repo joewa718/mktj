@@ -46,8 +46,11 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
-    public ProductDTO getProductDtoById(long id) {
-        return productMapper.productToProductDTO(productRepository.findOne(id));
+    public ProductDTO getProductDtoById(String phone,long id) {
+        User user = userRepository.findByPhone(phone);
+        Product product = productRepository.findOne(id);
+        product.setRetailPrice(ordinaryOrderServiceImp.getProductPrice(user.getRoleType(),product));
+        return productMapper.productToProductDTO(product);
     }
 
     @Override

@@ -36,6 +36,7 @@ public class ProductController extends BaseController {
     @ApiOperation(value = "获取产品详细信息")
     @RequestMapping(value = "/getProductById", method = RequestMethod.POST)
     public ResponseEntity<ProductDTO> getProductById(@RequestParam("id") long id) {
+        String phone = super.getCurrentUser().getUsername();
         ProductDTO productDTO = productService.getProductDtoById(id);
         return new ResponseEntity<>(productDTO, HttpStatus.OK);
     }

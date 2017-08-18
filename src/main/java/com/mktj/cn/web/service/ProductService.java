@@ -12,7 +12,7 @@ public interface ProductService {
 
     Iterable<ProductDTO> getProductPackageList();
 
-    ProductDTO getProductDtoById(long id);
+    ProductDTO getProductDtoById(String phone,long id);
 
     Product getProductById(long id);
 }
