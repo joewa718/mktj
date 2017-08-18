@@ -14,10 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/product")
 public class ProductController extends BaseController {
-
     @Autowired
     ProductService productService;
-
     @ApiOperation(value = "获取普通产品列表")
     @RequestMapping(value = "/getProductOrdinaryList", method = RequestMethod.POST)
     public ResponseEntity<Iterable<ProductDTO>> getProductOrdinaryList() {
@@ -37,7 +35,7 @@ public class ProductController extends BaseController {
     @RequestMapping(value = "/getProductById", method = RequestMethod.POST)
     public ResponseEntity<ProductDTO> getProductById(@RequestParam("id") long id) {
         String phone = super.getCurrentUser().getUsername();
-        ProductDTO productDTO = productService.getProductDtoById(id);
+        ProductDTO productDTO = productService.getProductDtoById(phone,id);
         return new ResponseEntity<>(productDTO, HttpStatus.OK);
     }
 }
