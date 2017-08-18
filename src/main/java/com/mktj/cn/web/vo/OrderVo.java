@@ -1,6 +1,6 @@
 package com.mktj.cn.web.vo;
 
-import com.mktj.cn.web.enu.PayType;
+import com.mktj.cn.web.enumerate.PayType;
 
 /**
  * @author zhanwang

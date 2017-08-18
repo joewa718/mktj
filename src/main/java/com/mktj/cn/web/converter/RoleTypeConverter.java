@@ -1,6 +1,6 @@
 package com.mktj.cn.web.converter;
 
-import com.mktj.cn.web.enu.RoleType;
+import com.mktj.cn.web.enumerate.RoleType;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;

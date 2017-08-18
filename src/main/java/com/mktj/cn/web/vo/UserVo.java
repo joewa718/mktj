@@ -2,7 +2,7 @@ package com.mktj.cn.web.vo;/**
  * Created by zhanwa01 on 2017/8/9.
  */
 
-import com.mktj.cn.web.enu.RoleType;
+import com.mktj.cn.web.enumerate.RoleType;
 
 /**
  * @author zhanwang

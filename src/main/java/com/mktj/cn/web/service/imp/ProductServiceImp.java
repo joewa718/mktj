@@ -8,7 +8,7 @@ import com.mktj.cn.web.repositories.ProductRepository;
 import com.mktj.cn.web.repositories.UserRepository;
 import com.mktj.cn.web.service.OrderService;
 import com.mktj.cn.web.service.ProductService;
-import com.mktj.cn.web.enu.ProductType;
+import com.mktj.cn.web.enumerate.ProductType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;

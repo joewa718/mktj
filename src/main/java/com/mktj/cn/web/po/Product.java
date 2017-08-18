@@ -1,8 +1,8 @@
 package com.mktj.cn.web.po;
 
 import com.mktj.cn.web.converter.ProductTypeConverter;
-import com.mktj.cn.web.enu.ProductType;
-import com.mktj.cn.web.enu.RoleType;
+import com.mktj.cn.web.enumerate.ProductType;
+import com.mktj.cn.web.enumerate.RoleType;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 

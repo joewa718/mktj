@@ -1,7 +1,7 @@
 package com.mktj.cn.web.service.imp;
 
 import com.mktj.cn.web.dto.OrderDTO;
-import com.mktj.cn.web.enu.*;
+import com.mktj.cn.web.enumerate.*;
 import com.mktj.cn.web.mapper.OrderMapper;
 import com.mktj.cn.web.po.*;
 import com.mktj.cn.web.repositories.*;
@@ -36,6 +36,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
     DeliveryAddressRepository deliveryAddressRepository;
     @Autowired
     TeamOrganizationRepository teamOrganizationRepository;
+
     @Override
     @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
     public OrderDTO applyOrder(String phone, OrderVo orderVo) {
@@ -48,8 +49,15 @@ public class OrderServiceImp extends BaseService implements OrderService {
         if (deliveryAddress == null) {
             throw new RuntimeException("无法找到对应的收货地址");
         }
-        int piece = product.getPiece();
-        BigDecimal price = product.getRetailPrice();
+        int piece;
+        BigDecimal price;
+        if (product.getProductType() == ProductType.套餐产品) {
+            piece = product.getPiece();
+            price = product.getRetailPrice();
+        } else {
+            piece = orderVo.getProductNum();
+            price = getProductPrice(user.getRoleType(), product);
+        }
         BigDecimal totalCost = price.multiply(BigDecimal.valueOf(piece));
         //新增订单信息
         Order order = saveOrder(orderVo, user, product, deliveryAddress, piece, price, totalCost);
@@ -58,7 +66,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
 
     @Override
     @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
-    public OrderDTO payOrder(String phone, long orderId){
+    public OrderDTO payOrder(String phone, long orderId) {
         User user = userRepository.findByPhone(phone);
         Order order = orderRepository.findOne(orderId);
         int piece = order.getProductNum();
@@ -76,12 +84,12 @@ public class OrderServiceImp extends BaseService implements OrderService {
         if (product == null) {
             throw new RuntimeException("无法找到对应的商品");
         }
-        if(product.getProductType() == ProductType.套餐产品){
-            if(user.getAuthorizationCode() == null){
+        if (product.getProductType() == ProductType.套餐产品) {
+            if (user.getAuthorizationCode() == null) {
                 user.setAuthorizationCode(generateAuthCode());
                 userRepository.save(user);
             }
-            if(product.getRoleType().getCode() > user.getRoleType().getCode()){
+            if (product.getRoleType().getCode() > user.getRoleType().getCode()) {
                 user.setRoleType(product.getRoleType());
                 userRepository.save(user);
             }
@@ -92,7 +100,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
                     order.getHigherUserList().add(recommend_man);
                     recommend_man.getServiceOrderList().add(order);
                     userRepository.save(recommend_man);
-                    joinTeam(recommend_man,user);
+                    joinTeam(recommend_man, user);
                 }
             }
         }
@@ -103,7 +111,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
     @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
     public void joinTeam(User recommend_man, User user) {
         Set<TeamOrganization> higherUserSet = recommend_man.getHigherUserList();
-        if(higherUserSet.size() > 0){
+        if (higherUserSet.size() > 0) {
             higherUserSet.forEach(team -> {
                 TeamOrganization teamOrganization = new TeamOrganization();
                 teamOrganization.setHigherUser(recommend_man);
@@ -111,7 +119,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
                 teamOrganization.setTeamCode(team.getTeamCode());
                 teamOrganizationRepository.save(teamOrganization);
             });
-        }else{
+        } else {
             TeamOrganization teamOrganization = new TeamOrganization();
             teamOrganization.setLowerUser(user);
             teamOrganization.setHigherUser(recommend_man);
@@ -150,6 +158,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
         order.setUser(user);
         return orderRepository.save(order);
     }
+
     @Override
     public OrderDTO getOrder(String phone, long orderId) {
         Order order = orderRepository.findOneById(orderId);
@@ -191,10 +200,10 @@ public class OrderServiceImp extends BaseService implements OrderService {
         } else {
             orderList = user.getServiceOrderList();
         }
-        if(status != OrderStatus.全部订单){
+        if (status != OrderStatus.全部订单) {
             orderList = orderList.stream().filter(order -> order.getOrderStatus() == status).collect(Collectors.toList());
         }
-        List<OrderDTO> orderDTOList =orderMapper.orderToOrderDTOList(orderList);
+        List<OrderDTO> orderDTOList = orderMapper.orderToOrderDTOList(orderList);
         orderDTOList.forEach(orderDTO -> orderDTO.setOrderType(orderType.getName()));
         return orderDTOList;
     }
@@ -209,19 +218,19 @@ public class OrderServiceImp extends BaseService implements OrderService {
             orderList = user.getServiceOrderList();
         }
         Map<Integer, Long> groupResult = orderList.stream().collect(Collectors.groupingBy(order -> order.getOrderStatus().getCode(), Collectors.counting()));
-        Map<String, Long> map =new HashMap<>();
+        Map<String, Long> map = new HashMap<>();
         if (user.getOrderAnalysis() != null) {
             long unPay = groupResult.get(OrderStatus.待支付.getCode()) == null ? Long.valueOf(0) : groupResult.get(OrderStatus.待支付.getCode());
             long alPay = groupResult.get(OrderStatus.已支付.getCode()) == null ? Long.valueOf(0) : groupResult.get(OrderStatus.已支付.getCode());
             long alSend = groupResult.get(OrderStatus.已发货.getCode()) == null ? Long.valueOf(0) : groupResult.get(OrderStatus.已发货.getCode());
             long complete = groupResult.get(OrderStatus.已完成.getCode()) == null ? Long.valueOf(0) : groupResult.get(OrderStatus.已完成.getCode());
             long cancel = groupResult.get(OrderStatus.已取消.getCode()) == null ? Long.valueOf(0) : groupResult.get(OrderStatus.已取消.getCode());
-            map.put("全部订单",Long.valueOf(unPay+alPay+alSend+complete+cancel));
-            map.put(OrderStatus.待支付.getName(),unPay);
-            map.put(OrderStatus.已支付.getName(),alPay);
-            map.put(OrderStatus.已发货.getName(),alSend);
-            map.put(OrderStatus.已完成.getName(),complete);
-            map.put(OrderStatus.已取消.getName(),cancel);
+            map.put("全部订单", Long.valueOf(unPay + alPay + alSend + complete + cancel));
+            map.put(OrderStatus.待支付.getName(), unPay);
+            map.put(OrderStatus.已支付.getName(), alPay);
+            map.put(OrderStatus.已发货.getName(), alSend);
+            map.put(OrderStatus.已完成.getName(), complete);
+            map.put(OrderStatus.已取消.getName(), cancel);
         }
         return map;
     }

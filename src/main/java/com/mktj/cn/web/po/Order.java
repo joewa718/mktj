@@ -3,8 +3,8 @@ package com.mktj.cn.web.po;
 import com.mktj.cn.web.converter.OrderStatusConverter;
 import com.mktj.cn.web.converter.OrderTypeConverter;
 import com.mktj.cn.web.converter.PayTypeConverter;
-import com.mktj.cn.web.enu.OrderStatus;
-import com.mktj.cn.web.enu.PayType;
+import com.mktj.cn.web.enumerate.OrderStatus;
+import com.mktj.cn.web.enumerate.PayType;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;

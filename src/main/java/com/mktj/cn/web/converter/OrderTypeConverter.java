@@ -1,6 +1,6 @@
 package com.mktj.cn.web.converter;
 
-import com.mktj.cn.web.enu.OrderType;
+import com.mktj.cn.web.enumerate.OrderType;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;

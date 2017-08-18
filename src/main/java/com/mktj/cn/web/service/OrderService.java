@@ -2,9 +2,9 @@ package com.mktj.cn.web.service;
 
 import com.mktj.cn.web.dto.OrderDTO;
 import com.mktj.cn.web.po.Product;
-import com.mktj.cn.web.enu.OrderStatus;
-import com.mktj.cn.web.enu.OrderType;
-import com.mktj.cn.web.enu.RoleType;
+import com.mktj.cn.web.enumerate.OrderStatus;
+import com.mktj.cn.web.enumerate.OrderType;
+import com.mktj.cn.web.enumerate.RoleType;
 import com.mktj.cn.web.po.User;
 import com.mktj.cn.web.vo.OrderVo;
 

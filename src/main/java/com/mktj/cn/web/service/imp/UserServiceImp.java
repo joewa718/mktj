@@ -14,7 +14,7 @@ import com.mktj.cn.web.repositories.UserRepository;
 import com.mktj.cn.web.service.BaseService;
 import com.mktj.cn.web.service.UserService;
 import com.mktj.cn.web.util.GenerateRandomCode;
-import com.mktj.cn.web.enu.RoleType;
+import com.mktj.cn.web.enumerate.RoleType;
 import com.mktj.cn.web.util.SmsSender;
 import com.mktj.cn.web.vo.DeliveryAddressVo;
 import com.mktj.cn.web.vo.RealInfoVo;

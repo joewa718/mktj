@@ -1,14 +1,13 @@
-package com.mktj.cn.web.enu;
+package com.mktj.cn.web.enumerate;
 
-public enum PayType {
-    线下转账("线下转账", 1), 余额支付("余额支付", 2);
+public enum ProductType {
+    普通产品("普通产品", 1), 套餐产品("套餐产品", 2);
 
-    PayType(String name, int code) {
+    ProductType(String name, int code) {
         this.name = name;
         this.code = code;
     }
 
-    private int code;
     private String name;
 
     public String getName() {
@@ -19,6 +18,8 @@ public enum PayType {
         this.name = name;
     }
 
+    private int code;
+
     public int getCode() {
         return code;
     }
@@ -27,12 +28,12 @@ public enum PayType {
         this.code = code;
     }
 
-    public static PayType fromCode(int code) {
+    public static ProductType fromCode(int code) {
         if (code == 1) {
-            return 线下转账;
+            return 普通产品;
         }
         if (code == 2) {
-            return 余额支付;
+            return 套餐产品;
         }
         throw new UnsupportedOperationException(
                 "The code " + code + " is not supported!"

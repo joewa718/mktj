@@ -2,7 +2,7 @@ package com.mktj.cn.web.repositories;
 
 import com.mktj.cn.web.po.Order;
 import com.mktj.cn.web.po.User;
-import com.mktj.cn.web.enu.OrderStatus;
+import com.mktj.cn.web.enumerate.OrderStatus;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

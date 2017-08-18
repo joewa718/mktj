@@ -1,7 +1,7 @@
 spring:
   #resources.static-locations: classpath:/dist/
   profiles:
-    active: st
+    active: dev
   data:
     jpa:
       repositories:
@@ -71,7 +71,7 @@ spring:
             indexBase: C:\project\mktj\lucene\indexes
   datasource:
       type: com.alibaba.druid.pool.DruidDataSource
-      driver-class-name: com.mysql.jdbc.Driver
+      driver-class-name: com.mysql.cj.jdbc.Driver
       url: jdbc:mysql://598af1f083b62.sh.cdb.myqcloud.com:5428/mktj?useUnicode=true&characterEncoding=utf-8&useSSL=false
       #url: jdbc:mysql://localhost:3306/mktj?useUnicode=true&characterEncoding=utf-8&useSSL=false
       username: root
@@ -120,7 +120,7 @@ spring:
             indexBase: /opt/projects/mktj/lucene/indexes/
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://10.66.245.8:3306/mktj?useUnicode=true&characterEncoding=utf-8&useSSL=false
     username: root
     password: wz718718
