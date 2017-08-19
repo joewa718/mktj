@@ -9,6 +9,7 @@ import com.mktj.cn.web.service.BaseService;
 import com.mktj.cn.web.service.OrderService;
 import com.mktj.cn.web.util.DateUtil;
 import com.mktj.cn.web.vo.OrderVo;
+import com.mktj.cn.web.vo.PayCertificateVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -67,6 +68,14 @@ public class OrderServiceImp extends BaseService implements OrderService {
 
     @Override
     @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
+    public OrderDTO savePayCert(String phone, PayCertificateVo payCertificateVo) {
+        User user = userRepository.findByPhone(phone);
+        Order order = orderRepository.findOne(payCertificateVo.getOrderId());
+        return null;
+    }
+
+    @Override
+    @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
     public OrderDTO payOrder(String phone, long orderId) {
         User user = userRepository.findByPhone(phone);
         Order order = orderRepository.findOne(orderId);
@@ -80,17 +89,14 @@ public class OrderServiceImp extends BaseService implements OrderService {
             user.setScore(user.getScore().subtract(totalCost));
             order.setOrderStatus(OrderStatus.已支付);
             orderRepository.updateOrderStatusByIdAndUser(OrderStatus.已支付, orderId, user);
-        }else{//线下转账，由属确认支付
-            if(order.getRecommendPhone() == null || !user.getPhone().equals(order.getRecommendPhone())){
+        } else {//线下转账，由属确认支付
+            if (order.getRecommendPhone() == null || !user.getPhone().equals(order.getRecommendPhone())) {
                 throw new RuntimeException("对不起，线下转账为成功，需要推荐人确认支付");
             }
             order.setOrderStatus(OrderStatus.已支付);
             orderRepository.updateOrderStatusByIdAndUser(OrderStatus.已支付, orderId, order.getUser());
         }
         Product product = productRepository.getProductByproductCode(order.getProductCode());
-        if (product == null) {
-            throw new RuntimeException("无法找到对应的商品");
-        }
         if (product.getProductType() == ProductType.套餐产品) {
             if (user.getAuthorizationCode() == null) {
                 user.setAuthorizationCode(generateAuthCode());

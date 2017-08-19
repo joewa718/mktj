@@ -62,8 +62,10 @@ public class Order {
     @Column(name = "order_time")
     @Temporal(TemporalType.TIMESTAMP)
     private Date orderTime;
-    @Column(name = "payCertificate")
-    private String payCertificate;
+    @Column(name = "pay_cert_photo")
+    private String payCertPhoto;
+    @Column(name = "pay_cert_info")
+    private String payCertInfo;
     @Convert(converter = OrderStatusConverter.class)
     @Column(name = "order_status")
     private OrderStatus orderStatus;
@@ -251,12 +253,20 @@ public class Order {
         this.higherUserList = higherUserList;
     }
 
-    public String getPayCertificate() {
-        return payCertificate;
+    public String getPayCertPhoto() {
+        return payCertPhoto;
     }
 
-    public void setPayCertificate(String payCertificate) {
-        this.payCertificate = payCertificate;
+    public void setPayCertPhoto(String payCertPhoto) {
+        this.payCertPhoto = payCertPhoto;
+    }
+
+    public String getPayCertInfo() {
+        return payCertInfo;
+    }
+
+    public void setPayCertInfo(String payCertInfo) {
+        this.payCertInfo = payCertInfo;
     }
 
     public String getMonth() {

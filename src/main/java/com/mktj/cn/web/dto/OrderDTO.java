@@ -1,5 +1,6 @@
 package com.mktj.cn.web.dto;
 
+import javax.persistence.Column;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -24,7 +25,8 @@ public class OrderDTO {
     private BigDecimal productCost;
     private int productNum;
     private String payWay;
-    private String payCertificate;
+    private String payCertPhoto;
+    private String payCertInfo;
     private String orderComment;
     private String orderType;
     private Date orderTime;
@@ -61,14 +63,6 @@ public class OrderDTO {
 
     public void setPayWay(String payWay) {
         this.payWay = payWay;
-    }
-
-    public String getPayCertificate() {
-        return payCertificate;
-    }
-
-    public void setPayCertificate(String payCertificate) {
-        this.payCertificate = payCertificate;
     }
 
     public String getOrderComment() {
@@ -208,5 +202,21 @@ public class OrderDTO {
 
     public void setRecommendPhone(String recommendPhone) {
         this.recommendPhone = recommendPhone;
+    }
+
+    public String getPayCertPhoto() {
+        return payCertPhoto;
+    }
+
+    public void setPayCertPhoto(String payCertPhoto) {
+        this.payCertPhoto = payCertPhoto;
+    }
+
+    public String getPayCertInfo() {
+        return payCertInfo;
+    }
+
+    public void setPayCertInfo(String payCertInfo) {
+        this.payCertInfo = payCertInfo;
     }
 }

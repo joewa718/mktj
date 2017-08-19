@@ -7,6 +7,7 @@ import com.mktj.cn.web.enumerate.OrderType;
 import com.mktj.cn.web.enumerate.RoleType;
 import com.mktj.cn.web.po.User;
 import com.mktj.cn.web.vo.OrderVo;
+import com.mktj.cn.web.vo.PayCertificateVo;
 
 import javax.naming.OperationNotSupportedException;
 import java.math.BigDecimal;
@@ -36,6 +37,13 @@ public interface OrderService {
      * @throws OperationNotSupportedException
      */
     OrderDTO payOrder(String phone, long orderId);
+
+    /**
+     * 提交凭证信息
+     * @param phone
+     * @return
+     */
+    OrderDTO savePayCert(String phone, PayCertificateVo payCertificateVo);
 
     /**
      * 获得订单详细信息
