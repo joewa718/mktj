@@ -5,6 +5,7 @@ package com.mktj.cn.web.dto;
  */
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * @author zhanwang
@@ -20,6 +21,19 @@ public class UserDTO {
     private Boolean isReceiveMessage;
     private String authorizationCode;
     private BigDecimal score;
+    private Date regTime;
+
+    public Date getRegTime() {
+        return regTime;
+    }
+
+    public void setRegTime(Date regTime) {
+        this.regTime = regTime;
+    }
+
+    public Boolean getReceiveMessage() {
+        return isReceiveMessage;
+    }
 
     public BigDecimal getScore() {
         return score;
