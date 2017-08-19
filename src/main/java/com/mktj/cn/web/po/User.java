@@ -13,10 +13,7 @@ import org.hibernate.search.annotations.Indexed;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "t_user")
@@ -52,6 +49,9 @@ public class User implements Serializable {
     private String authorizationCode;
     @Column(name = "isReceiveMessage")
     private Boolean isReceiveMessage = false;
+    @Column(name = "reg_time")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date regTime;
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private RealInfo realInfo;
@@ -67,7 +67,6 @@ public class User implements Serializable {
     @NotFound(action = NotFoundAction.IGNORE)
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private TeamAnalysis teamAnalysis;
-
     @NotFound(action = NotFoundAction.IGNORE)
     @OneToMany(mappedBy = "lowerUser", fetch = FetchType.LAZY)
     private Set<TeamOrganization> lowerList =new HashSet<>();
@@ -218,7 +217,13 @@ public class User implements Serializable {
         this.teamAnalysis = teamAnalysis;
     }
 
+    public Date getRegTime() {
+        return regTime;
+    }
 
+    public void setRegTime(Date regTime) {
+        this.regTime = regTime;
+    }
 
     public List<Order> getServiceOrderList() {
         return serviceOrderList;
