@@ -275,12 +275,14 @@ public class OrderServiceImp extends BaseService implements OrderService {
         Map<String, Long> map = new HashMap<>();
         if (user.getOrderAnalysis() != null) {
             long unPay = groupResult.get(OrderStatus.待支付.getCode()) == null ? Long.valueOf(0) : groupResult.get(OrderStatus.待支付.getCode());
+            long alConfirm = groupResult.get(OrderStatus.待确认.getCode()) == null ? Long.valueOf(0) : groupResult.get(OrderStatus.待确认.getCode());
             long alPay = groupResult.get(OrderStatus.已支付.getCode()) == null ? Long.valueOf(0) : groupResult.get(OrderStatus.已支付.getCode());
             long alSend = groupResult.get(OrderStatus.已发货.getCode()) == null ? Long.valueOf(0) : groupResult.get(OrderStatus.已发货.getCode());
             long complete = groupResult.get(OrderStatus.已完成.getCode()) == null ? Long.valueOf(0) : groupResult.get(OrderStatus.已完成.getCode());
             long cancel = groupResult.get(OrderStatus.已取消.getCode()) == null ? Long.valueOf(0) : groupResult.get(OrderStatus.已取消.getCode());
             map.put("全部订单", Long.valueOf(unPay + alPay + alSend + complete + cancel));
             map.put(OrderStatus.待支付.getName(), unPay);
+            map.put(OrderStatus.待确认.getName(), alConfirm);
             map.put(OrderStatus.已支付.getName(), alPay);
             map.put(OrderStatus.已发货.getName(), alSend);
             map.put(OrderStatus.已完成.getName(), complete);
