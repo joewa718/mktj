@@ -101,6 +101,12 @@ public class OrderServiceImp extends BaseService implements OrderService {
     public OrderDTO payOrder(String phone, long orderId) {
         User user = userRepository.findByPhone(phone);
         Order order = orderRepository.findOne(orderId);
+        if(order == null){
+            throw new RuntimeException("订单不存在");
+        }
+        if(order.getPayWay() == PayType.线下转账){
+            throw new RuntimeException("线下订单需要上传凭证并且上级确认");
+        }
         int piece = order.getProductNum();
         BigDecimal price = order.getProductPrice();
         BigDecimal totalCost = price.multiply(BigDecimal.valueOf(piece));
@@ -200,8 +206,8 @@ public class OrderServiceImp extends BaseService implements OrderService {
         order.setSendName(product.getSendMan());
         order.setSendPhone(product.getSendPhone());
         order.setRecommendPhone(orderVo.getRecommendPhone());
-        Optional<List<Order>> orderList = Optional.ofNullable(user.getOrderList());
-        orderList.orElse(new ArrayList<>());
+        Optional<Set<Order>> orderList = Optional.ofNullable(user.getOrderList());
+        orderList.orElse(new TreeSet<>());
         orderList.get().add(order);
         order.setUser(user);
         return orderRepository.save(order);
@@ -216,7 +222,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
     @Override
     public Integer getOrderCount(String phone, OrderType orderType) {
         User user = userRepository.findByPhone(phone);
-        List<Order> orderList;
+        Set<Order> orderList;
         if (orderType == OrderType.进货订单) {
             orderList = user.getOrderList();
         } else {
@@ -242,14 +248,14 @@ public class OrderServiceImp extends BaseService implements OrderService {
     @Override
     public List<OrderDTO> getOrderList(OrderType orderType, OrderStatus status, String phone) {
         User user = userRepository.findByPhone(phone);
-        List<Order> orderList;
+        Set<Order> orderList;
         if (orderType == OrderType.进货订单) {
             orderList = user.getOrderList();
         } else {
             orderList = user.getServiceOrderList();
         }
         if (status != OrderStatus.全部订单) {
-            orderList = orderList.stream().filter(order -> order.getOrderStatus() == status).collect(Collectors.toList());
+            orderList = orderList.stream().filter(order -> order.getOrderStatus() == status).collect(Collectors.toSet());
         }
         List<OrderDTO> orderDTOList = orderMapper.orderToOrderDTOList(orderList);
         orderDTOList.forEach(orderDTO -> orderDTO.setOrderType(orderType.getName()));
@@ -259,7 +265,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
     @Override
     public Map<String, Long> summaryOrderCount(String phone, OrderType orderType) {
         User user = userRepository.findByPhone(phone);
-        List<Order> orderList;
+        Set<Order> orderList;
         if (orderType == OrderType.进货订单) {
             orderList = user.getOrderList();
         } else {

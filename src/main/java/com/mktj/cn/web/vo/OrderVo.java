@@ -13,15 +13,6 @@ public class OrderVo {
     private PayType payType;
     private String orderComment;
     private String recommendPhone;
-    private String payCertificate;
-
-    public String getPayCertificate() {
-        return payCertificate;
-    }
-
-    public void setPayCertificate(String payCertificate) {
-        this.payCertificate = payCertificate;
-    }
 
     public PayType getPayType() {
         return payType;

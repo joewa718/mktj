@@ -56,9 +56,9 @@ public class User implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private RealInfo realInfo;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<DeliveryAddress> deliveryAddressList;
+    private Set<DeliveryAddress> deliveryAddressList;
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<Order> orderList;
+    private Set<Order> orderList;
     @NotFound(action = NotFoundAction.IGNORE)
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private OrderAnalysis orderAnalysis;
@@ -76,9 +76,8 @@ public class User implements Serializable {
     @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinTable(name = "t_user_service_order",
             joinColumns = {@JoinColumn(name = "user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "order_id")}
-    )
-    private List<Order> serviceOrderList = new ArrayList<>();
+            inverseJoinColumns = {@JoinColumn(name = "order_id")})
+    private Set<Order> serviceOrderList = new TreeSet<>();
 
     public long getId() {
         return id;
@@ -176,22 +175,6 @@ public class User implements Serializable {
         this.realInfo = realInfo;
     }
 
-    public List<DeliveryAddress> getDeliveryAddressList() {
-        return deliveryAddressList;
-    }
-
-    public void setDeliveryAddressList(List<DeliveryAddress> deliveryAddressList) {
-        this.deliveryAddressList = deliveryAddressList;
-    }
-
-    public List<Order> getOrderList() {
-        return orderList;
-    }
-
-    public void setOrderList(List<Order> orderList) {
-        this.orderList = orderList;
-    }
-
 
     public OrderAnalysis getOrderAnalysis() {
         return orderAnalysis;
@@ -225,14 +208,6 @@ public class User implements Serializable {
         this.regTime = regTime;
     }
 
-    public List<Order> getServiceOrderList() {
-        return serviceOrderList;
-    }
-
-    public void setServiceOrderList(List<Order> serviceOrderList) {
-        this.serviceOrderList = serviceOrderList;
-    }
-
     public Set<TeamOrganization> getLowerList() {
         return lowerList;
     }
@@ -247,5 +222,30 @@ public class User implements Serializable {
 
     public void setHigherUserList(Set<TeamOrganization> higherUserList) {
         this.higherUserList = higherUserList;
+    }
+
+
+    public Set<DeliveryAddress> getDeliveryAddressList() {
+        return deliveryAddressList;
+    }
+
+    public void setDeliveryAddressList(Set<DeliveryAddress> deliveryAddressList) {
+        this.deliveryAddressList = deliveryAddressList;
+    }
+
+    public Set<Order> getOrderList() {
+        return orderList;
+    }
+
+    public void setOrderList(Set<Order> orderList) {
+        this.orderList = orderList;
+    }
+
+    public Set<Order> getServiceOrderList() {
+        return serviceOrderList;
+    }
+
+    public void setServiceOrderList(Set<Order> serviceOrderList) {
+        this.serviceOrderList = serviceOrderList;
     }
 }

@@ -189,8 +189,8 @@ public class UserServiceImp extends BaseService implements UserService {
     @Override
     public void saveDeliveryAddress(String phone, DeliveryAddressVo deliveryAddressVo) {
         User user = userRepository.findByPhone(phone);
-        Optional<List<DeliveryAddress>> deliveryAddressList = Optional.ofNullable(user.getDeliveryAddressList());
-        deliveryAddressList.orElse(new ArrayList<>());
+        Optional<Set<DeliveryAddress>> deliveryAddressList = Optional.ofNullable(user.getDeliveryAddressList());
+        deliveryAddressList.orElse(new TreeSet<>());
         if (deliveryAddressVo.getIsDefault()) {
             deliveryAddressList.get().forEach(deliveryAddress -> {
                 deliveryAddress.setIsDefault(false);

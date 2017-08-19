@@ -54,7 +54,7 @@ public class UserController extends BaseController {
     }
 
     @ApiOperation(value = "上传凭证文件")
-    @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
+    @RequestMapping(value = "/uploadPayCertFile", method = RequestMethod.POST)
     public ResponseEntity<ImageDTO> uploadPayCertFile(@RequestParam(value = "file") MultipartFile file) throws ServletException, IOException {
         return upload(file,payCentPath);
     }

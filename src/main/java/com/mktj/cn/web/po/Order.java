@@ -10,9 +10,7 @@ import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author zhanwang
@@ -75,7 +73,8 @@ public class Order {
     @JoinColumn(name = "user_id")
     private User user;
     @ManyToMany(mappedBy = "serviceOrderList",fetch = FetchType.LAZY)
-    private List<User> higherUserList = new ArrayList<>();
+    private Set<User> higherUserList = new TreeSet<>();
+
     @Formula("MONTH(order_time)")
     private String month;
     public String getProductName() {
@@ -245,14 +244,6 @@ public class Order {
         this.recommendPhone = recommendPhone;
     }
 
-    public List<User> getHigherUserList() {
-        return higherUserList;
-    }
-
-    public void setHigherUserList(List<User> higherUserList) {
-        this.higherUserList = higherUserList;
-    }
-
     public String getPayCertPhoto() {
         return payCertPhoto;
     }
@@ -275,6 +266,14 @@ public class Order {
 
     public void setMonth(String month) {
         this.month = month;
+    }
+
+    public Set<User> getHigherUserList() {
+        return higherUserList;
+    }
+
+    public void setHigherUserList(Set<User> higherUserList) {
+        this.higherUserList = higherUserList;
     }
 
 }

@@ -51,12 +51,18 @@ public class ReportServiceImp implements ReportService {
     public Map<String, List<EntryDTO<String, Long>>> analysisOrderVolume(String phone) {
         User user = userRepository.findByPhone(phone);
         Map<String, Long> ordinaryOrderSaleVolume = fillVolumeResult(orderRepository.analysisOrdinaryOrderSaleVolume(user, OrderStatus.已支付, DateUtil.getYearBeginDate(), DateUtil.getCurrentDate()));
-        List<Order> orderList = user.getServiceOrderList();
+        Set<Order> orderList = user.getServiceOrderList();
         List<Long> orderIds = new ArrayList<>();
         if (orderList.size() > 0) {
             orderList.forEach(order -> orderIds.add(order.getId()));
         }
-        Map<String, Long> serviceOrderSaleVolume = fillVolumeResult(orderRepository.analysisServiceOrderSaleVolume(orderIds, OrderStatus.已支付, DateUtil.getYearBeginDate(), DateUtil.getCurrentDate()));
+        List<Object[]> result;
+        if(orderIds.size() > 0){
+            result = orderRepository.analysisServiceOrderSaleVolume(orderIds, OrderStatus.已支付, DateUtil.getYearBeginDate(), DateUtil.getCurrentDate());
+        }else{
+            result=new ArrayList<>();
+        }
+        Map<String, Long> serviceOrderSaleVolume = fillVolumeResult(result);
         List<String> monthList = DateUtil.getYTDMonth();
         Map<String, List<EntryDTO<String, Long>>> map = new HashMap<>();
         map.put("个人进货量", fillAnalysisOrderVolume(ordinaryOrderSaleVolume, monthList));
@@ -68,12 +74,18 @@ public class ReportServiceImp implements ReportService {
     public Map<String, List<EntryDTO<String, Double>>> analysisOrderShare(String phone) {
         User user = userRepository.findByPhone(phone);
         Map<String, Long> ordinaryOrderSaleVolume = fillVolumeResult(orderRepository.analysisOrdinaryOrderSaleVolume(user, OrderStatus.已支付, DateUtil.getYearBeginDate(), DateUtil.getCurrentDate()));
-        List<Order> orderList = user.getServiceOrderList();
+        Set<Order> orderList = user.getServiceOrderList();
         List<Long> orderIds = new ArrayList<>();
         if (orderList.size() > 0) {
             orderList.forEach(order -> orderIds.add(order.getId()));
         }
-        Map<String, Long> serviceOrderSaleVolume = fillVolumeResult(orderRepository.analysisServiceOrderSaleVolume(orderIds, OrderStatus.已支付, DateUtil.getYearBeginDate(), DateUtil.getCurrentDate()));
+        List<Object[]> result;
+        if(orderIds.size() > 0){
+            result = orderRepository.analysisServiceOrderSaleVolume(orderIds, OrderStatus.已支付, DateUtil.getYearBeginDate(), DateUtil.getCurrentDate());
+        }else{
+            result=new ArrayList<>();
+        }
+        Map<String, Long> serviceOrderSaleVolume = fillVolumeResult(result);
         List<String> monthList = DateUtil.getYTDMonth();
         Map<String, List<EntryDTO<String, Double>>> map = new HashMap<>();
         map.put("个人进货量环比", fillAnalysisOrderShare(ordinaryOrderSaleVolume, monthList));
