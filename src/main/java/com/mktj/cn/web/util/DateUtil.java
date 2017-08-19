@@ -1,9 +1,7 @@
 package com.mktj.cn.web.util;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -34,19 +32,11 @@ public class DateUtil {
 
     public static List<String> getYTDMonth() {
         List<String> monthList = new ArrayList<>();
-        Calendar a = Calendar.getInstance();
-        int step = 0;
-        while (true) {
-            a.set(Calendar.MONTH, step);
-            int curMonth = a.get(Calendar.MONTH) + 1;
-            if (curMonth > 12) {
-                break;
-            }
-            step++;
-            if (curMonth < 10) {
-                monthList.add("0" + curMonth);
+        for (int i = 1; i <= 12; i++) {
+            if (i < 10) {
+                monthList.add("0" + i);
             } else {
-                monthList.add(String.valueOf(curMonth));
+                monthList.add(String.valueOf(i));
             }
         }
         return monthList;

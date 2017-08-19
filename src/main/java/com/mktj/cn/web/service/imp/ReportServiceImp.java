@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import sun.util.calendar.CalendarUtils;
 import sun.util.locale.provider.CalendarDataUtility;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -86,11 +87,19 @@ public class ReportServiceImp implements ReportService {
     private List<EntryDTO<String, Double>> fillAnalysisOrderShare(Map<String, Long> serviceOrderSaleVolume, List<String> monthList) {
         List<EntryDTO<String, Double>> orderSaleShareList = new ArrayList<>();
         List<EntryDTO<String, Long>> entryDTOList = fillAnalysisOrderVolume(serviceOrderSaleVolume, monthList);
-        for (int i = 1; i < entryDTOList.size(); i++) {
-            EntryDTO<String, Long> volume = entryDTOList.get(i);
-            EntryDTO<String, Long> pre_volume = entryDTOList.get(i - 1);
-            Double share = Double.valueOf((volume.getValue() - pre_volume.getValue()) / volume.getValue());
-            orderSaleShareList.add(new EntryDTO<>(volume.getKey(),share));
+        for (int i = 0; i < entryDTOList.size(); i++) {
+            if (i == 0) {
+                orderSaleShareList.add(new EntryDTO<>(entryDTOList.get(i).getKey(), BigDecimal.valueOf(0).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue()));
+            } else {
+                EntryDTO<String, Long> cur = entryDTOList.get(i);
+                EntryDTO<String, Long> pre = entryDTOList.get(i - 1);
+                BigDecimal cur_volume = new BigDecimal(cur.getValue());
+                BigDecimal pre_volume = new BigDecimal(pre.getValue());
+                Double share = cur_volume.longValue() == 0 ?
+                        BigDecimal.valueOf(cur_volume.longValue()).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue() :
+                        cur_volume.subtract(pre_volume).divide(cur_volume).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                orderSaleShareList.add(new EntryDTO<>(cur.getKey(), share));
+            }
         }
         return orderSaleShareList;
     }
@@ -102,7 +111,7 @@ public class ReportServiceImp implements ReportService {
             if (serviceOrderSaleVolume.containsKey(month)) {
                 entryDTO = new EntryDTO(month, serviceOrderSaleVolume.get(month));
             } else {
-                entryDTO = new EntryDTO(month, 0);
+                entryDTO = new EntryDTO(month, Long.valueOf(0));
             }
             orderSaleVolumeList.add(entryDTO);
         });
