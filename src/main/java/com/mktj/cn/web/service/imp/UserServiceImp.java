@@ -1,5 +1,6 @@
 package com.mktj.cn.web.service.imp;
 
+import com.mktj.cn.web.util.DateUtil;
 import com.mktj.cn.web.util.encrypt.AESCryptUtil;
 import com.mktj.cn.web.dto.DeliveryAddressDTO;
 import com.mktj.cn.web.dto.RealInfoDTO;
@@ -94,13 +95,14 @@ public class UserServiceImp extends BaseService implements UserService {
             throw new OperationNotSupportedException("手机验证码不正确");
         }
         Long regCodeTime = (Long) session.getAttribute("regCodeTime");
-        long cur_time = new Date().getTime();
+        long cur_time = DateUtil.getCurrentDate().getTime();
         if ((cur_time - regCodeTime) / 1000 > 600) {//10分钟
             throw new OperationNotSupportedException("手机验证码已经过期");
         }
         user = userMapper.userToUserVo(userVo);
         user.setPassword(AESCryptUtil.encrypt(user.getPassword()));
         user.setDisable(false);
+        user.setRegTime(DateUtil.getCurrentDate());
         //初始化订单分析
         OrderAnalysis ordinaryOrderAnalysis =new OrderAnalysis();
         ordinaryOrderAnalysis.setUser(user);
@@ -299,7 +301,7 @@ public class UserServiceImp extends BaseService implements UserService {
             throw new OperationNotSupportedException("手机验证码不正确");
         }
         Long sendPwFoundTime = (Long) session.getAttribute("sendPwFoundTime");
-        long cur_time = new Date().getTime();
+        long cur_time = DateUtil.getCurrentDate().getTime();
         if ((cur_time - sendPwFoundTime) / 1000 > 600) {//10分钟
             throw new OperationNotSupportedException("手机验证码已经过期");
         }
@@ -318,7 +320,7 @@ public class UserServiceImp extends BaseService implements UserService {
             throw new OperationNotSupportedException("手机验证码不正确");
         }
         Long sendPwFoundTime = (Long) session.getAttribute("sendPwFoundTime");
-        long cur_time = new Date().getTime();
+        long cur_time = DateUtil.getCurrentDate().getTime();
         if ((cur_time - sendPwFoundTime) / 1000 > 600) {//10分钟
             throw new OperationNotSupportedException("手机验证码已经过期");
         }

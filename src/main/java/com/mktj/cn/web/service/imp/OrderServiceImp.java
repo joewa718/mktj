@@ -7,6 +7,7 @@ import com.mktj.cn.web.po.*;
 import com.mktj.cn.web.repositories.*;
 import com.mktj.cn.web.service.BaseService;
 import com.mktj.cn.web.service.OrderService;
+import com.mktj.cn.web.util.DateUtil;
 import com.mktj.cn.web.vo.OrderVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -141,7 +142,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
         order.setOrderCode(generateOrderCode(String.valueOf(user.getId())));
         order.setUser(user);
         order.setOrderStatus(OrderStatus.待支付);
-        order.setOrderTime(new Date());
+        order.setOrderTime(DateUtil.getCurrentDate());
         order.setOrderComment(orderVo.getOrderComment());
         order.setPayWay(orderVo.getPayType());
         order.setProductName(product.getProductName());

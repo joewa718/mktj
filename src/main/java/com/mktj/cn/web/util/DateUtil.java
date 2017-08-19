@@ -50,5 +50,7 @@ public class DateUtil {
         return format.format(date);
     }
 
-
+    public static Date getCurrentDate(){
+        return new Date();
+    }
 }

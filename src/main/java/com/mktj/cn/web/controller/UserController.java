@@ -6,6 +6,7 @@ import com.mktj.cn.web.dto.RealInfoDTO;
 import com.mktj.cn.web.dto.UserDTO;
 import com.mktj.cn.web.exception.DuplicateAccountException;
 import com.mktj.cn.web.service.UserService;
+import com.mktj.cn.web.util.DateUtil;
 import com.mktj.cn.web.util.ImageCode;
 import com.mktj.cn.web.vo.DeliveryAddressVo;
 import com.mktj.cn.web.vo.RealInfoVo;
@@ -225,7 +226,7 @@ public class UserController extends BaseController {
             HttpSession session = request.getSession();
             code = userService.sendRegCode(phone, captcha, session);
             session.setAttribute("regCode", code.toLowerCase());
-            session.setAttribute("regCodeTime", new Date().getTime());
+            session.setAttribute("regCodeTime", DateUtil.getCurrentDate().getTime());
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -240,7 +241,7 @@ public class UserController extends BaseController {
             HttpSession session = request.getSession();
             code = userService.sendPwFoundCode(phone, captcha, session);
             session.setAttribute("sendPwFoundCode", code.toLowerCase());
-            session.setAttribute("sendPwFoundTime", new Date().getTime());
+            session.setAttribute("sendPwFoundTime", DateUtil.getCurrentDate().getTime());
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
