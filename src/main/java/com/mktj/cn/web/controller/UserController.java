@@ -4,6 +4,7 @@ import com.mktj.cn.web.dto.DeliveryAddressDTO;
 import com.mktj.cn.web.dto.ImageDTO;
 import com.mktj.cn.web.dto.RealInfoDTO;
 import com.mktj.cn.web.dto.UserDTO;
+import com.mktj.cn.web.enumerate.FileType;
 import com.mktj.cn.web.exception.DuplicateAccountException;
 import com.mktj.cn.web.service.UserService;
 import com.mktj.cn.web.util.DateUtil;
@@ -41,16 +42,28 @@ public class UserController extends BaseController {
     private final static Logger log = LoggerFactory.getLogger(UserController.class);
     @Value("${photo.path}")
     private String filePath;
+    @Value("${photo.payCentPath}")
+    private String payCentPath;
     @Autowired
     UserService userService;
 
     @ApiOperation(value = "上传文件")
     @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
     public ResponseEntity<ImageDTO> uploadFile(@RequestParam(value = "file") MultipartFile file) throws ServletException, IOException {
+        return upload(file,filePath);
+    }
+
+    @ApiOperation(value = "上传凭证文件")
+    @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
+    public ResponseEntity<ImageDTO> uploadPayCertFile(@RequestParam(value = "file") MultipartFile file) throws ServletException, IOException {
+        return upload(file,payCentPath);
+    }
+
+    private ResponseEntity<ImageDTO> upload(@RequestParam(value = "file") MultipartFile file,String path) {
         ImageDTO imageDTO = new ImageDTO();
         String fileName;
         try {
-            fileName = userService.updateFile(file, filePath);
+            fileName = userService.updateFile(file, path);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             imageDTO.setCode(500);

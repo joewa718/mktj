@@ -15,7 +15,6 @@ public class PayCertificateVo {
     public void setOrderId(long orderId) {
         this.orderId = orderId;
     }
-
     public String getPayCertPhoto() {
         return payCertPhoto;
     }
@@ -23,7 +22,6 @@ public class PayCertificateVo {
     public void setPayCertPhoto(String payCertPhoto) {
         this.payCertPhoto = payCertPhoto;
     }
-
     public String getPayCertInfo() {
         return payCertInfo;
     }

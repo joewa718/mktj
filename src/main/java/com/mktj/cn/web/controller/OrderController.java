@@ -7,6 +7,7 @@ import com.mktj.cn.web.service.ProductService;
 import com.mktj.cn.web.enumerate.OrderStatus;
 import com.mktj.cn.web.enumerate.OrderType;
 import com.mktj.cn.web.vo.OrderVo;
+import com.mktj.cn.web.vo.PayCertificateVo;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -46,6 +47,30 @@ public class OrderController extends BaseController {
         String phone = super.getCurrentUser().getUsername();
         try {
             OrderDTO orderDTO = orderService.payOrder(phone,orderId);
+            return new ResponseEntity<>(orderDTO, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @ApiOperation(value = "线下订单提交给推荐人")
+    @RequestMapping(value = "/savePayCert", method = RequestMethod.POST)
+    public ResponseEntity<Object> submitOrder(@ModelAttribute PayCertificateVo payCertificateVo) {
+        String phone = super.getCurrentUser().getUsername();
+        try {
+            OrderDTO orderDTO = orderService.savePayCert(phone,payCertificateVo);
+            return new ResponseEntity<>(orderDTO, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @ApiOperation(value = "推荐人确认订单")
+    @RequestMapping(value = "/sureOrder", method = RequestMethod.POST)
+    public ResponseEntity<Object> sureOrder(@RequestParam long orderId) {
+        String phone = super.getCurrentUser().getUsername();
+        try {
+            OrderDTO orderDTO = orderService.sureOrder(phone,orderId);
             return new ResponseEntity<>(orderDTO, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

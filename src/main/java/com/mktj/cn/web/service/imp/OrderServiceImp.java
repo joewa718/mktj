@@ -69,9 +69,31 @@ public class OrderServiceImp extends BaseService implements OrderService {
     @Override
     @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
     public OrderDTO savePayCert(String phone, PayCertificateVo payCertificateVo) {
-        User user = userRepository.findByPhone(phone);
         Order order = orderRepository.findOne(payCertificateVo.getOrderId());
-        return null;
+        if(order == null){
+            throw new RuntimeException("订单不存在");
+        }
+        if(order.getPayWay() != PayType.线下转账){
+            throw new RuntimeException("只有线下订单需要传凭证");
+        }
+        if(StringUtils.isBlank(order.getRecommendPhone())){
+            throw new RuntimeException("线下订单推荐人不能为空");
+        }
+        User recommendPhone = userRepository.findByPhone(order.getRecommendPhone());
+        if(recommendPhone == null){
+            throw new RuntimeException("推荐人没有找到");
+        }
+        if(StringUtils.isBlank(payCertificateVo.getPayCertPhoto())){
+            throw new RuntimeException("凭证照片不能为空");
+        }
+        if(StringUtils.isBlank(payCertificateVo.getPayCertPhoto())){
+            throw new RuntimeException("凭证信息不能为空");
+        }
+        order.setPayCertPhoto(payCertificateVo.getPayCertPhoto());
+        order.setPayCertInfo(payCertificateVo.getPayCertInfo());
+        order.setOrderStatus(OrderStatus.待确认);
+        orderRepository.save(order);
+        return orderMapper.orderToOrderDTO(order);
     }
 
     @Override
@@ -87,16 +109,29 @@ public class OrderServiceImp extends BaseService implements OrderService {
                 throw new RuntimeException("对不起，您的积分不足，无法购买");
             }
             user.setScore(user.getScore().subtract(totalCost));
-            order.setOrderStatus(OrderStatus.已支付);
             orderRepository.updateOrderStatusByIdAndUser(OrderStatus.已支付, orderId, user);
-        } else {//线下转账，由属确认支付
-            if (order.getRecommendPhone() == null || !user.getPhone().equals(order.getRecommendPhone())) {
-                throw new RuntimeException("对不起，线下转账为成功，需要推荐人确认支付");
-            }
-            order.setOrderStatus(OrderStatus.已支付);
-            orderRepository.updateOrderStatusByIdAndUser(OrderStatus.已支付, orderId, order.getUser());
         }
+        order = paySuccessProcess(user, order);
+        return orderMapper.orderToOrderDTO(order);
+    }
+
+    @Override
+    @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
+    public OrderDTO sureOrder(String phone, long orderId) {
+        User user = userRepository.findByPhone(phone);
+        Order order = orderRepository.findOne(orderId);
+        //线下转账，由属确认支付
+        if (StringUtils.isBlank(order.getRecommendPhone()) || !user.getPhone().equals(order.getRecommendPhone())) {
+            throw new RuntimeException("对不起，线下转账为成功，需要推荐人确认支付");
+        }
+        orderRepository.updateOrderStatusByIdAndUser(OrderStatus.已支付, orderId, order.getUser());
+        order =  paySuccessProcess(user, order);
+        return orderMapper.orderToOrderDTO(order);
+    }
+
+    private Order paySuccessProcess(User user, Order order) {
         Product product = productRepository.getProductByproductCode(order.getProductCode());
+        order.setOrderStatus(OrderStatus.已支付);
         if (product.getProductType() == ProductType.套餐产品) {
             if (user.getAuthorizationCode() == null) {
                 user.setAuthorizationCode(generateAuthCode());
@@ -117,7 +152,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
                 }
             }
         }
-        return orderMapper.orderToOrderDTO(order);
+        return order;
     }
 
     @Override

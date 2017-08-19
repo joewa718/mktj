@@ -82,6 +82,14 @@ public interface OrderService {
     Map<String, Long> summaryOrderCount(String phone, OrderType orderType);
 
     /**
+     * 确认订单
+     * @param phone
+     * @param orderId
+     * @return
+     */
+    OrderDTO sureOrder(String phone, long orderId);
+
+    /**
      * 加入团队
      * @param recommend_man
      * @param user

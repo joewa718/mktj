@@ -102,6 +102,7 @@ web:
   maximumSessions: 100
 photo:
   path: c:/project/mktj/photo/
+  payCentPath: c:/project/mktj/payCentPath/
 ---
 server:
   port: 80
@@ -145,3 +146,4 @@ web:
   maximumSessions: 1
 photo:
   path: /opt/projects/mktj/photo/
+  payCentPath: /opt/projects/mktj/payCentPath/
