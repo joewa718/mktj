@@ -1,4 +1,4 @@
-package com.mktj.cn.util.encrypt;
+package com.mktj.cn.web.util.encrypt;
 
 import org.apache.commons.codec.binary.Base64;
 

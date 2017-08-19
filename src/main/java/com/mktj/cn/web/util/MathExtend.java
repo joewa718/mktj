@@ -1,4 +1,4 @@
-package com.mktj.cn.util;
+package com.mktj.cn.web.util;
 
 import java.math.BigDecimal;
 

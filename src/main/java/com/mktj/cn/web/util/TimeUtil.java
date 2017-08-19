@@ -1,4 +1,4 @@
-package com.mktj.cn.util;
+package com.mktj.cn.web.util;
 
 public class TimeUtil {
 

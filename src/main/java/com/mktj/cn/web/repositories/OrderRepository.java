@@ -9,7 +9,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface OrderRepository extends CrudRepository<Order, Long>, JpaSpecificationExecutor<Order> {
@@ -21,4 +23,10 @@ public interface OrderRepository extends CrudRepository<Order, Long>, JpaSpecifi
     List<Order> findByOrderStatusAndUser(OrderStatus orderStatus, User user);
     
     Order findOneById(long id);
+
+    @Query("select t.month,sum (t.productNum) from Order t where t.user =?1 and t.orderStatus >= ?2 and t.orderTime >= ?3 and t.orderTime <=?4 group by t.month")
+    List<Object[]> analysisOrdinaryOrderSaleVolume(User user,OrderStatus orderStatus, Date begin, Date end);
+
+    @Query("select t.month,sum (t.productNum) from Order t where t.id in ?1 and t.orderStatus >= ?2 and t.orderTime >= ?3 and t.orderTime <=?4  group by t.month")
+    List<Object[]> analysisServiceOrderSaleVolume(List<Long> ids,OrderStatus orderStatus, Date begin, Date end);
 }

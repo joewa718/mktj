@@ -6,6 +6,7 @@ import com.mktj.cn.web.converter.PayTypeConverter;
 import com.mktj.cn.web.enumerate.OrderStatus;
 import com.mktj.cn.web.enumerate.PayType;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -58,10 +59,12 @@ public class Order {
     private PayType payWay;
     @Column(name = "order_comment")
     private String orderComment;
-    @Convert(converter = OrderTypeConverter.class)
     @Column(name = "order_time")
     @Temporal(TemporalType.TIMESTAMP)
     private Date orderTime;
+    @Formula("MONTH(order_time)")
+    private String month;
+
     @Convert(converter = OrderStatusConverter.class)
     @Column(name = "order_status")
     private OrderStatus orderStatus;
@@ -246,6 +249,16 @@ public class Order {
 
     public void setHigherUserList(List<User> higherUserList) {
         this.higherUserList = higherUserList;
+    }
+
+
+
+    public String getMonth() {
+        return month;
+    }
+
+    public void setMonth(String month) {
+        this.month = month;
     }
 
 }

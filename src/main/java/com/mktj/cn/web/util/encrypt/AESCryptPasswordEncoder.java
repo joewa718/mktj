@@ -1,4 +1,4 @@
-package com.mktj.cn.util.encrypt;
+package com.mktj.cn.web.util.encrypt;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
