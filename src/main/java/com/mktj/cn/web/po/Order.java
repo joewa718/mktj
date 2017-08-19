@@ -62,9 +62,8 @@ public class Order {
     @Column(name = "order_time")
     @Temporal(TemporalType.TIMESTAMP)
     private Date orderTime;
-    @Formula("MONTH(order_time)")
-    private String month;
-
+    @Column(name = "payCertificate")
+    private String payCertificate;
     @Convert(converter = OrderStatusConverter.class)
     @Column(name = "order_status")
     private OrderStatus orderStatus;
@@ -75,7 +74,8 @@ public class Order {
     private User user;
     @ManyToMany(mappedBy = "serviceOrderList",fetch = FetchType.LAZY)
     private List<User> higherUserList = new ArrayList<>();
-
+    @Formula("MONTH(order_time)")
+    private String month;
     public String getProductName() {
         return productName;
     }
@@ -251,7 +251,13 @@ public class Order {
         this.higherUserList = higherUserList;
     }
 
+    public String getPayCertificate() {
+        return payCertificate;
+    }
 
+    public void setPayCertificate(String payCertificate) {
+        this.payCertificate = payCertificate;
+    }
 
     public String getMonth() {
         return month;

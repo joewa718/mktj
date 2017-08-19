@@ -24,6 +24,7 @@ public class OrderDTO {
     private BigDecimal productCost;
     private int productNum;
     private String payWay;
+    private String payCertificate;
     private String orderComment;
     private String orderType;
     private Date orderTime;
@@ -60,6 +61,14 @@ public class OrderDTO {
 
     public void setPayWay(String payWay) {
         this.payWay = payWay;
+    }
+
+    public String getPayCertificate() {
+        return payCertificate;
+    }
+
+    public void setPayCertificate(String payCertificate) {
+        this.payCertificate = payCertificate;
     }
 
     public String getOrderComment() {

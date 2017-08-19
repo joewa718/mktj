@@ -41,11 +41,6 @@ public class DateUtil {
         }
         return monthList;
     }
-
-    public static void main(String[] args) {
-        System.out.println(getYTDMonth());
-    }
-
     public static String dateToString(Date date, DateFormat _format) {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 

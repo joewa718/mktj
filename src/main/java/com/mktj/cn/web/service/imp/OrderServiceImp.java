@@ -77,9 +77,15 @@ public class OrderServiceImp extends BaseService implements OrderService {
                 throw new RuntimeException("对不起，您的积分不足，无法购买");
             }
             user.setScore(user.getScore().subtract(totalCost));
+            order.setOrderStatus(OrderStatus.已支付);
+            orderRepository.updateOrderStatusByIdAndUser(OrderStatus.已支付, orderId, user);
+        }else{//线下转账，由属确认支付
+            if(order.getRecommendPhone() == null || !user.getPhone().equals(order.getRecommendPhone())){
+                throw new RuntimeException("对不起，线下转账为成功，需要推荐人确认支付");
+            }
+            order.setOrderStatus(OrderStatus.已支付);
+            orderRepository.updateOrderStatusByIdAndUser(OrderStatus.已支付, orderId, order.getUser());
         }
-        order.setOrderStatus(OrderStatus.已支付);
-        orderRepository.updateOrderStatusByIdAndUser(OrderStatus.已支付, orderId, user);
         Product product = productRepository.getProductByproductCode(order.getProductCode());
         if (product == null) {
             throw new RuntimeException("无法找到对应的商品");
