@@ -4,7 +4,9 @@ import com.mktj.cn.web.po.TeamOrganization;
 import com.mktj.cn.web.po.User;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,4 +22,10 @@ public interface TeamOrganizationRepository extends CrudRepository<TeamOrganizat
 
     @Query("select t.lowerUser.roleType,count(t) from TeamOrganization t where t.teamCode =?1 group by t.lowerUser.roleType")
     List<Object[]> analysisNewMemberDistribution(String teamCode);
+
+    @Query("select distinct t.higherUser.id from TeamOrganization t")
+    List<Long> getHigherIdList();
+
+    @Query(value = "select getChildList(?1)",nativeQuery = true)
+    String processCalRoleType(long uid);
 }
