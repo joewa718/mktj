@@ -59,12 +59,10 @@ public class User implements Serializable,Comparable{
     private Set<DeliveryAddress> deliveryAddressList;
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private Set<Order> orderList;
-    @NotFound(action = NotFoundAction.IGNORE)
-    @OneToMany(mappedBy = "lowerUser",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<TeamOrganization> lowerList =new HashSet<>();
-    @NotFound(action = NotFoundAction.IGNORE)
     @OneToMany(mappedBy = "higherUser",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<TeamOrganization> higherUserList = new HashSet<>();
+    private Set<TeamOrganization> lowerList;
+    @OneToMany(mappedBy = "lowerUser",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<TeamOrganization> higherUserList;
     @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinTable(name = "t_user_service_order",
             joinColumns = {@JoinColumn(name = "user_id")},
