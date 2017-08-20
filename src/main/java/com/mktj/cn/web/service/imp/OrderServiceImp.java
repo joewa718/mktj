@@ -85,7 +85,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
         if(order == null){
             throw new RuntimeException("订单不存在");
         }
-        if(order.getOrderStatus() == OrderStatus.待支付){
+        if(order.getOrderStatus() != OrderStatus.待支付){
             throw new RuntimeException("订单状态必须是待支付");
         }
         if(order.getPayWay() != PayType.线下转账){
@@ -170,7 +170,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
         if(order.getPayWay() != PayType.线下转账){
             throw new RuntimeException("确认订单，必须是线下转账类型");
         }
-        if(order.getOrderStatus() == OrderStatus.待确认){
+        if(order.getOrderStatus() != OrderStatus.待确认){
             throw new RuntimeException("订单状态必须是待确认");
         }
         orderRepository.updateOrderStatusByIdAndUser(OrderStatus.已支付, orderId, order.getUser());
