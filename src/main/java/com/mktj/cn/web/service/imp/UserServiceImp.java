@@ -349,11 +349,13 @@ public class UserServiceImp extends BaseService implements UserService {
                 }
                 if (u_count > 12 && zxu_count > 4) {
                     User user = userRepository.findOne(id);
-                    if(user.getAuthorizationCode() == null){
-                        user.setAuthorizationCode(generateAuthCode());
+                    if(user.getRoleType().getCode() < RoleType.高级合伙人.getCode()){
+                        if(user.getAuthorizationCode() == null){
+                            user.setAuthorizationCode(generateAuthCode());
+                        }
+                        user.setRoleType(RoleType.高级合伙人);
+                        userRepository.save(user);
                     }
-                    user.setRoleType(RoleType.高级合伙人);
-                    userRepository.save(user);
                 }
             }
         });
