@@ -285,4 +285,22 @@ public class Order {
     public void setSendManHead(String sendManHead) {
         this.sendManHead = sendManHead;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Order order = (Order) o;
+
+        if (id != order.id) return false;
+        return orderCode.equals(order.orderCode);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + orderCode.hashCode();
+        return result;
+    }
 }

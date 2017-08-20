@@ -103,17 +103,6 @@ public class UserServiceImp extends BaseService implements UserService {
         user.setPassword(AESCryptUtil.encrypt(user.getPassword()));
         user.setDisable(false);
         user.setRegTime(DateUtil.getCurrentDate());
-        //初始化订单分析
-        OrderAnalysis ordinaryOrderAnalysis =new OrderAnalysis();
-        ordinaryOrderAnalysis.setUser(user);
-        user.setOrderAnalysis(ordinaryOrderAnalysis);
-        ServiceOrderAnalysis serviceOrderAnalysis =new ServiceOrderAnalysis();
-        serviceOrderAnalysis.setUser(user);
-        user.setServiceOrderAnalysis(serviceOrderAnalysis);
-        //初始化团队分析
-        TeamAnalysis teamAnalysis = new TeamAnalysis();
-        teamAnalysis.setUser(user);
-        user.setTeamAnalysis(teamAnalysis);
         user = userRepository.save(user);
         session.removeAttribute("regCode");
         session.removeAttribute("regCodeTime");

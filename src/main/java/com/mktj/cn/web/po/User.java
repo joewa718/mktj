@@ -60,14 +60,6 @@ public class User implements Serializable,Comparable{
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private Set<Order> orderList;
     @NotFound(action = NotFoundAction.IGNORE)
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private OrderAnalysis orderAnalysis;
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private ServiceOrderAnalysis serviceOrderAnalysis;
-    @NotFound(action = NotFoundAction.IGNORE)
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private TeamAnalysis teamAnalysis;
-    @NotFound(action = NotFoundAction.IGNORE)
     @OneToMany(mappedBy = "lowerUser",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<TeamOrganization> lowerList =new HashSet<>();
     @NotFound(action = NotFoundAction.IGNORE)
@@ -175,31 +167,6 @@ public class User implements Serializable,Comparable{
         this.realInfo = realInfo;
     }
 
-
-    public OrderAnalysis getOrderAnalysis() {
-        return orderAnalysis;
-    }
-
-    public void setOrderAnalysis(OrderAnalysis orderAnalysis) {
-        this.orderAnalysis = orderAnalysis;
-    }
-
-    public ServiceOrderAnalysis getServiceOrderAnalysis() {
-        return serviceOrderAnalysis;
-    }
-
-    public void setServiceOrderAnalysis(ServiceOrderAnalysis serviceOrderAnalysis) {
-        this.serviceOrderAnalysis = serviceOrderAnalysis;
-    }
-
-    public TeamAnalysis getTeamAnalysis() {
-        return teamAnalysis;
-    }
-
-    public void setTeamAnalysis(TeamAnalysis teamAnalysis) {
-        this.teamAnalysis = teamAnalysis;
-    }
-
     public Date getRegTime() {
         return regTime;
     }
@@ -250,6 +217,11 @@ public class User implements Serializable,Comparable{
     }
 
     @Override
+    public int compareTo(Object o) {
+        return 0;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -257,18 +229,13 @@ public class User implements Serializable,Comparable{
         User user = (User) o;
 
         if (id != user.id) return false;
-        return phone != null ? phone.equals(user.phone) : user.phone == null;
+        return phone.equals(user.phone);
     }
 
     @Override
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (phone != null ? phone.hashCode() : 0);
+        result = 31 * result + phone.hashCode();
         return result;
-    }
-
-    @Override
-    public int compareTo(Object o) {
-        return 0;
     }
 }

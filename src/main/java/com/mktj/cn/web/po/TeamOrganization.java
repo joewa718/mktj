@@ -22,24 +22,6 @@ public class TeamOrganization {
     @Column(name = "phone", nullable = false)
     private String teamCode;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        TeamOrganization that = (TeamOrganization) o;
-
-        if (!lowerUser.equals(that.lowerUser)) return false;
-        return higherUser.equals(that.higherUser);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = lowerUser.hashCode();
-        result = 31 * result + higherUser.hashCode();
-        return result;
-    }
-
     public User getLowerUser() {
         return lowerUser;
     }
@@ -72,4 +54,24 @@ public class TeamOrganization {
         this.teamCode = teamCode;
     }
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TeamOrganization that = (TeamOrganization) o;
+
+        if (!lowerUser.equals(that.lowerUser)) return false;
+        if (!higherUser.equals(that.higherUser)) return false;
+        return teamCode.equals(that.teamCode);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = lowerUser.hashCode();
+        result = 31 * result + higherUser.hashCode();
+        result = 31 * result + teamCode.hashCode();
+        return result;
+    }
 }
