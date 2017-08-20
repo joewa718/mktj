@@ -51,6 +51,13 @@ public class OrderServiceImp extends BaseService implements OrderService {
         if (deliveryAddress == null) {
             throw new RuntimeException("无法找到对应的收货地址");
         }
+        if(StringUtils.isBlank(orderVo.getRecommendPhone())){
+            throw new RuntimeException("线下订单推荐人不能为空");
+        }
+        User recommend_man = userRepository.findByPhone(orderVo.getRecommendPhone());
+        if(recommend_man == null){
+            throw new RuntimeException("推荐人没有找到");
+        }
         int piece;
         BigDecimal price;
         if (product.getProductType() == ProductType.套餐产品) {
@@ -63,7 +70,11 @@ public class OrderServiceImp extends BaseService implements OrderService {
         BigDecimal totalCost = price.multiply(BigDecimal.valueOf(piece));
         //新增订单信息
         Order order = saveOrder(orderVo, user, product, deliveryAddress, piece, price, totalCost);
+        order.getHigherUserList().add(recommend_man);
+        recommend_man.getServiceOrderList().add(order);
+        userRepository.save(recommend_man);
         return orderMapper.orderToOrderDTO(order);
+
     }
 
     @Override
@@ -79,8 +90,8 @@ public class OrderServiceImp extends BaseService implements OrderService {
         if(StringUtils.isBlank(order.getRecommendPhone())){
             throw new RuntimeException("线下订单推荐人不能为空");
         }
-        User recommendPhone = userRepository.findByPhone(order.getRecommendPhone());
-        if(recommendPhone == null){
+        User recommend_man = userRepository.findByPhone(order.getRecommendPhone());
+        if(recommend_man == null){
             throw new RuntimeException("推荐人没有找到");
         }
         if(payCertificateVo.getPayCertPhoto() == null || payCertificateVo.getPayCertPhoto().length == 0){
@@ -119,7 +130,25 @@ public class OrderServiceImp extends BaseService implements OrderService {
             user.setScore(user.getScore().subtract(totalCost));
             orderRepository.updateOrderStatusByIdAndUser(OrderStatus.已支付, orderId, user);
         }
-        order = paySuccessProcess(user, order);
+        Product product = productRepository.getProductByproductCode(order.getProductCode());
+        order.setOrderStatus(OrderStatus.已支付);
+        if (product.getProductType() == ProductType.套餐产品) {
+            if (user.getAuthorizationCode() == null) {
+                user.setAuthorizationCode(generateAuthCode());
+            }
+            if (product.getRoleType().getCode() > user.getRoleType().getCode()) {
+                user.setRoleType(product.getRoleType());
+            }
+        }
+        User recommend_man = userRepository.findByPhone(order.getRecommendPhone());
+        if (recommend_man != null) {
+            TeamOrganization teamOrganization = new TeamOrganization();
+            teamOrganization.setLowerUser(user);
+            teamOrganization.setHigherUser(recommend_man);
+            teamOrganization.setTeamCode(recommend_man.getPhone());
+            user.getLowerList().add(teamOrganization);
+        }
+        userRepository.save(user);
         return orderMapper.orderToOrderDTO(order);
     }
 
@@ -133,56 +162,23 @@ public class OrderServiceImp extends BaseService implements OrderService {
             throw new RuntimeException("对不起，线下转账为成功，需要推荐人确认支付");
         }
         orderRepository.updateOrderStatusByIdAndUser(OrderStatus.已支付, orderId, order.getUser());
-        order =  paySuccessProcess(user, order);
-        return orderMapper.orderToOrderDTO(order);
-    }
-
-    private Order paySuccessProcess(User user, Order order) {
         Product product = productRepository.getProductByproductCode(order.getProductCode());
         order.setOrderStatus(OrderStatus.已支付);
         if (product.getProductType() == ProductType.套餐产品) {
             if (user.getAuthorizationCode() == null) {
                 user.setAuthorizationCode(generateAuthCode());
-                userRepository.save(user);
             }
             if (product.getRoleType().getCode() > user.getRoleType().getCode()) {
                 user.setRoleType(product.getRoleType());
-                userRepository.save(user);
-            }
-            //更新推荐人服务订单
-            if (!StringUtils.isBlank(order.getRecommendPhone())) {
-                User recommend_man = userRepository.findByPhone(order.getRecommendPhone());
-                if (recommend_man != null) {
-                    order.getHigherUserList().add(recommend_man);
-                    recommend_man.getServiceOrderList().add(order);
-                    userRepository.save(recommend_man);
-                    joinTeam(recommend_man, user);
-                }
             }
         }
-        return order;
-    }
-
-    @Override
-    @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
-    public void joinTeam(User recommend_man, User user) {
-        Set<TeamOrganization> higherUserSet = recommend_man.getHigherUserList();
-        if (higherUserSet.size() > 0) {
-            higherUserSet.forEach(team -> {
-                TeamOrganization teamOrganization = new TeamOrganization();
-                teamOrganization.setHigherUser(recommend_man);
-                teamOrganization.setLowerUser(user);
-                teamOrganization.setTeamCode(team.getTeamCode());
-                teamOrganizationRepository.save(teamOrganization);
-            });
-        } else {
-            TeamOrganization teamOrganization = new TeamOrganization();
-            teamOrganization.setLowerUser(user);
-            teamOrganization.setHigherUser(recommend_man);
-            teamOrganization.setTeamCode(recommend_man.getPhone());
-            teamOrganizationRepository.save(teamOrganization);
-        }
-
+        TeamOrganization teamOrganization = new TeamOrganization();
+        teamOrganization.setLowerUser(order.getUser());
+        teamOrganization.setHigherUser(user);
+        teamOrganization.setTeamCode(order.getRecommendPhone());
+        user.getLowerList().add(teamOrganization);
+        userRepository.save(user);
+        return orderMapper.orderToOrderDTO(order);
     }
 
     @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
@@ -282,7 +278,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
             long alSend = groupResult.get(OrderStatus.已发货.getCode()) == null ? Long.valueOf(0) : groupResult.get(OrderStatus.已发货.getCode());
             long complete = groupResult.get(OrderStatus.已完成.getCode()) == null ? Long.valueOf(0) : groupResult.get(OrderStatus.已完成.getCode());
             long cancel = groupResult.get(OrderStatus.已取消.getCode()) == null ? Long.valueOf(0) : groupResult.get(OrderStatus.已取消.getCode());
-            map.put("全部订单", Long.valueOf(unPay + alPay + alSend + complete + cancel));
+            map.put("全部订单", Long.valueOf(unPay + alConfirm + alPay + alSend + complete + cancel));
             map.put(OrderStatus.待支付.getName(), unPay);
             map.put(OrderStatus.待确认.getName(), alConfirm);
             map.put(OrderStatus.已支付.getName(), alPay);

@@ -20,7 +20,7 @@ import java.util.*;
 @Indexed
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE, region = "entityCache")
-public class User implements Serializable {
+public class User implements Serializable,Comparable{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @DocumentId
@@ -68,10 +68,10 @@ public class User implements Serializable {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private TeamAnalysis teamAnalysis;
     @NotFound(action = NotFoundAction.IGNORE)
-    @OneToMany(mappedBy = "lowerUser", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "lowerUser",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<TeamOrganization> lowerList =new HashSet<>();
     @NotFound(action = NotFoundAction.IGNORE)
-    @OneToMany(mappedBy = "higherUser", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "higherUser",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<TeamOrganization> higherUserList = new HashSet<>();
     @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinTable(name = "t_user_service_order",
@@ -247,5 +247,28 @@ public class User implements Serializable {
 
     public void setServiceOrderList(Set<Order> serviceOrderList) {
         this.serviceOrderList = serviceOrderList;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User user = (User) o;
+
+        if (id != user.id) return false;
+        return phone != null ? phone.equals(user.phone) : user.phone == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (phone != null ? phone.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return 0;
     }
 }

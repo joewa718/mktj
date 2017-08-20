@@ -89,12 +89,6 @@ public interface OrderService {
      */
     OrderDTO sureOrder(String phone, long orderId);
 
-    /**
-     * 加入团队
-     * @param recommend_man
-     * @param user
-     */
-    void joinTeam(User recommend_man, User user);
 
     BigDecimal getProductPrice(RoleType roleType, Product product);
 }
