@@ -1,5 +1,6 @@
 package com.mktj.cn.web.service.imp;
 
+import com.mktj.cn.web.repositories.TeamOrganizationRepository;
 import com.mktj.cn.web.util.DateUtil;
 import com.mktj.cn.web.util.encrypt.AESCryptUtil;
 import com.mktj.cn.web.dto.DeliveryAddressDTO;
@@ -25,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -42,6 +44,8 @@ public class UserServiceImp extends BaseService implements UserService {
     private final static Logger log = LoggerFactory.getLogger(UserServiceImp.class);
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    TeamOrganizationRepository teamOrganizationRepository;
     @Autowired
     DeliveryAddressRepository deliveryAddressRepository;
     @Autowired
@@ -325,5 +329,33 @@ public class UserServiceImp extends BaseService implements UserService {
             throw new RuntimeException("您的验证码无效,未查询到用户信息");
         }
         return userMapper.userToUserDTO(user);
+    }
+    @Override
+    public void updateUserRoleType() {
+        List<Long> ids = teamOrganizationRepository.getHigherIdList();
+        ids.forEach(id -> {
+            String offlineUser = teamOrganizationRepository.processCalRoleType(id);
+            String[] branch = offlineUser.split("\\|");
+            if (branch.length > 2) {
+                int u_count = 0;
+                int zxu_count = 0;
+                for (int i = 2; i < branch.length; i++) {
+                    String[] levelGroup = branch[i].split(":");
+                    String[] uidList = levelGroup[1].split(",");
+                    u_count += uidList.length;
+                    if (i == 2) {
+                        zxu_count = u_count;
+                    }
+                }
+                if (u_count > 12 && zxu_count > 4) {
+                    User user = userRepository.findOne(id);
+                    if(user.getAuthorizationCode() == null){
+                        user.setAuthorizationCode(generateAuthCode());
+                    }
+                    user.setRoleType(RoleType.高级合伙人);
+                    userRepository.save(user);
+                }
+            }
+        });
     }
 }

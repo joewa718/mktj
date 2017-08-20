@@ -10,11 +10,13 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 
 //@EnableScheduling
 @ServletComponentScan
 @SpringBootApplication
+@EnableScheduling
 @ComponentScan(basePackages = {"com.mktj.cn.*"})
 public class Application extends SpringBootServletInitializer {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);

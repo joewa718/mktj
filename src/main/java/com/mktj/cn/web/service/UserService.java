@@ -61,4 +61,6 @@ public interface UserService {
     void foundPassword(String password,HttpSession session) throws OperationNotSupportedException;
 
     UserDTO getByAuthorizationCode(String authorizationCode);
+
+    void updateUserRoleType();
 }
