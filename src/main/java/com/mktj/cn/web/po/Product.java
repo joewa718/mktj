@@ -18,6 +18,23 @@ import java.math.BigDecimal;
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE, region = "entityCache")
 public class Product {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Product product = (Product) o;
+
+        if (id != product.id) return false;
+        return productCode.equals(product.productCode);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + productCode.hashCode();
+        return result;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

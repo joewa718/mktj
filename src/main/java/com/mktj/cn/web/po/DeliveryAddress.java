@@ -14,6 +14,7 @@ import javax.persistence.*;
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE, region = "entityCache")
 public class DeliveryAddress {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -108,4 +109,36 @@ public class DeliveryAddress {
         this.detailed = detailed;
     }
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        DeliveryAddress that = (DeliveryAddress) o;
+
+        if (id != that.id) return false;
+        if (isDefault != that.isDefault) return false;
+        if (deliveryMan != null ? !deliveryMan.equals(that.deliveryMan) : that.deliveryMan != null) return false;
+        if (phone != null ? !phone.equals(that.phone) : that.phone != null) return false;
+        if (province != null ? !province.equals(that.province) : that.province != null) return false;
+        if (city != null ? !city.equals(that.city) : that.city != null) return false;
+        if (region != null ? !region.equals(that.region) : that.region != null) return false;
+        if (detailed != null ? !detailed.equals(that.detailed) : that.detailed != null) return false;
+        return user != null ? user.equals(that.user) : that.user == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (deliveryMan != null ? deliveryMan.hashCode() : 0);
+        result = 31 * result + (phone != null ? phone.hashCode() : 0);
+        result = 31 * result + (province != null ? province.hashCode() : 0);
+        result = 31 * result + (city != null ? city.hashCode() : 0);
+        result = 31 * result + (region != null ? region.hashCode() : 0);
+        result = 31 * result + (detailed != null ? detailed.hashCode() : 0);
+        result = 31 * result + (isDefault ? 1 : 0);
+        result = 31 * result + (user != null ? user.hashCode() : 0);
+        return result;
+    }
 }
