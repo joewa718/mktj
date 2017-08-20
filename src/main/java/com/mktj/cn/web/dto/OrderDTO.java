@@ -25,7 +25,7 @@ public class OrderDTO {
     private BigDecimal productCost;
     private int productNum;
     private String payWay;
-    private String payCertPhoto;
+    private String[] payCertPhoto;
     private String payCertInfo;
     private String orderComment;
     private String orderType;
@@ -204,14 +204,6 @@ public class OrderDTO {
         this.recommendPhone = recommendPhone;
     }
 
-    public String getPayCertPhoto() {
-        return payCertPhoto;
-    }
-
-    public void setPayCertPhoto(String payCertPhoto) {
-        this.payCertPhoto = payCertPhoto;
-    }
-
     public String getPayCertInfo() {
         return payCertInfo;
     }
@@ -219,4 +211,14 @@ public class OrderDTO {
     public void setPayCertInfo(String payCertInfo) {
         this.payCertInfo = payCertInfo;
     }
+
+
+    public String[] getPayCertPhoto() {
+        return payCertPhoto;
+    }
+
+    public void setPayCertPhoto(String[] payCertPhoto) {
+        this.payCertPhoto = payCertPhoto;
+    }
+
 }

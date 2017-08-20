@@ -83,17 +83,19 @@ public class OrderServiceImp extends BaseService implements OrderService {
         if(recommendPhone == null){
             throw new RuntimeException("推荐人没有找到");
         }
-        if(StringUtils.isBlank(payCertificateVo.getPayCertPhoto())){
+        if(payCertificateVo.getPayCertPhoto() == null || payCertificateVo.getPayCertPhoto().length == 0){
             throw new RuntimeException("凭证照片不能为空");
         }
-        if(StringUtils.isBlank(payCertificateVo.getPayCertPhoto())){
+        if(StringUtils.isBlank(payCertificateVo.getPayCertInfo())){
             throw new RuntimeException("凭证信息不能为空");
         }
-        order.setPayCertPhoto(payCertificateVo.getPayCertPhoto());
+        String[] payCentPhoto = payCertificateVo.getPayCertPhoto();
+        order.setPayCertPhoto(StringUtils.join(payCentPhoto, ","));
         order.setPayCertInfo(payCertificateVo.getPayCertInfo());
         order.setOrderStatus(OrderStatus.待确认);
-        orderRepository.save(order);
-        return orderMapper.orderToOrderDTO(order);
+        order = orderRepository.save(order);
+        OrderDTO orderDTO = orderMapper.orderToOrderDTO(order);
+        return orderDTO;
     }
 
     @Override

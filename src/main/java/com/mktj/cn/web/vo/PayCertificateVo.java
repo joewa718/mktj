@@ -5,7 +5,16 @@ package com.mktj.cn.web.vo;
  **/
 public class PayCertificateVo {
     private long orderId;
-    private String payCertPhoto;
+    private String[] payCertPhoto;
+
+    public String[] getPayCertPhoto() {
+        return payCertPhoto;
+    }
+
+    public void setPayCertPhoto(String[] payCertPhoto) {
+        this.payCertPhoto = payCertPhoto;
+    }
+
     private String payCertInfo;
 
     public long getOrderId() {
@@ -14,13 +23,6 @@ public class PayCertificateVo {
 
     public void setOrderId(long orderId) {
         this.orderId = orderId;
-    }
-    public String getPayCertPhoto() {
-        return payCertPhoto;
-    }
-
-    public void setPayCertPhoto(String payCertPhoto) {
-        this.payCertPhoto = payCertPhoto;
     }
     public String getPayCertInfo() {
         return payCertInfo;
