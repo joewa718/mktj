@@ -18,6 +18,7 @@ public class OrderDTO {
     private String receiverRegion;
     private String receiverDetailed;
     private String sendName;
+    private String sendManHead;
     private String sendPhone;
     private String productCode;
     private String productName;
@@ -219,6 +220,16 @@ public class OrderDTO {
 
     public void setPayCertPhoto(String[] payCertPhoto) {
         this.payCertPhoto = payCertPhoto;
+    }
+
+
+
+    public String getSendManHead() {
+        return sendManHead;
+    }
+
+    public void setSendManHead(String sendManHead) {
+        this.sendManHead = sendManHead;
     }
 
 }

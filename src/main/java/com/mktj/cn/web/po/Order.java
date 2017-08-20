@@ -40,6 +40,8 @@ public class Order {
     private String receiverDetailed;
     @Column(name = "send_name")
     private String sendName;
+    @Column(name = "send_man_head")
+    private String sendManHead;
     @Column(name = "send_phone")
     private String sendPhone;
     @Column(name = "product_code")
@@ -276,4 +278,11 @@ public class Order {
         this.higherUserList = higherUserList;
     }
 
+    public String getSendManHead() {
+        return sendManHead;
+    }
+
+    public void setSendManHead(String sendManHead) {
+        this.sendManHead = sendManHead;
+    }
 }

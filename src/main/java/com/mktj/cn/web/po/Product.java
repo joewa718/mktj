@@ -30,6 +30,8 @@ public class Product {
     private String productImage;
     @Column(name = "send_man")
     private String sendMan;
+    @Column(name = "send_man_head")
+    private String sendManHead;
     @Column(name = "send_phone")
     private String sendPhone;
     @Column(name = "description", length = 500)
@@ -200,6 +202,14 @@ public class Product {
 
     public void setSendPhone(String sendPhone) {
         this.sendPhone = sendPhone;
+    }
+
+    public String getSendManHead() {
+        return sendManHead;
+    }
+
+    public void setSendManHead(String sendManHead) {
+        this.sendManHead = sendManHead;
     }
 
 }

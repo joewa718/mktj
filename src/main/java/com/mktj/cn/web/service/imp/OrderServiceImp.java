@@ -202,6 +202,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
         order.setReceiverPhone(deliveryAddress.getPhone());
         order.setReceiverName(deliveryAddress.getDeliveryMan());
         order.setSendName(product.getSendMan());
+        order.setSendManHead(product.getSendMan());
         order.setSendPhone(product.getSendPhone());
         order.setRecommendPhone(orderVo.getRecommendPhone());
         Optional<Set<Order>> orderList = Optional.ofNullable(user.getOrderList());
