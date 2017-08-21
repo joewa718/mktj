@@ -35,7 +35,7 @@ public class ReportController extends BaseController {
     @RequestMapping(value = "/analysisImmediateMemberDistribution", method = RequestMethod.POST)
     public  ResponseEntity<Map<String,Long>> analysisImmediateMemberDistribution(){
         String phone = super.getCurrentUser().getUsername();
-        Map<String,Long> map = reportService.analysisImmediateMemberDistribution(phone,phone);
+        Map<String,Long> map = reportService.analysisImmediateMemberDistribution(phone);
         return new ResponseEntity<>(map,HttpStatus.OK);
 
     }

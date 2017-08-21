@@ -36,6 +36,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
     OrderMapper orderMapper;
     @Autowired
     DeliveryAddressRepository deliveryAddressRepository;
+
     @Override
     @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
     public OrderDTO applyOrder(String phone, OrderVo orderVo) {
@@ -48,15 +49,20 @@ public class OrderServiceImp extends BaseService implements OrderService {
         if (deliveryAddress == null) {
             throw new RuntimeException("无法找到对应的收货地址");
         }
-        if(orderVo.getPayType() == PayType.线下转账 && StringUtils.isBlank(orderVo.getRecommendPhone())){
+        if (orderVo.getPayType() == PayType.线下转账 && StringUtils.isBlank(orderVo.getRecommendPhone())) {
             throw new RuntimeException("线下订单推荐人不能为空");
         }
 
-        if(orderVo.getRecommendPhone().equals(user.getPhone())){
+        if (orderVo.getRecommendPhone().equals(user.getPhone())) {
             throw new RuntimeException("推荐人不能是本人");
         }
+
+        if (user.getHigher() != null && !user.getHigher().getPhone().equals(orderVo.getRecommendPhone())) {
+            throw new RuntimeException("推荐人必须是自己的上级");
+        }
+
         User recommend_man = userRepository.findByPhone(orderVo.getRecommendPhone());
-        if(recommend_man == null){
+        if (recommend_man == null) {
             throw new RuntimeException("推荐人没有找到");
         }
         int piece;
@@ -82,26 +88,26 @@ public class OrderServiceImp extends BaseService implements OrderService {
     @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
     public OrderDTO savePayCert(String phone, PayCertificateVo payCertificateVo) {
         Order order = orderRepository.findOne(payCertificateVo.getOrderId());
-        if(order == null){
+        if (order == null) {
             throw new RuntimeException("订单不存在");
         }
-        if(order.getOrderStatus() != OrderStatus.待支付 && order.getOrderStatus() != OrderStatus.待确认){
+        if (order.getOrderStatus() != OrderStatus.待支付 && order.getOrderStatus() != OrderStatus.待确认) {
             throw new RuntimeException("订单状态必须是待支付");
         }
-        if(order.getPayWay() != PayType.线下转账){
+        if (order.getPayWay() != PayType.线下转账) {
             throw new RuntimeException("上传凭证，必须是线下订单类型");
         }
-        if(StringUtils.isBlank(order.getRecommendPhone())){
+        if (StringUtils.isBlank(order.getRecommendPhone())) {
             throw new RuntimeException("线下订单推荐人不能为空");
         }
         User recommend_man = userRepository.findByPhone(order.getRecommendPhone());
-        if(recommend_man == null){
+        if (recommend_man == null) {
             throw new RuntimeException("推荐人没有找到");
         }
-        if(payCertificateVo.getPayCertPhoto() == null || payCertificateVo.getPayCertPhoto().length == 0){
+        if (payCertificateVo.getPayCertPhoto() == null || payCertificateVo.getPayCertPhoto().length == 0) {
             throw new RuntimeException("凭证照片不能为空");
         }
-        if(StringUtils.isBlank(payCertificateVo.getPayCertInfo())){
+        if (StringUtils.isBlank(payCertificateVo.getPayCertInfo())) {
             throw new RuntimeException("凭证信息不能为空");
         }
         String[] payCentPhoto = payCertificateVo.getPayCertPhoto();
@@ -118,10 +124,10 @@ public class OrderServiceImp extends BaseService implements OrderService {
     public OrderDTO payOrder(String phone, long orderId) {
         User user = userRepository.findByPhone(phone);
         Order order = orderRepository.findOne(orderId);
-        if(order == null){
+        if (order == null) {
             throw new RuntimeException("订单不存在");
         }
-        if(order.getPayWay() != PayType.余额支付){
+        if (order.getPayWay() != PayType.余额支付) {
             throw new RuntimeException("支付订单,必须是余额支付类型");
         }
         int piece = order.getProductNum();
@@ -136,13 +142,9 @@ public class OrderServiceImp extends BaseService implements OrderService {
         order.setOrderStatus(OrderStatus.已支付);
         setPayRoleType(user, product);
         User recommend_man = userRepository.findByPhone(order.getRecommendPhone());
-        if (recommend_man != null) {
-            TeamOrganization teamOrganization = new TeamOrganization();
-            teamOrganization.setLowerUser(user);
-            teamOrganization.setHigherUser(recommend_man);
-            teamOrganization.setTeamCode(recommend_man.getPhone());
-            user.getLowerList().add(teamOrganization);
-        }
+        recommend_man.getLower().add(user);
+        user.setHigher(recommend_man);
+        user.setOrgPath(setOrgPath(recommend_man));
         userRepository.save(user);
         return orderMapper.orderToOrderDTO(order);
     }
@@ -167,22 +169,20 @@ public class OrderServiceImp extends BaseService implements OrderService {
         if (StringUtils.isBlank(order.getRecommendPhone()) || !user.getPhone().equals(order.getRecommendPhone())) {
             throw new RuntimeException("对不起，线下转账为成功，需要推荐人确认支付");
         }
-        if(order.getPayWay() != PayType.线下转账){
+        if (order.getPayWay() != PayType.线下转账) {
             throw new RuntimeException("确认订单，必须是线下转账类型");
         }
-        if(order.getOrderStatus() != OrderStatus.待确认){
+        if (order.getOrderStatus() != OrderStatus.待确认) {
             throw new RuntimeException("订单状态必须是待确认");
         }
         orderRepository.updateOrderStatusByIdAndUser(OrderStatus.已支付, orderId, order.getUser());
         Product product = productRepository.getProductByproductCode(order.getProductCode());
         order.setOrderStatus(OrderStatus.已支付);
-        setPayRoleType(user, product);
-        TeamOrganization teamOrganization = new TeamOrganization();
-        teamOrganization.setLowerUser(order.getUser());
-        teamOrganization.setHigherUser(user);
-        teamOrganization.setTeamCode(order.getRecommendPhone());
-        user.getLowerList().add(teamOrganization);
-        userRepository.save(user);
+        setPayRoleType(order.getUser(), product);
+        user.getLower().add(order.getUser());
+        order.getUser().setHigher(user);
+        order.getUser().setOrgPath(setOrgPath(user));
+        userRepository.save(order.getUser());
         return orderMapper.orderToOrderDTO(order);
     }
 
@@ -275,6 +275,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
         } else {
             orderList = user.getServiceOrderList();
         }
+
         Map<Integer, Long> groupResult = orderList.stream().collect(Collectors.groupingBy(order -> order.getOrderStatus().getCode(), Collectors.counting()));
         Map<String, Long> map = new HashMap<>();
         long unPay = groupResult.get(OrderStatus.待支付.getCode()) == null ? Long.valueOf(0) : groupResult.get(OrderStatus.待支付.getCode());
@@ -290,6 +291,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
         map.put(OrderStatus.已发货.getName(), alSend);
         map.put(OrderStatus.已完成.getName(), complete);
         map.put(OrderStatus.已取消.getName(), cancel);
+
         return map;
     }
 }

@@ -6,8 +6,8 @@ import com.mktj.cn.web.enumerate.RoleType;
 import com.mktj.cn.web.po.Order;
 import com.mktj.cn.web.po.User;
 import com.mktj.cn.web.repositories.OrderRepository;
-import com.mktj.cn.web.repositories.TeamOrganizationRepository;
 import com.mktj.cn.web.repositories.UserRepository;
+import com.mktj.cn.web.service.BaseService;
 import com.mktj.cn.web.service.ReportService;
 import com.mktj.cn.web.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,30 +20,30 @@ import java.util.*;
  * @create 2017-08-19 1:18
  **/
 @Service
-public class ReportServiceImp implements ReportService {
-    @Autowired
-    TeamOrganizationRepository teamOrganizationRepository;
+public class ReportServiceImp  extends BaseService implements ReportService {
     @Autowired
     OrderRepository orderRepository;
     @Autowired
     UserRepository userRepository;
 
     @Override
-    public Map<String, Long> analysisMemberDistribution(String teamCode) {
-        List<Object[]> list = teamOrganizationRepository.analysisMemberDistribution(teamCode);
-        return fillResult(list);
-    }
-
-    @Override
-    public Map<String, Long> analysisImmediateMemberDistribution(String phone, String teamCode) {
+    public Map<String, Long> analysisMemberDistribution(String phone) {
         User user = userRepository.findByPhone(phone);
-        List<Object[]> list = teamOrganizationRepository.analysisImmediateMemberDistribution(user, teamCode);
+        List<Object[]> list = userRepository.analysisMemberDistribution(getLikeStr(user));
         return fillResult(list);
     }
 
     @Override
-    public Map<String, Long> analysisNewMemberDistribution(String teamCode) {
-        List<Object[]> list = teamOrganizationRepository.analysisNewMemberDistribution(teamCode);
+    public Map<String, Long> analysisImmediateMemberDistribution(String phone) {
+        User user = userRepository.findByPhone(phone);
+        List<Object[]> list = userRepository.analysisImmediateMemberDistribution(getEqualStr(user));
+        return fillResult(list);
+    }
+
+    @Override
+    public Map<String, Long> analysisNewMemberDistribution(String phone) {
+        User user = userRepository.findByPhone(phone);
+        List<Object[]> list = userRepository.analysisNewMemberDistribution(getLikeStr(user));
         return fillResult(list);
     }
 
@@ -143,6 +143,7 @@ public class ReportServiceImp implements ReportService {
 
     private Map<String, Long> fillResult(List<Object[]> list) {
         Map<String, Long> result = new HashMap<>();
+        result.put(RoleType.普通.getName(), Long.valueOf(0));
         result.put(RoleType.天使.getName(), Long.valueOf(0));
         result.put(RoleType.合伙人.getName(), Long.valueOf(0));
         result.put(RoleType.准合伙人.getName(), Long.valueOf(0));

@@ -18,18 +18,18 @@ public interface ReportService {
      * 获取团队成员分布
      * @return
      */
-    Map<String,Long> analysisMemberDistribution(String teamCode);
+    Map<String,Long> analysisMemberDistribution(String phone);
     /**
      * 获取团队直系成员分布
      * @return
      */
-    Map<String,Long> analysisImmediateMemberDistribution(String phone,String teamCode);
+    Map<String,Long> analysisImmediateMemberDistribution(String phone);
 
    /**
      * 获取团队新成员分布
      * @return
      */
-    Map<String,Long> analysisNewMemberDistribution(String teamCode);
+    Map<String,Long> analysisNewMemberDistribution(String phone);
 
     /**
      * 获取个人进货量和出货量

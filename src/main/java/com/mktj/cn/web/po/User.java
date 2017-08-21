@@ -59,15 +59,18 @@ public class User implements Serializable,Comparable{
     private Set<DeliveryAddress> deliveryAddressList;
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private Set<Order> orderList;
-    @OneToMany(mappedBy = "higherUser",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<TeamOrganization> lowerList;
-    @OneToMany(mappedBy = "lowerUser",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<TeamOrganization> higherUserList;
+    @OneToMany(mappedBy = "higher", cascade = { CascadeType.REFRESH, CascadeType.PERSIST }, fetch = FetchType.LAZY)
+    private Set<User> lower;
+    @ManyToOne(cascade = { CascadeType.REFRESH, CascadeType.PERSIST })
+    @JoinColumn(name = "h_uid")
+    private User higher;
     @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinTable(name = "t_user_service_order",
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "order_id")})
     private Set<Order> serviceOrderList = new TreeSet<>();
+    @Column(name = "org_path", nullable = true)
+    private String orgPath;
 
     public long getId() {
         return id;
@@ -173,23 +176,6 @@ public class User implements Serializable,Comparable{
         this.regTime = regTime;
     }
 
-    public Set<TeamOrganization> getLowerList() {
-        return lowerList;
-    }
-
-    public void setLowerList(Set<TeamOrganization> lowerList) {
-        this.lowerList = lowerList;
-    }
-
-    public Set<TeamOrganization> getHigherUserList() {
-        return higherUserList;
-    }
-
-    public void setHigherUserList(Set<TeamOrganization> higherUserList) {
-        this.higherUserList = higherUserList;
-    }
-
-
     public Set<DeliveryAddress> getDeliveryAddressList() {
         return deliveryAddressList;
     }
@@ -235,5 +221,29 @@ public class User implements Serializable,Comparable{
         int result = (int) (id ^ (id >>> 32));
         result = 31 * result + phone.hashCode();
         return result;
+    }
+
+    public String getOrgPath() {
+        return orgPath;
+    }
+
+    public void setOrgPath(String orgPath) {
+        this.orgPath = orgPath;
+    }
+
+    public Set<User> getLower() {
+        return lower;
+    }
+
+    public void setLower(Set<User> lower) {
+        this.lower = lower;
+    }
+
+    public User getHigher() {
+        return higher;
+    }
+
+    public void setHigher(User higher) {
+        this.higher = higher;
     }
 }
