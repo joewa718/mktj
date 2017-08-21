@@ -143,7 +143,7 @@ spring:
     multipart:
       location: /opt/projects/mktj/temp
 web:
-  maximumSessions: 1
+  maximumSessions: 100
 photo:
   path: /opt/projects/mktj/photo/
   payCentPath: /opt/projects/mktj/photo/
