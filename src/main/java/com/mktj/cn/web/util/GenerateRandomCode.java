@@ -6,7 +6,8 @@ public class GenerateRandomCode {
 
     public synchronized String generateOrderCode(int len, String userId) {
         int random = this.createRandomInt();
-        String code = this.generate(random, len - userId.length()) + userId;
+        String date = DateUtil.getTodayFormat();
+        String code = date + this.generate(random, len - userId.length() - date.length()) + userId;
         return code.toUpperCase();
     }
 

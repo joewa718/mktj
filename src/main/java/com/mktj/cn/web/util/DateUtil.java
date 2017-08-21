@@ -13,10 +13,7 @@ import java.util.List;
  * Created by lije09 on 2016/12/14.
  */
 public class DateUtil {
-    public static final DateTimeFormatter DATE_FORMAT_MM_YYYY = DateTimeFormatter.ofPattern("MMyyyy");
-    public static final DateTimeFormatter DATE_FORMAT_MM_DD_YYYY = DateTimeFormatter.ofPattern("MMddyyyy");
-    public static final DateTimeFormatter DATE_FORMAT_YYYY_MM = DateTimeFormatter.ofPattern("yyyyMM");
-
+    private static final DateFormat format = new SimpleDateFormat("yyyyMMdd");
     private DateUtil() {
     }
 
@@ -41,13 +38,8 @@ public class DateUtil {
         }
         return monthList;
     }
-    public static String dateToString(Date date, DateFormat _format) {
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-        if (_format != null) {
-            format = _format;
-        }
-        return format.format(date);
+    public static String getTodayFormat() {
+        return format.format(DateUtil.getCurrentDate());
     }
 
     public static Date getCurrentDate(){
