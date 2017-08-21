@@ -32,9 +32,9 @@ public interface UserRepository extends CrudRepository<User, Long>, JpaSpecifica
     @Query("select u from User u where u.roleType < ?1 and u.disable=0")
     List<User> findByLessThanRoleType(RoleType roleType);
 
-    @Query("select count(u) from User u where u.orgPath like ?1 and u.disable=0")
+    @Query("select u from User u where u.orgPath like ?1 and u.disable=0")
     List<User> findByLikeOrgPath(String orgPath);
-    @Query("select count(u) from User u where u.orgPath = ?1 and u.disable=0")
+    @Query("select u from User u where u.orgPath = ?1 and u.disable=0")
     List<User> findByOneLevelOrgPath(String orgPath);
 
     @Query(value = "select getChildList(?1)", nativeQuery = true)

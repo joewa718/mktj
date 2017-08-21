@@ -347,7 +347,7 @@ public class UserServiceImp extends BaseService implements UserService {
         List<User> userList = userRepository.findByLessThanRoleType(RoleType.高级合伙人);
         for (User user : userList) {
             int zx_count = 0;
-            List<User> zxUserList = userRepository.findByOneLevelOrgPath(getLikeStr(user));
+            List<User> zxUserList = userRepository.findByOneLevelOrgPath(getEqualStr(user));
             for (User zxUser : zxUserList) {
                 zx_count += getScoreByRoleType(zxUser);
             }

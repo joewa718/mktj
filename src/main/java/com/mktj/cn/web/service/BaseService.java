@@ -21,7 +21,7 @@ public abstract class BaseService {
         if (StringUtils.isBlank(user.getOrgPath())) {
             return '>' + String.valueOf(user.getId()) + ">%";
         } else {
-            return user.getOrgPath() + "%";
+            return user.getOrgPath() + String.valueOf(user.getId()) + ">%";
         }
     }
 
@@ -29,7 +29,7 @@ public abstract class BaseService {
         if (StringUtils.isBlank(user.getOrgPath())) {
             return '>' + String.valueOf(user.getId()) + ">";
         } else {
-            return user.getOrgPath();
+            return user.getOrgPath() + String.valueOf(user.getId()) + ">";
         }
     }
 
