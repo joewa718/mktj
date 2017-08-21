@@ -85,7 +85,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
         if(order == null){
             throw new RuntimeException("订单不存在");
         }
-        if(order.getOrderStatus() != OrderStatus.待支付 || order.getOrderStatus() != OrderStatus.待确认){
+        if(order.getOrderStatus() != OrderStatus.待支付 && order.getOrderStatus() != OrderStatus.待确认){
             throw new RuntimeException("订单状态必须是待支付");
         }
         if(order.getPayWay() != PayType.线下转账){
