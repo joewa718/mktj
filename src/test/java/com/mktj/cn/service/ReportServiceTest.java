@@ -39,6 +39,6 @@ public class ReportServiceTest extends AbstractTransactionalTestNGSpringContextT
 
     @Test
     public void updateUserRoleTypeTest() {
-        userService.updateUserRoleType();
+        userService.upgradeUerRoleType();
     }
 }

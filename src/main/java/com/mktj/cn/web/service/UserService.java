@@ -62,5 +62,5 @@ public interface UserService {
 
     UserDTO getByAuthorizationCode(String authorizationCode);
 
-    void updateUserRoleType();
+    void upgradeUerRoleType();
 }

@@ -15,8 +15,8 @@ public class Jobs {
     UserService userService;
     @Scheduled(fixedRate = 1000 * 60 * 10)
     public void cronJob() {
-        log.debug("updateUserRoleType begin");
-        userService.updateUserRoleType();
-        log.debug("updateUserRoleType end");
+        log.debug("upgradeUerRoleType begin");
+        userService.upgradeUerRoleType();
+        log.debug("upgradeUerRoleType end");
     }
 }

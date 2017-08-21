@@ -302,7 +302,7 @@ public class UserServiceImp extends BaseService implements UserService {
     }
 
     @Override
-    public void foundPassword(String password,HttpSession session) throws OperationNotSupportedException {
+    public void foundPassword(String password, HttpSession session) throws OperationNotSupportedException {
         String phone = (String) session.getAttribute("foundPhone");
         User user = userRepository.findByPhone(phone);
         if (user == null) {
@@ -322,16 +322,33 @@ public class UserServiceImp extends BaseService implements UserService {
         session.removeAttribute("sendPwFoundCode");
         session.removeAttribute("sendPwFoundTime");
     }
+
     @Override
-    public UserDTO getByAuthorizationCode(String authorizationCode){
+    public UserDTO getByAuthorizationCode(String authorizationCode) {
         User user = userRepository.getByAuthorizationCode(authorizationCode);
-        if(user == null){
+        if (user == null) {
             throw new RuntimeException("您的验证码无效,未查询到用户信息");
         }
         return userMapper.userToUserDTO(user);
     }
+
+    /**
+     * 根据用户级别打分
+     *
+     * @param uid
+     * @return
+     */
+    private int getScoreByRoleType(String uid) {
+        User user = userRepository.findOne(Long.valueOf(uid));
+        if (user.getRoleType() == RoleType.高级合伙人) {
+            return 4;
+        } else {
+            return 1;
+        }
+    }
+
     @Override
-    public void updateUserRoleType() {
+    public void upgradeUerRoleType() {
         List<Long> ids = teamOrganizationRepository.getHigherIdList();
         ids.forEach(id -> {
             String offlineUser = teamOrganizationRepository.processCalRoleType(id);
@@ -340,17 +357,24 @@ public class UserServiceImp extends BaseService implements UserService {
                 int u_count = 0;
                 int zxu_count = 0;
                 for (int i = 2; i < branch.length; i++) {
+                    if(zxu_count > 12 && zxu_count > 4){
+                        break;
+                    }
                     String[] levelGroup = branch[i].split(":");
                     String[] uidList = levelGroup[1].split(",");
-                    u_count += uidList.length;
+                    for (String uid : uidList) {
+                        u_count += getScoreByRoleType(uid);
+                    }
                     if (i == 2) {
-                        zxu_count = u_count;
+                        for (String uid : uidList) {
+                            zxu_count += getScoreByRoleType(uid);
+                        }
                     }
                 }
                 if (u_count > 12 && zxu_count > 4) {
                     User user = userRepository.findOne(id);
-                    if(user.getRoleType().getCode() < RoleType.高级合伙人.getCode()){
-                        if(user.getAuthorizationCode() == null){
+                    if (user.getRoleType().getCode() < RoleType.高级合伙人.getCode()) {
+                        if (user.getAuthorizationCode() == null) {
                             user.setAuthorizationCode(generateAuthCode());
                         }
                         user.setRoleType(RoleType.高级合伙人);
