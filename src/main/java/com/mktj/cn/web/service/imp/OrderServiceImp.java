@@ -152,13 +152,11 @@ public class OrderServiceImp extends BaseService implements OrderService {
     }
 
     private void setPayRoleType(User user, Product product) {
-        if (product.getProductType() == ProductType.套餐产品) {
+        if (product.getProductType() == ProductType.套餐产品 && product.getRoleType().getCode() > user.getRoleType().getCode()) {
             if (user.getAuthorizationCode() == null) {
                 user.setAuthorizationCode(generateAuthCode());
             }
-            if (product.getRoleType().getCode() > user.getRoleType().getCode()) {
-                user.setRoleType(product.getRoleType());
-            }
+            user.setRoleType(product.getRoleType());
         }
     }
 
