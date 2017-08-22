@@ -20,7 +20,7 @@ public class TaskScheduleConfig extends BaseService{
     @Value("${flush.path}")
     String url;
     private final static Logger log = LoggerFactory.getLogger(TaskScheduleConfig.class);
-    @Scheduled(fixedRate = 1000)
+    @Scheduled(fixedRate = 1000 * 60 * 15)
     public void cronJob() {
         log.debug("upgradeUerRoleType begin");
         restTemplate.getForEntity(url,null);

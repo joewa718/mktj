@@ -56,9 +56,11 @@ public class OrderServiceImp extends BaseService implements OrderService {
         if (orderVo.getRecommendPhone().equals(user.getPhone())) {
             throw new RuntimeException("推荐人不能是本人");
         }
-
+        if(userRepository.findOffspringCountByOrgPathAndPhone(getLikeStr(user),orderVo.getRecommendPhone()) != null){
+            throw new RuntimeException("推荐人不能是自己的下属");
+        }
         if (user.getHigher() != null && !user.getHigher().getPhone().equals(orderVo.getRecommendPhone())) {
-            throw new RuntimeException("推荐人必须是自己的上级");
+            throw new RuntimeException("推荐人必须是自己的上级,您的上级是("+user.getHigher().getPhone()+")");
         }
 
         User recommend_man = userRepository.findByPhone(orderVo.getRecommendPhone());
@@ -174,6 +176,9 @@ public class OrderServiceImp extends BaseService implements OrderService {
         }
         if (order.getOrderStatus() != OrderStatus.待确认) {
             throw new RuntimeException("订单状态必须是待确认");
+        }
+        if (order.getUser().getHigher() != null) {
+            throw new RuntimeException("该用户已经有上级（"+order.getUser().getHigher().getPhone()+"），先取消订单重新提交");
         }
         orderRepository.updateOrderStatusByIdAndUser(OrderStatus.已支付, orderId, order.getUser());
         Product product = productRepository.getProductByproductCode(order.getProductCode());

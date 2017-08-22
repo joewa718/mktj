@@ -26,6 +26,11 @@ public interface UserRepository extends CrudRepository<User, Long>, JpaSpecifica
     @Query("select u.roleType,count(u) from User u where u.orgPath like ?1 group by u.roleType")
     List<Object[]> analysisMemberDistribution(String orgPath);
 
+
+    @Query("select u from User u where u.orgPath like ?1 and phone = ?2 group by u.roleType")
+    User findOffspringCountByOrgPathAndPhone(String orgPath,String phone);
+
+
     @Query("select u.roleType,count(u) from User u where u.orgPath = ?1 group by u.roleType")
     List<Object[]> analysisImmediateMemberDistribution(String orgPath);
 
