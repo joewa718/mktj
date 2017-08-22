@@ -67,6 +67,8 @@ public interface UserService {
 
     Map<String,List<UserDTO>> findMyTeamUser(String person,String search);
 
+    Map<String, List<UserDTO>> findMyNewTeamUser(String phone, String search);
+
     Map<String,List<UserDTO>> findMyZxTeamUser(String person, String search);
 
 }

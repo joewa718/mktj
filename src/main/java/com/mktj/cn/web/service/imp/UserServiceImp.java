@@ -383,35 +383,32 @@ public class UserServiceImp extends BaseService implements UserService {
 
     @Override
     public Map<String, List<UserDTO>> findMyTeamUser(String phone, String search) {
-        Map<String, List<UserDTO>> result = new HashMap<>();
-        result.put(RoleType.普通.getName(), new ArrayList<>());
-        result.put(RoleType.天使.getName(), new ArrayList<>());
-        result.put(RoleType.合伙人.getName(), new ArrayList<>());
-        result.put(RoleType.准合伙人.getName(), new ArrayList<>());
-        result.put(RoleType.高级合伙人.getName(), new ArrayList<>());
         User user = userRepository.findByPhone(phone);
         List<User> userList = userRepository.findByLikeOrgPath(getLikeStr(user));
-        if (search != null) {
-            userList = userList.stream().filter(u -> search.equals(u.getPhone()) || (u.getRealInfo() != null && search.equals(u.getRealInfo().getRealName()))).collect(Collectors.toList());
-        }
-        userList.forEach(u -> {
-            if (result.containsKey(u.getRoleType().getName())) {
-                result.get(u.getRoleType().getName()).add(userMapper.userToUserDTO(u));
-            }
-        });
-        return result;
+        return getMyTeamList(search, userList);
+    }
+
+    @Override
+    public Map<String, List<UserDTO>> findMyNewTeamUser(String phone, String search) {
+        User user = userRepository.findByPhone(phone);
+        List<User> userList = userRepository.findByLikeOrgPath(getLikeStr(user));
+        return getMyTeamList(search, userList);
     }
 
     @Override
     public Map<String, List<UserDTO>> findMyZxTeamUser(String phone, String search) {
+        User user = userRepository.findByPhone(phone);
+        List<User> userList = userRepository.findByOneLevelOrgPath(getEqualStr(user));
+        return getMyTeamList(search, userList);
+    }
+
+    private Map<String, List<UserDTO>> getMyTeamList(String search, List<User> userList) {
         Map<String, List<UserDTO>> result = new HashMap<>();
         result.put(RoleType.普通.getName(), new ArrayList<>());
         result.put(RoleType.天使.getName(), new ArrayList<>());
         result.put(RoleType.合伙人.getName(), new ArrayList<>());
         result.put(RoleType.准合伙人.getName(), new ArrayList<>());
         result.put(RoleType.高级合伙人.getName(), new ArrayList<>());
-        User user = userRepository.findByPhone(phone);
-        List<User> userList = userRepository.findByOneLevelOrgPath(getEqualStr(user));
         if (search != null) {
             userList = userList.stream().filter(u -> search.equals(u.getPhone()) || (u.getRealInfo() != null && search.equals(u.getRealInfo().getRealName()))).collect(Collectors.toList());
         }

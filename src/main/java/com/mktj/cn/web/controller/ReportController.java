@@ -80,6 +80,15 @@ public class ReportController extends BaseController {
 
     }
 
+    @ApiOperation(value = "获取我的新团队人员")
+    @RequestMapping(value = "/findMyNewTeamUser", method = RequestMethod.POST)
+    public  ResponseEntity<Map<String,List<UserDTO>>> findMyNewTeamUser(@RequestParam(value = "search",required = false) String search){
+        String phone = super.getCurrentUser().getUsername();
+        Map<String,List<UserDTO>> userDTOList = userService.findMyNewTeamUser(phone,search);
+        return new ResponseEntity<>(userDTOList,HttpStatus.OK);
+
+    }
+
     @ApiOperation(value = "获取我的直系团队人员")
     @RequestMapping(value = "/findMyZxTeamUser", method = RequestMethod.POST)
     public  ResponseEntity<Map<String,List<UserDTO>>> findMyZxTeamUser(@RequestParam(value = "search",required = false) String search){
