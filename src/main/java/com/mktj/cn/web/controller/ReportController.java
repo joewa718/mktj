@@ -97,4 +97,13 @@ public class ReportController extends BaseController {
         return new ResponseEntity<>(userDTOList,HttpStatus.OK);
 
     }
+
+    @ApiOperation(value = "获取我的沉睡团队人员")
+    @RequestMapping(value = "/findMyZxTeamUser", method = RequestMethod.POST)
+    public  ResponseEntity<Map<String,List<UserDTO>>> findMySleepTeamUser(@RequestParam(value = "search",required = false) String search){
+        String phone = super.getCurrentUser().getUsername();
+        Map<String,List<UserDTO>> userDTOList = userService.findMyZxTeamUser(phone,search);
+        return new ResponseEntity<>(userDTOList,HttpStatus.OK);
+
+    }
 }
