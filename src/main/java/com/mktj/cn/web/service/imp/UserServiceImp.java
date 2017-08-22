@@ -382,7 +382,7 @@ public class UserServiceImp extends BaseService implements UserService {
     }
 
     @Override
-    public Map<String,List<UserDTO>> findMyTeamUser(String phone, String search) {
+    public Map<String, List<UserDTO>> findMyTeamUser(String phone, String search) {
         Map<String, List<UserDTO>> result = new HashMap<>();
         result.put(RoleType.普通.getName(), new ArrayList<>());
         result.put(RoleType.天使.getName(), new ArrayList<>());
@@ -390,12 +390,12 @@ public class UserServiceImp extends BaseService implements UserService {
         result.put(RoleType.准合伙人.getName(), new ArrayList<>());
         result.put(RoleType.高级合伙人.getName(), new ArrayList<>());
         User user = userRepository.findByPhone(phone);
-        List<User> userList = userRepository.findByLikeOrgPath(user.getOrgPath());
+        List<User> userList = userRepository.findByLikeOrgPath(getLikeStr(user));
         if (search != null) {
-            userList = userList.stream().filter(u -> u.getPhone().equals(search) || u.getRealInfo().getRealName().equals(search)).collect(Collectors.toList());
+            userList = userList.stream().filter(u -> search.equals(u.getPhone()) || (u.getRealInfo() != null && search.equals(u.getRealInfo().getRealName()))).collect(Collectors.toList());
         }
-        userList.forEach(u ->{
-            if(result.containsKey(u.getRoleType().getName())){
+        userList.forEach(u -> {
+            if (result.containsKey(u.getRoleType().getName())) {
                 result.get(u.getRoleType().getName()).add(userMapper.userToUserDTO(u));
             }
         });
@@ -403,7 +403,7 @@ public class UserServiceImp extends BaseService implements UserService {
     }
 
     @Override
-    public Map<String,List<UserDTO>> findMyZxTeamUser(String phone, String search) {
+    public Map<String, List<UserDTO>> findMyZxTeamUser(String phone, String search) {
         Map<String, List<UserDTO>> result = new HashMap<>();
         result.put(RoleType.普通.getName(), new ArrayList<>());
         result.put(RoleType.天使.getName(), new ArrayList<>());
@@ -411,12 +411,12 @@ public class UserServiceImp extends BaseService implements UserService {
         result.put(RoleType.准合伙人.getName(), new ArrayList<>());
         result.put(RoleType.高级合伙人.getName(), new ArrayList<>());
         User user = userRepository.findByPhone(phone);
-        List<User> userList = userRepository.findByOneLevelOrgPath(user.getOrgPath());
+        List<User> userList = userRepository.findByOneLevelOrgPath(getEqualStr(user));
         if (search != null) {
-            userList = userList.stream().filter(u -> u.getPhone().equals(search) || u.getRealInfo().getRealName().equals(search)).collect(Collectors.toList());
+            userList = userList.stream().filter(u -> search.equals(u.getPhone()) || (u.getRealInfo() != null && search.equals(u.getRealInfo().getRealName()))).collect(Collectors.toList());
         }
-        userList.forEach(u ->{
-            if(result.containsKey(u.getRoleType().getName())){
+        userList.forEach(u -> {
+            if (result.containsKey(u.getRoleType().getName())) {
                 result.get(u.getRoleType().getName()).add(userMapper.userToUserDTO(u));
             }
         });

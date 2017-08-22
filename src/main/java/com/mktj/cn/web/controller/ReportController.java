@@ -81,7 +81,7 @@ public class ReportController extends BaseController {
     }
 
     @ApiOperation(value = "获取我的直系团队人员")
-    @RequestMapping(value = "/findMyTeamUser", method = RequestMethod.POST)
+    @RequestMapping(value = "/findMyZxTeamUser", method = RequestMethod.POST)
     public  ResponseEntity<Map<String,List<UserDTO>>> findMyZxTeamUser(@RequestParam(value = "search",required = false) String search){
         String phone = super.getCurrentUser().getUsername();
         Map<String,List<UserDTO>> userDTOList = userService.findMyZxTeamUser(phone,search);
