@@ -329,54 +329,27 @@ public class UserServiceImp extends BaseService implements UserService {
         return userMapper.userToUserDTO(user);
     }
 
-    /**
-     * 根据用户级别打分
-     *
-     * @param user
-     * @return
-     */
-    private int getScoreByRoleType(User user) {
-        if (user.getRoleType() == RoleType.高级合伙人) {
-            return 4;
-        } else {
-            return 1;
-        }
-    }
-
     @Override
     public void upgradeUerRoleType() {
         List<User> userList = userRepository.findByLessThanRoleType(RoleType.高级合伙人);
         for (User user : userList) {
-            int zx_count = 0;
-            List<User> zxUserList = userRepository.findByOneLevelOrgPath(getEqualStr(user));
-            for (User zxUser : zxUserList) {
-                zx_count += getScoreByRoleType(zxUser);
-            }
-            if (zx_count < 4) {
-                continue;
-            } else if (zx_count > 12) {
+            Long zxCount = userRepository.findSumByOneLevelOrgPath(getEqualStr(user));
+            if(zxCount >= 12){
                 if (user.getAuthorizationCode() == null) {
                     user.setAuthorizationCode(generateOrderCode(String.valueOf(user.getId())));
                 }
                 user.setRoleType(RoleType.高级合伙人);
                 userRepository.save(user);
-                continue;
-            } else {
-                int all_count = 0;
-                List<User> offUserList = userRepository.findByLikeOrgPath(getLikeStr(user));
-                for (User offUser : offUserList) {
-                    all_count += getScoreByRoleType(offUser);
-                }
-                if (all_count > 12) {
+            }else{
+                Long allCount = userRepository.findSumByLikeOrgPath(getLikeStr(user));
+                if(allCount >= 12 && zxCount >= 4){
                     if (user.getAuthorizationCode() == null) {
                         user.setAuthorizationCode(generateOrderCode(String.valueOf(user.getId())));
                     }
                     user.setRoleType(RoleType.高级合伙人);
                     userRepository.save(user);
-                    continue;
                 }
             }
-
 
         }
     }

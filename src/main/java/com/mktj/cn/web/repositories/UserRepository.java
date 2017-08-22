@@ -38,6 +38,12 @@ public interface UserRepository extends CrudRepository<User, Long>, JpaSpecifica
     @Query("select u from User u where u.orgPath = ?1 and u.disable=0")
     List<User> findByOneLevelOrgPath(String orgPath);
 
+    @Query(value = "select ifnull(sum(if(u.role_type=4,4,1)),0) from t_user u where u.org_path like ?1 and u.disable=0", nativeQuery = true)
+    Long findSumByLikeOrgPath(String orgPath);
+
+    @Query(value = "select ifnull(sum(if(u.role_type=4,4,1)),0) from t_user u where u.org_path = ?1 and u.disable=0", nativeQuery = true)
+    Long findSumByOneLevelOrgPath(String orgPath);
+
     @Query(value = "select getChildList(?1)", nativeQuery = true)
     String processCalRoleType(long uid);
 }
