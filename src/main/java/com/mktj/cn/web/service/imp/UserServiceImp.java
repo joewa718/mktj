@@ -32,6 +32,7 @@ import javax.naming.OperationNotSupportedException;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by zhanwa01 on 2017/4/12.
@@ -381,16 +382,44 @@ public class UserServiceImp extends BaseService implements UserService {
     }
 
     @Override
-    public List<UserDTO> findMyTeamUser(String phone,String search) {
+    public Map<String,List<UserDTO>> findMyTeamUser(String phone, String search) {
+        Map<String, List<UserDTO>> result = new HashMap<>();
+        result.put(RoleType.普通.getName(), new ArrayList<>());
+        result.put(RoleType.天使.getName(), new ArrayList<>());
+        result.put(RoleType.合伙人.getName(), new ArrayList<>());
+        result.put(RoleType.准合伙人.getName(), new ArrayList<>());
+        result.put(RoleType.高级合伙人.getName(), new ArrayList<>());
         User user = userRepository.findByPhone(phone);
-        List<User> userList =userRepository.findByLikeOrgPath(user.getOrgPath());
-        return userMapper.userToUserDTOList(userList);
+        List<User> userList = userRepository.findByLikeOrgPath(user.getOrgPath());
+        if (search != null) {
+            userList = userList.stream().filter(u -> u.getPhone().equals(search) || u.getRealInfo().getRealName().equals(search)).collect(Collectors.toList());
+        }
+        userList.forEach(u ->{
+            if(result.containsKey(u.getRoleType().getName())){
+                result.get(u.getRoleType().getName()).add(userMapper.userToUserDTO(u));
+            }
+        });
+        return result;
     }
 
     @Override
-    public List<UserDTO> findMyZxTeamUser(String phone,String search) {
+    public Map<String,List<UserDTO>> findMyZxTeamUser(String phone, String search) {
+        Map<String, List<UserDTO>> result = new HashMap<>();
+        result.put(RoleType.普通.getName(), new ArrayList<>());
+        result.put(RoleType.天使.getName(), new ArrayList<>());
+        result.put(RoleType.合伙人.getName(), new ArrayList<>());
+        result.put(RoleType.准合伙人.getName(), new ArrayList<>());
+        result.put(RoleType.高级合伙人.getName(), new ArrayList<>());
         User user = userRepository.findByPhone(phone);
-        List<User> userList =userRepository.findByOneLevelOrgPath(user.getOrgPath());
-        return userMapper.userToUserDTOList(userList);
+        List<User> userList = userRepository.findByOneLevelOrgPath(user.getOrgPath());
+        if (search != null) {
+            userList = userList.stream().filter(u -> u.getPhone().equals(search) || u.getRealInfo().getRealName().equals(search)).collect(Collectors.toList());
+        }
+        userList.forEach(u ->{
+            if(result.containsKey(u.getRoleType().getName())){
+                result.get(u.getRoleType().getName()).add(userMapper.userToUserDTO(u));
+            }
+        });
+        return result;
     }
 }

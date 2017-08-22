@@ -3,20 +3,18 @@ package com.mktj.cn.web.service;
 import com.mktj.cn.web.dto.DeliveryAddressDTO;
 import com.mktj.cn.web.dto.RealInfoDTO;
 import com.mktj.cn.web.dto.UserDTO;
-import com.mktj.cn.web.exception.DuplicateAccountException;
 import com.mktj.cn.web.enumerate.RoleType;
-import com.mktj.cn.web.po.User;
+import com.mktj.cn.web.exception.DuplicateAccountException;
 import com.mktj.cn.web.vo.DeliveryAddressVo;
 import com.mktj.cn.web.vo.RealInfoVo;
 import com.mktj.cn.web.vo.UserVo;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.naming.OperationNotSupportedException;
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by zhanwa01 on 2017/4/12.
@@ -67,8 +65,8 @@ public interface UserService {
 
     void upgradeUerRoleType();
 
-    List<UserDTO> findMyTeamUser(String person,String search);
+    Map<String,List<UserDTO>> findMyTeamUser(String person,String search);
 
-    List<UserDTO> findMyZxTeamUser(String person,String search);
+    Map<String,List<UserDTO>> findMyZxTeamUser(String person, String search);
 
 }
