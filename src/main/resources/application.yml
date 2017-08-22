@@ -103,6 +103,8 @@ web:
 photo:
   path: c:/project/mktj/photo/
   payCentPath: c:/project/mktj/payCentPath/
+flush:
+  path: http://localhost:8080/api/user/flushUserRoleType
 ---
 server:
   port: 80
@@ -147,3 +149,5 @@ web:
 photo:
   path: /opt/projects/mktj/photo/
   payCentPath: /opt/projects/mktj/photo/
+flush:
+  path: http://122.152.208.113/api/user/flushUserRoleType

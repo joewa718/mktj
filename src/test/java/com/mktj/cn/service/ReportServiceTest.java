@@ -2,7 +2,6 @@ package com.mktj.cn.service;
 
 import com.mktj.cn.Application;
 import com.mktj.cn.web.dto.EntryDTO;
-import com.mktj.cn.web.repositories.UserSearch;
 import com.mktj.cn.web.service.ReportService;
 import com.mktj.cn.web.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +38,6 @@ public class ReportServiceTest extends AbstractTransactionalTestNGSpringContextT
 
     @Test
     public void updateUserRoleTypeTest() {
-        userService.upgradeUerRoleType();
+       /* userService.upgradeUerRoleType();*/
     }
 }

@@ -26,6 +26,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.naming.OperationNotSupportedException;
@@ -331,6 +333,7 @@ public class UserServiceImp extends BaseService implements UserService {
 
     @Override
     public void upgradeUerRoleType() {
+        List<User> updateList=new ArrayList<>();
         List<User> userList = userRepository.findByLessThanRoleType(RoleType.高级合伙人);
         for (User user : userList) {
             Long zxCount = userRepository.findSumByOneLevelOrgPath(getEqualStr(user));
@@ -339,7 +342,7 @@ public class UserServiceImp extends BaseService implements UserService {
                     user.setAuthorizationCode(generateOrderCode(String.valueOf(user.getId())));
                 }
                 user.setRoleType(RoleType.高级合伙人);
-                userRepository.save(user);
+                updateList.add(user);
             }else{
                 Long allCount = userRepository.findSumByLikeOrgPath(getLikeStr(user));
                 if(allCount >= 12 && zxCount >= 4){
@@ -347,13 +350,12 @@ public class UserServiceImp extends BaseService implements UserService {
                         user.setAuthorizationCode(generateOrderCode(String.valueOf(user.getId())));
                     }
                     user.setRoleType(RoleType.高级合伙人);
-                    userRepository.save(user);
+                    updateList.add(user);
                 }
             }
-
         }
+        userRepository.save(updateList);
     }
-
     @Override
     public Map<String, List<UserDTO>> findMyTeamUser(String phone, String search) {
         User user = userRepository.findByPhone(phone);

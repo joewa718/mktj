@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -297,4 +298,10 @@ public class UserController extends BaseController {
         }
     }
 
+    @ApiOperation(value = "刷新用户级别")
+    @RequestMapping(value = "/flushUserRoleType", method = RequestMethod.GET)
+    public ResponseEntity<Object> flushUserRoleTYpe() {
+       userService.upgradeUerRoleType();
+       return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

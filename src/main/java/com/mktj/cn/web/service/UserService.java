@@ -5,6 +5,7 @@ import com.mktj.cn.web.dto.RealInfoDTO;
 import com.mktj.cn.web.dto.UserDTO;
 import com.mktj.cn.web.enumerate.RoleType;
 import com.mktj.cn.web.exception.DuplicateAccountException;
+import com.mktj.cn.web.po.User;
 import com.mktj.cn.web.vo.DeliveryAddressVo;
 import com.mktj.cn.web.vo.RealInfoVo;
 import com.mktj.cn.web.vo.UserVo;
@@ -63,12 +64,12 @@ public interface UserService {
 
     UserDTO getByAuthorizationCode(String authorizationCode);
 
-    void upgradeUerRoleType();
-
     Map<String,List<UserDTO>> findMyTeamUser(String person,String search);
 
     Map<String, List<UserDTO>> findMyNewTeamUser(String phone, String search);
 
     Map<String,List<UserDTO>> findMyZxTeamUser(String person, String search);
+
+    void upgradeUerRoleType();
 
 }

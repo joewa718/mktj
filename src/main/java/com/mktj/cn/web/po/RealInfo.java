@@ -2,10 +2,6 @@ package com.mktj.cn.web.po;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.search.annotations.Analyze;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Index;
-import org.hibernate.search.annotations.Store;
 
 import javax.persistence.*;
 import java.io.Serializable;

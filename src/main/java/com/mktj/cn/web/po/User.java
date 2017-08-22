@@ -4,12 +4,6 @@ import com.mktj.cn.web.converter.RoleTypeConverter;
 import com.mktj.cn.web.enumerate.RoleType;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
-import org.hibernate.search.annotations.DocumentId;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Indexed;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -17,25 +11,20 @@ import java.util.*;
 
 @Entity
 @Table(name = "t_user")
-@Indexed
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE, region = "entityCache")
 public class User implements Serializable,Comparable{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @DocumentId
     private long id;
-    @Field
     @Column(name = "nickname")
     private String nickname;
     @Column(name = "head_Portrait")
     private String headPortrait;
-    @Field
     @Column(name = "phone", nullable = false, unique = true)
     private String phone;
     @Column(name = "password", nullable = false)
     private String password;
-    @Field
     @Column(name = "email")
     private String email;
     @Column(name = "score")
