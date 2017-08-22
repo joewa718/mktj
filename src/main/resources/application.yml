@@ -1,7 +1,7 @@
 spring:
   #resources.static-locations: classpath:/dist/
   profiles:
-    active: dev
+    active: st
   data:
     jpa:
       repositories:
@@ -40,11 +40,11 @@ wechat:
     aesKey: u3hX2kQdo1hvQWRkg9MjOahuw3zY7nxmargMNf9TJW7
   pay:
     appId: wxd45ea849e28c0d42
-    mchId:
-    mchKey:
+    mchId: 1487336252
+    mchKey: 134fafasdfqwerqwersv12231fqqer1a
     subAppId:
     subMchId:
-    keyPath:
+    keyPath: resources/cert/apiclient_cert.p12
 sms:
   appId: 1400038379
   appKey: 1b9e33d5acd98689763038c5c347db41

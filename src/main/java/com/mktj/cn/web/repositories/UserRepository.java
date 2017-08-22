@@ -34,6 +34,7 @@ public interface UserRepository extends CrudRepository<User, Long>, JpaSpecifica
 
     @Query("select u from User u where u.orgPath like ?1 and u.disable=0")
     List<User> findByLikeOrgPath(String orgPath);
+
     @Query("select u from User u where u.orgPath = ?1 and u.disable=0")
     List<User> findByOneLevelOrgPath(String orgPath);
 

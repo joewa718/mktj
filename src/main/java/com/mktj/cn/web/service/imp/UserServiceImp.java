@@ -379,4 +379,18 @@ public class UserServiceImp extends BaseService implements UserService {
 
         }
     }
+
+    @Override
+    public List<UserDTO> findMyTeamUser(String phone,String search) {
+        User user = userRepository.findByPhone(phone);
+        List<User> userList =userRepository.findByLikeOrgPath(user.getOrgPath());
+        return userMapper.userToUserDTOList(userList);
+    }
+
+    @Override
+    public List<UserDTO> findMyZxTeamUser(String phone,String search) {
+        User user = userRepository.findByPhone(phone);
+        List<User> userList =userRepository.findByOneLevelOrgPath(user.getOrgPath());
+        return userMapper.userToUserDTOList(userList);
+    }
 }
