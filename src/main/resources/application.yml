@@ -120,7 +120,7 @@ spring:
         search:
           default:
             directory_provider: filesystem
-            indexBase: /opt/projects/mktj/lucene/indexes/
+            indexBase: /sdb1/projects/mktj_st/lucene/indexes/
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -143,12 +143,12 @@ spring:
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
   http:
     multipart:
-      location: /sdb1/projects/mktj/temp
+      location: /sdb1/projects/mktj_st/temp
 web:
   maximumSessions: 100
 photo:
-  path: /sdb1/projects/mktj/photo/
-  payCentPath: /sdb1/projects/mktj/photo/
+  path: /sdb1/projects/mktj_st/photo/
+  payCentPath: /sdb1/projects/mktj_st/photo/
 flush:
   path: http://122.152.208.113:8080/api/user/flushUserRoleType
 ---
