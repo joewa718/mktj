@@ -165,7 +165,6 @@ public class OrderServiceImp extends BaseService implements OrderService {
     public OrderDTO sureOrder(String phone, long orderId) {
         User user = userRepository.findByPhone(phone);
         Order order = orderRepository.findOne(orderId);
-        Product product = productRepository.getProductByproductCode(order.getProductCode());
         //线下转账，由属确认支付
         if (StringUtils.isBlank(order.getRecommendPhone()) || !user.getPhone().equals(order.getRecommendPhone())) {
             throw new RuntimeException("对不起，线下转账为成功，需要推荐人确认支付");
@@ -181,6 +180,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
         }
         orderRepository.updateOrderStatusByIdAndUser(OrderStatus.已支付, orderId, order.getUser());
         order.setOrderStatus(OrderStatus.已支付);
+        Product product = productRepository.getProductByproductCode(order.getProductCode());
         setPayRoleType(order.getUser(), product);
         if(order.getUser().getHigher() == null && order.getUser().getRoleType().getCode() > RoleType.普通.getCode()){
             List<User> offspringUser = userRepository.findByLikeOrgPath(getLikeStr(order.getUser()));
