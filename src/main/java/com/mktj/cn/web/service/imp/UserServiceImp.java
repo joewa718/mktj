@@ -339,7 +339,7 @@ public class UserServiceImp extends BaseService implements UserService {
             Long zxCount = userRepository.findSumByOneLevelOrgPath(getEqualStr(user));
             if(zxCount >= 12){
                 if (user.getAuthorizationCode() == null) {
-                    user.setAuthorizationCode(generateOrderCode(String.valueOf(user.getId())));
+                    user.setAuthorizationCode(generateAuthCode());
                 }
                 user.setRoleType(RoleType.高级合伙人);
                 updateList.add(user);
@@ -347,7 +347,7 @@ public class UserServiceImp extends BaseService implements UserService {
                 Long allCount = userRepository.findSumByLikeOrgPath(getLikeStr(user));
                 if(allCount >= 12 && zxCount >= 4){
                     if (user.getAuthorizationCode() == null) {
-                        user.setAuthorizationCode(generateOrderCode(String.valueOf(user.getId())));
+                        user.setAuthorizationCode(generateAuthCode());
                     }
                     user.setRoleType(RoleType.高级合伙人);
                     updateList.add(user);
