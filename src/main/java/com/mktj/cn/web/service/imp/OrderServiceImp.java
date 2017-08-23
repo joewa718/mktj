@@ -176,7 +176,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
         if (order.getOrderStatus() != OrderStatus.待确认) {
             throw new RuntimeException("订单状态必须是待确认");
         }
-        if (order.getUser().getHigher() != null && !user.getPhone().equals(order.getUser().getHigher().getPhone()) && product.getProductType() == ProductType.套餐产品) {
+        if (order.getUser().getHigher() != null && !user.getPhone().equals(order.getUser().getHigher().getPhone())) {
             throw new RuntimeException("该用户已经有上级（" + order.getUser().getHigher().getPhone() + "），先取消订单重新提交");
         }
         orderRepository.updateOrderStatusByIdAndUser(OrderStatus.已支付, orderId, order.getUser());
