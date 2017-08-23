@@ -379,7 +379,6 @@ public class UserServiceImp extends BaseService implements UserService {
 
     private Map<String, List<UserDTO>> getMyTeamList(String search, List<User> userList) {
         Map<String, List<UserDTO>> result = new HashMap<>();
-        result.put(RoleType.普通.getName(), new ArrayList<>());
         result.put(RoleType.天使.getName(), new ArrayList<>());
         result.put(RoleType.合伙人.getName(), new ArrayList<>());
         result.put(RoleType.准合伙人.getName(), new ArrayList<>());

@@ -56,11 +56,11 @@ public class OrderServiceImp extends BaseService implements OrderService {
         if (orderVo.getRecommendPhone().equals(user.getPhone())) {
             throw new RuntimeException("推荐人不能是本人");
         }
-        if(userRepository.findOffspringCountByOrgPathAndPhone(getLikeStr(user),orderVo.getRecommendPhone()) != null){
+        if (userRepository.findOffspringCountByOrgPathAndPhone(getLikeStr(user), orderVo.getRecommendPhone()) != null) {
             throw new RuntimeException("推荐人不能是自己的下属");
         }
         if (user.getHigher() != null && !user.getHigher().getPhone().equals(orderVo.getRecommendPhone())) {
-            throw new RuntimeException("推荐人必须是自己的上级,您的上级是("+user.getHigher().getPhone()+")");
+            throw new RuntimeException("推荐人必须是自己的上级,您的上级是(" + user.getHigher().getPhone() + ")");
         }
 
         User recommend_man = userRepository.findByPhone(orderVo.getRecommendPhone());
@@ -146,7 +146,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
         User recommend_man = userRepository.findByPhone(order.getRecommendPhone());
         recommend_man.getLower().add(user);
         user.setHigher(recommend_man);
-        user.setOrgPath(setOrgPath(recommend_man));
+        user.setOrgPath(bindOffSpringOrgPath(recommend_man,user));
         userRepository.save(user);
         return orderMapper.orderToOrderDTO(order);
     }
@@ -165,6 +165,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
     public OrderDTO sureOrder(String phone, long orderId) {
         User user = userRepository.findByPhone(phone);
         Order order = orderRepository.findOne(orderId);
+        Product product = productRepository.getProductByproductCode(order.getProductCode());
         //线下转账，由属确认支付
         if (StringUtils.isBlank(order.getRecommendPhone()) || !user.getPhone().equals(order.getRecommendPhone())) {
             throw new RuntimeException("对不起，线下转账为成功，需要推荐人确认支付");
@@ -175,16 +176,24 @@ public class OrderServiceImp extends BaseService implements OrderService {
         if (order.getOrderStatus() != OrderStatus.待确认) {
             throw new RuntimeException("订单状态必须是待确认");
         }
-        if (order.getUser().getHigher() != null) {
-            throw new RuntimeException("该用户已经有上级（"+order.getUser().getHigher().getPhone()+"），先取消订单重新提交");
+        if (order.getUser().getHigher() != null && !user.getPhone().equals(order.getUser().getHigher().getPhone()) && product.getProductType() != ProductType.普通产品) {
+            throw new RuntimeException("该用户已经有上级（" + order.getUser().getHigher().getPhone() + "），先取消订单重新提交");
         }
         orderRepository.updateOrderStatusByIdAndUser(OrderStatus.已支付, orderId, order.getUser());
-        Product product = productRepository.getProductByproductCode(order.getProductCode());
         order.setOrderStatus(OrderStatus.已支付);
         setPayRoleType(order.getUser(), product);
-        user.getLower().add(order.getUser());
-        order.getUser().setHigher(user);
-        order.getUser().setOrgPath(setOrgPath(user));
+        if(order.getUser().getHigher() == null && order.getUser().getRoleType().getCode() > RoleType.普通.getCode()){
+            List<User> offspringUser = userRepository.findByLikeOrgPath(getLikeStr(order.getUser()));
+            if (offspringUser != null && offspringUser.size() > 0) {
+                offspringUser.forEach(lower -> {
+                    lower.setOrgPath(bindOffSpringOrgPath(user,lower));
+                    userRepository.save(lower);
+                });
+            }
+            user.getLower().add(order.getUser());
+            order.getUser().setHigher(user);
+            order.getUser().setOrgPath(bindOffSpringOrgPath(user,order.getUser()));
+        }
         userRepository.save(order.getUser());
         return orderMapper.orderToOrderDTO(order);
     }

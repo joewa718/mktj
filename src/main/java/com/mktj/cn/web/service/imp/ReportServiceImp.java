@@ -143,7 +143,6 @@ public class ReportServiceImp  extends BaseService implements ReportService {
 
     private Map<String, Long> fillResult(List<Object[]> list) {
         Map<String, Long> result = new HashMap<>();
-        result.put(RoleType.普通.getName(), Long.valueOf(0));
         result.put(RoleType.天使.getName(), Long.valueOf(0));
         result.put(RoleType.合伙人.getName(), Long.valueOf(0));
         result.put(RoleType.准合伙人.getName(), Long.valueOf(0));

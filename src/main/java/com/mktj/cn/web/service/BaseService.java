@@ -33,11 +33,15 @@ public abstract class BaseService {
         }
     }
 
-    protected String setOrgPath(User user) {
-        if (StringUtils.isBlank(user.getOrgPath())) {
-            return '>' + String.valueOf(user.getId()) + ">";
+    protected   String bindOffSpringOrgPath(User higher, User lower) {
+        return getOrgPath(higher) + (!StringUtils.isBlank(lower.getOrgPath()) ? lower.getOrgPath() : ">");
+    }
+
+    private  String getOrgPath(User user) {
+        if (!StringUtils.isBlank(user.getOrgPath())) {
+            return user.getOrgPath() + user.getId();
         } else {
-            return user.getOrgPath() + String.valueOf(user.getId()) + ">";
+            return '>' + String.valueOf(user.getId());
         }
     }
 }
