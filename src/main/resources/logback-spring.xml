@@ -2,7 +2,28 @@
 <configuration>
     <springProfile name="st">
         <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
-            <File>/opt/projects/mktj/log/application.log</File>
+            <File>/sdb1/projects/mktj_st/log/application.log</File>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <FileNamePattern>/sdb1/projects/mktj_st/log/o2o_application.log_%d{yyyy-MM-dd}-%i.log
+                </FileNamePattern>
+                <MaxHistory>30</MaxHistory>
+                <TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                    <MaxFileSize>50MB</MaxFileSize>
+                </TimeBasedFileNamingAndTriggeringPolicy>
+            </rollingPolicy>
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>[%-5level] %d{HH:mm:ss.SSS} [%thread] %logger{36} - %msg%n
+                </pattern>
+            </layout>
+        </appender>
+        <root>
+            <level value="DEBUG"/>
+            <appender-ref ref="file"/>
+        </root>
+    </springProfile>
+    <springProfile name="prd">
+        <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <File>/sdb1/projects/mktj/log/application.log</File>
             <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
                 <FileNamePattern>/opt/projects/mktj/log/o2o_application.log_%d{yyyy-MM-dd}-%i.log
                 </FileNamePattern>

@@ -1,7 +1,7 @@
 spring:
   #resources.static-locations: classpath:/dist/
   profiles:
-    active: dev
+    active: prd
   data:
     jpa:
       repositories:
@@ -107,7 +107,7 @@ flush:
   path: http://localhost:8080/api/user/flushUserRoleType
 ---
 server:
-  port: 80
+  port: 8888
 spring:
   profiles: st
   jpa:
@@ -121,6 +121,53 @@ spring:
           default:
             directory_provider: filesystem
             indexBase: /opt/projects/mktj/lucene/indexes/
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://10.66.245.8:3306/mktj_st?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: wz718718
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 20
+    filters: stat,wall,log4j
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+  http:
+    multipart:
+      location: /sdb1/projects/mktj/temp
+web:
+  maximumSessions: 100
+photo:
+  path: /sdb1/projects/mktj/photo/
+  payCentPath: /sdb1/projects/mktj/photo/
+flush:
+  path: http://122.152.208.113:8080/api/user/flushUserRoleType
+---
+---
+server:
+  port: 80
+spring:
+  profiles: prd
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      dialect: org.hibernate.dialect.MySQL5Dialect
+    properties:
+      hibernate:
+        search:
+          default:
+            directory_provider: filesystem
+            indexBase: /sdb1/projects/mktj/lucene/indexes/
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -143,11 +190,11 @@ spring:
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
   http:
     multipart:
-      location: /opt/projects/mktj/temp
+      location: /sdb1/projects/mktj/temp
 web:
   maximumSessions: 100
 photo:
-  path: /opt/projects/mktj/photo/
-  payCentPath: /opt/projects/mktj/photo/
+  path: /sdb1/projects/mktj/photo/
+  payCentPath: /sdb1/projects/mktj/photo/
 flush:
-  path: http://122.152.208.113/api/user/flushUserRoleType
+  path: http://www.jinhuishengwu.cn/api/user/flushUserRoleType
