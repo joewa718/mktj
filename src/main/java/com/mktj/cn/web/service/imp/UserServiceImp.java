@@ -378,11 +378,11 @@ public class UserServiceImp extends BaseService implements UserService {
     }
 
     private Map<String, List<UserDTO>> getMyTeamList(String search, List<User> userList) {
-        Map<String, List<UserDTO>> result = new HashMap<>();
-        result.put(RoleType.天使.getName(), new ArrayList<>());
-        result.put(RoleType.合伙人.getName(), new ArrayList<>());
-        result.put(RoleType.准合伙人.getName(), new ArrayList<>());
+        Map<String, List<UserDTO>> result = new LinkedHashMap<>();
         result.put(RoleType.高级合伙人.getName(), new ArrayList<>());
+        result.put(RoleType.准合伙人.getName(), new ArrayList<>());
+        result.put(RoleType.合伙人.getName(), new ArrayList<>());
+        result.put(RoleType.天使.getName(), new ArrayList<>());
         if (search != null) {
             userList = userList.stream().filter(u -> search.equals(u.getPhone()) || (u.getRealInfo() != null && search.equals(u.getRealInfo().getRealName()))).collect(Collectors.toList());
         }
