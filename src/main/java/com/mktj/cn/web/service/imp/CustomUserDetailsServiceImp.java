@@ -28,7 +28,7 @@ public class CustomUserDetailsServiceImp implements UserDetailsService {
     public UserSecurityDTO loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByPhone(username);
         if (user == null) {
-            throw new UsernameNotFoundException("username not found");
+            throw new UsernameNotFoundException("username not foundaaa");
         }
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(ROLE_USER));
