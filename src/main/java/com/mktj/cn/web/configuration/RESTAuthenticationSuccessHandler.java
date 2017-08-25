@@ -1,6 +1,9 @@
 package com.mktj.cn.web.configuration;
 
+import com.mktj.cn.web.dto.UserSecurityDTO;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +21,11 @@ public class RESTAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         clearAuthenticationAttributes(request);
-        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/api/user/getLoginUser");
-        requestDispatcher.forward(request, response);
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof UserDetails) {
+            UserSecurityDTO userSecurityDTO =  ((UserSecurityDTO) principal);
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/api/user/getLoginUser");
+            requestDispatcher.forward(request, response);
+        }
     }
 }

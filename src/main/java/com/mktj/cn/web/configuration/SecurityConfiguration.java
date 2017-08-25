@@ -91,7 +91,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.logout().invalidateHttpSession(true).logoutSuccessHandler(logoutSuccessHandler);
         http.authorizeRequests()
                 .antMatchers("/css/**", "/js/**", "/tpl/**", "/plugin/**", "/imageupload/**", "/images/**","/extend/**","/image/**", "/vendor/**",
-                        "/*.html", "/","/*.txt", "/fonts/**", "/l10n/**", "/**/favicon.ico", "/webjars/springfox-swagger-ui/**", "/swagger-resources/**", "/v2/**",
+                        "/*.html", "/","/*.txt","/fonts/**", "/l10n/**", "/**/favicon.ico", "/webjars/springfox-swagger-ui/**", "/swagger-resources/**", "/v2/**",
                         "/api/user/login", "/api/user/regUser","/api/user/getUserByAuthorizationCode",  "/api/user/sendRegCode", "/api/user/captcha","/api/user/sendPwFoundCode",
                         "/api/user/passwordFoundNext","/api/user/passwordFound","/api/user/flushUserRoleType", "/api/wechat/portal/**", "/api/wechat/user/**","/druid/**").permitAll()
                 .antMatchers("/api/user/**", "/api/product/**", "/api/order/**").hasAnyRole("USER")

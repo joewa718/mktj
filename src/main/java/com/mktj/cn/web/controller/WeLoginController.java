@@ -2,6 +2,7 @@ package com.mktj.cn.web.controller;
 
 import com.mktj.cn.web.properties.WechatMpProperties;
 import com.mktj.cn.web.service.UserService;
+import com.mktj.cn.web.util.GenerateRandomCode;
 import io.swagger.annotations.ApiOperation;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -11,6 +12,7 @@ import me.chanjar.weixin.mp.bean.result.WxMpUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -41,9 +43,10 @@ public class WeLoginController extends WxMpUserQuery {
 
     @ApiOperation(value = "用户登录")
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public void login(HttpServletResponse response) throws IOException {
-        String authorizationUrl = wxService.oauth2buildAuthorizationUrl("http://122.152.208.113/api/wechat/user/weLoginCallback", "snsapi_userinfo", "123456");
-        response.sendRedirect(authorizationUrl);
+    public void login(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        GenerateRandomCode generateRandomCode =new GenerateRandomCode();
+        String connectUrl = wxService.buildQrConnectUrl(request.getContextPath() + "/api/wechat/user/weLoginCallback", "snsapi_login", generateRandomCode.generate(32));
+        response.sendRedirect(connectUrl);
     }
 
     @ApiOperation(value = "用户登录回调")
@@ -51,7 +54,7 @@ public class WeLoginController extends WxMpUserQuery {
     public void weLoginCallback(@RequestParam("code") String code, @RequestParam("state") String state, HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             WxMpOAuth2AccessToken wxMpOAuth2AccessToken = wxService.oauth2getAccessToken(code);
-            WxMpUser wxMpUser = wxService.oauth2getUserInfo(wxMpOAuth2AccessToken, null);
+            WxMpUser wxMpUser = wxService.oauth2getUserInfo(wxMpOAuth2AccessToken, "zh_CN");
             userServiceImp.regWxUser(wxMpUser);
             response.sendRedirect(request.getContextPath() + "/api/user/login?username=" + wxMpUser.getOpenId() + "&password=123456");
         } catch (WxErrorException e) {
