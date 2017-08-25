@@ -34,7 +34,7 @@ public interface UserRepository extends CrudRepository<User, Long>, JpaSpecifica
     @Query("select u.roleType,count(u) from User u where u.orgPath = ?1 group by u.roleType")
     List<Object[]> analysisImmediateMemberDistribution(String orgPath);
 
-    @Query("select u.roleType,count(u) from User u where  u.orgPath like ?1  group by u.roleType")
+    @Query("select u.roleType,count(u) from User u where  u.orgPath like ?1 and diffDate > 30 group by u.roleType")
     List<Object[]> analysisNewMemberDistribution(String orgPath);
 
     @Query("select u from User u where u.roleType < ?1 and u.disable=0")

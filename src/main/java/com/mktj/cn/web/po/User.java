@@ -4,6 +4,8 @@ import com.mktj.cn.web.converter.RoleTypeConverter;
 import com.mktj.cn.web.enumerate.RoleType;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Formula;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -60,7 +62,8 @@ public class User implements Serializable,Comparable{
     private Set<Order> serviceOrderList = new TreeSet<>();
     @Column(name = "org_path", nullable = true)
     private String orgPath;
-
+    @Formula("datediff(now(),reg_time)")
+    private int diffDate;
     public long getId() {
         return id;
     }
@@ -235,4 +238,13 @@ public class User implements Serializable,Comparable{
     public void setHigher(User higher) {
         this.higher = higher;
     }
+
+    public int getDiffDate() {
+        return diffDate;
+    }
+
+    public void setDiffDate(int diffDate) {
+        this.diffDate = diffDate;
+    }
+
 }
