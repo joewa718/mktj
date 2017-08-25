@@ -24,8 +24,12 @@ public class RESTAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
         Object principal = authentication.getPrincipal();
         if (principal instanceof UserDetails) {
             UserSecurityDTO userSecurityDTO =  ((UserSecurityDTO) principal);
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/api/user/getLoginUser");
-            requestDispatcher.forward(request, response);
+            if(userSecurityDTO.getWeUser()){
+                response.sendRedirect(request.getContextPath()+"/u.html");
+            }else{
+                RequestDispatcher requestDispatcher = request.getRequestDispatcher("/api/user/getLoginUser");
+                requestDispatcher.forward(request, response);
+            }
         }
     }
 }

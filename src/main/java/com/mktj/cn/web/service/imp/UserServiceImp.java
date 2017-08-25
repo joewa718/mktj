@@ -24,6 +24,7 @@ import me.chanjar.weixin.mp.bean.result.WxMpUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -33,6 +34,11 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.naming.OperationNotSupportedException;
 import javax.servlet.http.HttpSession;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -43,6 +49,8 @@ import java.util.stream.Collectors;
 @Scope("prototype")
 public class UserServiceImp extends BaseService implements UserService {
     private final static Logger log = LoggerFactory.getLogger(UserServiceImp.class);
+    @Value("${photo.path}")
+    private String filePath;
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -73,18 +81,44 @@ public class UserServiceImp extends BaseService implements UserService {
     }
 
     @Override
-    public UserDTO regWxUser(WxMpUser wxMpUser) {
-        User user = userRepository.findByPhone(wxMpUser.getOpenId());
+    public User regWxUser(WxMpUser wxMpUser) {
+        User user = userRepository.findByAppId(wxMpUser.getOpenId());
         if (user == null) {
             user = new User();
+            GenerateRandomCode generateRandomCode = new GenerateRandomCode();
+            try {
+                download(wxMpUser.getHeadImgUrl(),UUID.randomUUID()+".gif",filePath);
+                user.setHeadPortrait(UUID.randomUUID()+".gif");
+            } catch (Exception e) {
+                log.error(e.getMessage(),e);
+            }
+            user.setApp_id(wxMpUser.getOpenId());
+            user.setNickname(wxMpUser.getNickname());
+            user.setPassword(AESCryptUtil.encrypt("123456"));
+            user.setUsername(generateRandomCode.generate(10));
+            user.setDisable(false);
+            user = userRepository.save(user);
         }
-        user.setNickname(wxMpUser.getNickname());
-        user.setPassword(AESCryptUtil.encrypt("123456"));
-        user.setHeadPortrait(wxMpUser.getHeadImgUrl());
-        user.setDisable(false);
-        user.setAuthorizationCode(generateAuthCode());
-        user = userRepository.save(user);
-        return userMapper.userToUserDTO(user);
+        return user;
+    }
+
+    public static void download(String urlString, String filename, String savePath) throws Exception {
+        URL url = new URL(urlString);
+        URLConnection con = url.openConnection();
+        con.setConnectTimeout(5 * 1000);
+        InputStream is = con.getInputStream();
+        byte[] bs = new byte[1024];
+        int len;
+        File sf = new File(savePath);
+        if (!sf.exists()) {
+            sf.mkdirs();
+        }
+        OutputStream os = new FileOutputStream(sf.getPath() + "\\" + filename);
+        while ((len = is.read(bs)) != -1) {
+            os.write(bs, 0, len);
+        }
+        os.close();
+        is.close();
     }
 
     @Override
@@ -333,19 +367,19 @@ public class UserServiceImp extends BaseService implements UserService {
 
     @Override
     public void upgradeUerRoleType() {
-        List<User> updateList=new ArrayList<>();
+        List<User> updateList = new ArrayList<>();
         List<User> userList = userRepository.findByLessThanRoleType(RoleType.高级合伙人);
         for (User user : userList) {
             Long zxCount = userRepository.findSumByOneLevelOrgPath(getEqualStr(user));
-            if(zxCount >= 12){
+            if (zxCount >= 12) {
                 if (user.getAuthorizationCode() == null) {
                     user.setAuthorizationCode(generateAuthCode());
                 }
                 user.setRoleType(RoleType.高级合伙人);
                 updateList.add(user);
-            }else{
+            } else {
                 Long allCount = userRepository.findSumByLikeOrgPath(getLikeStr(user));
-                if(allCount >= 12 && zxCount >= 4){
+                if (allCount >= 12 && zxCount >= 4) {
                     if (user.getAuthorizationCode() == null) {
                         user.setAuthorizationCode(generateAuthCode());
                     }
@@ -356,6 +390,7 @@ public class UserServiceImp extends BaseService implements UserService {
         }
         userRepository.save(updateList);
     }
+
     @Override
     public Map<String, List<UserDTO>> findMyTeamUser(String phone, String search) {
         User user = userRepository.findByPhone(phone);

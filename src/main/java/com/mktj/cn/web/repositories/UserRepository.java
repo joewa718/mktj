@@ -62,4 +62,6 @@ public interface UserRepository extends CrudRepository<User, Long>, JpaSpecifica
 
     @Query(value = "select getChildList(?1)", nativeQuery = true)
     String processCalRoleType(long uid);
+
+    User findByAppId(String appId);
 }

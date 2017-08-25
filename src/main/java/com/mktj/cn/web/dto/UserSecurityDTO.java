@@ -7,6 +7,7 @@ import java.util.Collection;
 
 public class UserSecurityDTO extends org.springframework.security.core.userdetails.User {
     private long id;
+    private Boolean isWeUser;
     private String nickname;
     private String email;
     private Boolean disable;
@@ -24,6 +25,7 @@ public class UserSecurityDTO extends org.springframework.security.core.userdetai
             this.id = user.getId();
             this.email = user.getEmail();
             this.disable = user.getDisable();
+            this.isWeUser = user.getWeUser();
         }
     }
 
@@ -69,6 +71,14 @@ public class UserSecurityDTO extends org.springframework.security.core.userdetai
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public Boolean getWeUser() {
+        return isWeUser;
+    }
+
+    public void setWeUser(Boolean weUser) {
+        isWeUser = weUser;
     }
 
 }

@@ -22,8 +22,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 @ComponentScan(basePackages = {"com.mktj.cn.*"})
 public class Application extends SpringBootServletInitializer {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
-    @Autowired
-    UserService userService;
+
     public static void main(String[] args) throws Exception {
         SpringApplication.run(Application.class, args);
     }

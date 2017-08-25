@@ -19,6 +19,8 @@ public class User implements Serializable,Comparable{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+    @Column(name = "username")
+    private String username;
     @Column(name = "nickname")
     private String nickname;
     @Column(name = "head_Portrait")
@@ -43,6 +45,8 @@ public class User implements Serializable,Comparable{
     @Column(name = "reg_time")
     @Temporal(TemporalType.TIMESTAMP)
     private Date regTime;
+    @Column(name = "is_we_user")
+    private Boolean isWeUser = false;
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private RealInfo realInfo;
@@ -56,14 +60,15 @@ public class User implements Serializable,Comparable{
     @JoinColumn(name = "h_uid")
     private User higher;
     @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    @JoinTable(name = "t_user_service_order",
-            joinColumns = {@JoinColumn(name = "user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "order_id")})
+    @JoinTable(name = "t_user_service_order",joinColumns = {@JoinColumn(name = "user_id")},inverseJoinColumns = {@JoinColumn(name = "order_id")})
     private Set<Order> serviceOrderList = new TreeSet<>();
     @Column(name = "org_path", nullable = true)
     private String orgPath;
+    @Column(name = "appId", nullable = true)
+    private String app_id;
     @Formula("datediff(now(),reg_time)")
     private int diffDate;
+
     public long getId() {
         return id;
     }
@@ -246,5 +251,39 @@ public class User implements Serializable,Comparable{
     public void setDiffDate(int diffDate) {
         this.diffDate = diffDate;
     }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public boolean isWeUser() {
+        return isWeUser;
+    }
+
+    public void setWeUser(boolean weUser) {
+        isWeUser = weUser;
+    }
+
+
+    public String getApp_id() {
+        return app_id;
+    }
+
+    public void setApp_id(String app_id) {
+        this.app_id = app_id;
+    }
+
+    public Boolean getWeUser() {
+        return isWeUser;
+    }
+
+    public void setWeUser(Boolean weUser) {
+        isWeUser = weUser;
+    }
+
 
 }
