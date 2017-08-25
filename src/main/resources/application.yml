@@ -124,7 +124,7 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://10.66.245.8:3306/mktj_st?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    url: jdbc:mysql://598af1f083b62.sh.cdb.myqcloud.com:5428/mktj_st?useUnicode=true&characterEncoding=utf-8&useSSL=false
     username: root
     password: wz718718
     initialSize: 5
@@ -150,7 +150,7 @@ photo:
   path: /sdb1/projects/mktj_st/photo/
   payCentPath: /sdb1/projects/mktj_st/photo/
 flush:
-  path: http://122.152.208.113:8080/api/user/flushUserRoleType
+  path: http://127.0.0.1:8888/api/user/flushUserRoleType
 ---
 ---
 server:
