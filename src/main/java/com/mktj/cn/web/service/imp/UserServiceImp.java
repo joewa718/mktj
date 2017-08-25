@@ -92,11 +92,14 @@ public class UserServiceImp extends BaseService implements UserService {
             } catch (Exception e) {
                 log.error(e.getMessage(),e);
             }
-            user.setApp_id(wxMpUser.getOpenId());
+            user.setAppId(wxMpUser.getOpenId());
             user.setNickname(wxMpUser.getNickname());
             user.setPassword(AESCryptUtil.encrypt("123456"));
             user.setUsername(generateRandomCode.generate(10));
             user.setDisable(false);
+            user.setRoleType(RoleType.普通);
+            user.setRegTime(new Date());
+            user.setWeUser(true);
             user = userRepository.save(user);
         }
         return user;
@@ -113,7 +116,7 @@ public class UserServiceImp extends BaseService implements UserService {
         if (!sf.exists()) {
             sf.mkdirs();
         }
-        OutputStream os = new FileOutputStream(sf.getPath() + "\\" + filename);
+        OutputStream os = new FileOutputStream(sf.getPath() + "/" + filename);
         while ((len = is.read(bs)) != -1) {
             os.write(bs, 0, len);
         }

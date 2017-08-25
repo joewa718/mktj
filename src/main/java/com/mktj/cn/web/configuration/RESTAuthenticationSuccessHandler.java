@@ -21,15 +21,7 @@ public class RESTAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         clearAuthenticationAttributes(request);
-        Object principal = authentication.getPrincipal();
-        if (principal instanceof UserDetails) {
-            UserSecurityDTO userSecurityDTO =  ((UserSecurityDTO) principal);
-            if(userSecurityDTO.getWeUser()){
-                response.sendRedirect(request.getContextPath()+"/u.html");
-            }else{
-                RequestDispatcher requestDispatcher = request.getRequestDispatcher("/api/user/getLoginUser");
-                requestDispatcher.forward(request, response);
-            }
-        }
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/api/user/getLoginUser");
+        requestDispatcher.forward(request, response);
     }
 }

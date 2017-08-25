@@ -19,13 +19,13 @@ public class User implements Serializable,Comparable{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    @Column(name = "username")
+    @Column(name = "username" , nullable = true)
     private String username;
     @Column(name = "nickname")
     private String nickname;
     @Column(name = "head_Portrait")
     private String headPortrait;
-    @Column(name = "phone", nullable = false, unique = true)
+    @Column(name = "phone", nullable = true, unique = true)
     private String phone;
     @Column(name = "password", nullable = false)
     private String password;
@@ -64,8 +64,9 @@ public class User implements Serializable,Comparable{
     private Set<Order> serviceOrderList = new TreeSet<>();
     @Column(name = "org_path", nullable = true)
     private String orgPath;
-    @Column(name = "appId", nullable = true)
-    private String app_id;
+    @Column(name = "app_id", nullable = true)
+    private String appId;
+
     @Formula("datediff(now(),reg_time)")
     private int diffDate;
 
@@ -269,13 +270,6 @@ public class User implements Serializable,Comparable{
     }
 
 
-    public String getApp_id() {
-        return app_id;
-    }
-
-    public void setApp_id(String app_id) {
-        this.app_id = app_id;
-    }
 
     public Boolean getWeUser() {
         return isWeUser;
@@ -285,5 +279,14 @@ public class User implements Serializable,Comparable{
         isWeUser = weUser;
     }
 
+
+
+    public String getAppId() {
+        return appId;
+    }
+
+    public void setAppId(String appId) {
+        this.appId = appId;
+    }
 
 }

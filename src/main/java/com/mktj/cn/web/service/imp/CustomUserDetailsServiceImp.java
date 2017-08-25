@@ -28,11 +28,20 @@ public class CustomUserDetailsServiceImp implements UserDetailsService {
     public UserSecurityDTO loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByPhone(username);
         if (user == null) {
-            throw new UsernameNotFoundException("username not found");
+            user = userRepository.findByAppId(username);
+            if(user == null){
+                throw new UsernameNotFoundException("username not found");
+            }else{
+                List<GrantedAuthority> authorities = new ArrayList<>();
+                authorities.add(new SimpleGrantedAuthority(ROLE_USER));
+                return new UserSecurityDTO(user.getAppId(), user.getPassword(), authorities, user);
+            }
+        }else{
+            List<GrantedAuthority> authorities = new ArrayList<>();
+            authorities.add(new SimpleGrantedAuthority(ROLE_USER));
+            return new UserSecurityDTO(user.getPhone(), user.getPassword(), authorities, user);
         }
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(ROLE_USER));
-        return new UserSecurityDTO(user.getPhone(), user.getPassword(), authorities, user);
+
     }
 
 }
