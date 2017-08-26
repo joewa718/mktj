@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -62,7 +63,7 @@ public class WeLoginController extends WxMpUserQuery {
             WxMpOAuth2AccessToken wxMpOAuth2AccessToken = wxService.oauth2getAccessToken(code);
             WxMpUser wxMpUser = wxService.oauth2getUserInfo(wxMpOAuth2AccessToken, "zh_CN");
             User user = userServiceImp.regWxUser(wxMpUser);
-            Authentication token = new UsernamePasswordAuthenticationToken(user.getAppId(), user.getPassword());
+            Authentication token = new UsernamePasswordAuthenticationToken(user.getAppId(), "123456");
             Authentication result =daoAuthenticationProvider.authenticate(token);
             SecurityContextHolder.getContext().setAuthentication(result);
             response.sendRedirect("http://www.jinhuishengwu.cn/u.html");
@@ -70,4 +71,5 @@ public class WeLoginController extends WxMpUserQuery {
             log.error(e.getMessage(), e);
         }
     }
+
 }

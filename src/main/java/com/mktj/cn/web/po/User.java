@@ -19,8 +19,6 @@ public class User implements Serializable,Comparable{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    @Column(name = "username" , nullable = true)
-    private String username;
     @Column(name = "nickname")
     private String nickname;
     @Column(name = "head_Portrait")
@@ -66,7 +64,8 @@ public class User implements Serializable,Comparable{
     private String orgPath;
     @Column(name = "app_id", nullable = true)
     private String appId;
-
+    @Column(name = "isVerificationPhone", nullable = true)
+    private boolean isVerificationPhone = false;
     @Formula("datediff(now(),reg_time)")
     private int diffDate;
 
@@ -253,14 +252,6 @@ public class User implements Serializable,Comparable{
         this.diffDate = diffDate;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public boolean isWeUser() {
         return isWeUser;
     }
@@ -268,8 +259,6 @@ public class User implements Serializable,Comparable{
     public void setWeUser(boolean weUser) {
         isWeUser = weUser;
     }
-
-
 
     public Boolean getWeUser() {
         return isWeUser;
@@ -279,8 +268,6 @@ public class User implements Serializable,Comparable{
         isWeUser = weUser;
     }
 
-
-
     public String getAppId() {
         return appId;
     }
@@ -288,5 +275,12 @@ public class User implements Serializable,Comparable{
     public void setAppId(String appId) {
         this.appId = appId;
     }
+    
+    public boolean isVerificationPhone() {
+        return isVerificationPhone;
+    }
 
+    public void setVerificationPhone(boolean verificationPhone) {
+        isVerificationPhone = verificationPhone;
+    }
 }

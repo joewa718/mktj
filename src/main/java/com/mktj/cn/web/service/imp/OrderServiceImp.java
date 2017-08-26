@@ -40,11 +40,14 @@ public class OrderServiceImp extends BaseService implements OrderService {
     @Override
     @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
     public OrderDTO applyOrder(String phone, OrderVo orderVo) {
+        User user = userRepository.findByPhone(phone);
+        if(user.isWeUser() && !user.isVerificationPhone()){
+            throw new RuntimeException("您是微信用户还未验证过手机，请先验证手机");
+        }
         Product product = productRepository.findOne(orderVo.getProductId());
         if (product == null) {
             throw new RuntimeException("无法找到对应的商品");
         }
-        User user = userRepository.findByPhone(phone);
         DeliveryAddress deliveryAddress = deliveryAddressRepository.findOneByIdAndUser(orderVo.getDeliverAddressId(), user);
         if (deliveryAddress == null) {
             throw new RuntimeException("无法找到对应的收货地址");
@@ -52,7 +55,6 @@ public class OrderServiceImp extends BaseService implements OrderService {
         if (orderVo.getPayType() == PayType.线下转账 && StringUtils.isBlank(orderVo.getRecommendPhone())) {
             throw new RuntimeException("线下订单推荐人不能为空");
         }
-
         if (orderVo.getRecommendPhone().equals(user.getPhone())) {
             throw new RuntimeException("推荐人不能是本人");
         }
@@ -62,10 +64,12 @@ public class OrderServiceImp extends BaseService implements OrderService {
         if (user.getHigher() != null && !user.getHigher().getPhone().equals(orderVo.getRecommendPhone())) {
             throw new RuntimeException("推荐人必须是自己的上级,您的上级是(" + user.getHigher().getPhone() + ")");
         }
-
         User recommend_man = userRepository.findByPhone(orderVo.getRecommendPhone());
         if (recommend_man == null) {
             throw new RuntimeException("推荐人没有找到");
+        }
+        if(recommend_man.isWeUser() && !recommend_man.isVerificationPhone()){
+            throw new RuntimeException("你的推荐人还未验证过手机，无法填写");
         }
         int piece;
         BigDecimal price;

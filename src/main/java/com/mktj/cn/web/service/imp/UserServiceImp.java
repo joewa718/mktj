@@ -1,22 +1,24 @@
 package com.mktj.cn.web.service.imp;
 
-import com.mktj.cn.web.util.DateUtil;
-import com.mktj.cn.web.util.encrypt.AESCryptUtil;
 import com.mktj.cn.web.dto.DeliveryAddressDTO;
 import com.mktj.cn.web.dto.RealInfoDTO;
 import com.mktj.cn.web.dto.UserDTO;
+import com.mktj.cn.web.enumerate.RoleType;
 import com.mktj.cn.web.exception.DuplicateAccountException;
 import com.mktj.cn.web.mapper.DeliveryAddressMapper;
 import com.mktj.cn.web.mapper.RealInfoMapper;
 import com.mktj.cn.web.mapper.UserMapper;
-import com.mktj.cn.web.po.*;
+import com.mktj.cn.web.po.DeliveryAddress;
+import com.mktj.cn.web.po.RealInfo;
+import com.mktj.cn.web.po.User;
 import com.mktj.cn.web.repositories.DeliveryAddressRepository;
 import com.mktj.cn.web.repositories.UserRepository;
 import com.mktj.cn.web.service.BaseService;
 import com.mktj.cn.web.service.UserService;
+import com.mktj.cn.web.util.DateUtil;
 import com.mktj.cn.web.util.GenerateRandomCode;
-import com.mktj.cn.web.enumerate.RoleType;
 import com.mktj.cn.web.util.SmsSender;
+import com.mktj.cn.web.util.encrypt.AESCryptUtil;
 import com.mktj.cn.web.vo.DeliveryAddressVo;
 import com.mktj.cn.web.vo.RealInfoVo;
 import com.mktj.cn.web.vo.UserVo;
@@ -27,8 +29,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.naming.OperationNotSupportedException;
@@ -85,18 +85,19 @@ public class UserServiceImp extends BaseService implements UserService {
         User user = userRepository.findByAppId(wxMpUser.getOpenId());
         if (user == null) {
             user = new User();
-            GenerateRandomCode generateRandomCode = new GenerateRandomCode();
             try {
-                download(wxMpUser.getHeadImgUrl(),UUID.randomUUID()+".gif",filePath);
-                user.setHeadPortrait(UUID.randomUUID()+".gif");
+                UUID uuid = UUID.randomUUID();
+                log.debug("wxMpUser.getHeadImgUrl():"+wxMpUser.getHeadImgUrl());
+                download(wxMpUser.getHeadImgUrl(),uuid+".jpg",filePath);
+                user.setHeadPortrait(uuid+".jpg");
             } catch (Exception e) {
                 log.error(e.getMessage(),e);
             }
             user.setAppId(wxMpUser.getOpenId());
             user.setNickname(wxMpUser.getNickname());
             user.setPassword(AESCryptUtil.encrypt("123456"));
-            user.setUsername(generateRandomCode.generate(10));
             user.setDisable(false);
+            user.setPhone(wxMpUser.getOpenId());
             user.setRoleType(RoleType.普通);
             user.setRegTime(new Date());
             user.setWeUser(true);
