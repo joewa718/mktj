@@ -445,7 +445,11 @@ public class UserServiceImp extends BaseService implements UserService {
         User user = userRepository.findByAppId(appId);
         if(user!= null){
             user.setIs_wxLogin(isWxLogin);
+            userRepository.save(user);
+        }else{
+            throw new RuntimeException("not found appId");
         }
-        user = userRepository.save(user);
+
+
     }
 }
