@@ -100,6 +100,7 @@ public class UserServiceImp extends BaseService implements UserService {
             user.setPhone(wxMpUser.getOpenId());
             user.setRoleType(RoleType.普通);
             user.setRegTime(new Date());
+            user.setVerificationPhone(false);
             user.setWeUser(true);
             user = userRepository.save(user);
         }
@@ -431,5 +432,20 @@ public class UserServiceImp extends BaseService implements UserService {
             }
         });
         return result;
+    }
+    @Override
+    public void editPhone(String phone,String new_phone){
+        User user = userRepository.findByPhone(phone);
+        user.setPhone(new_phone);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void setWxLogin(String appId,boolean isWxLogin) {
+        User user = userRepository.findByAppId(appId);
+        if(user!= null){
+            user.setIs_wxLogin(isWxLogin);
+        }
+        user = userRepository.save(user);
     }
 }

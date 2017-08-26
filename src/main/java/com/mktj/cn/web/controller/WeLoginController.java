@@ -63,9 +63,11 @@ public class WeLoginController extends WxMpUserQuery {
             WxMpOAuth2AccessToken wxMpOAuth2AccessToken = wxService.oauth2getAccessToken(code);
             WxMpUser wxMpUser = wxService.oauth2getUserInfo(wxMpOAuth2AccessToken, "zh_CN");
             User user = userServiceImp.regWxUser(wxMpUser);
+            userServiceImp.setWxLogin(user.getAppId(),true);
             Authentication token = new UsernamePasswordAuthenticationToken(user.getAppId(), "~!@Wz718718");
             Authentication result =daoAuthenticationProvider.authenticate(token);
             SecurityContextHolder.getContext().setAuthentication(result);
+            userServiceImp.setWxLogin(user.getAppId(),false);
             response.sendRedirect("http://www.jinhuishengwu.cn/u.html");
         } catch (WxErrorException e) {
             log.error(e.getMessage(), e);
@@ -76,9 +78,11 @@ public class WeLoginController extends WxMpUserQuery {
     @RequestMapping(value = "/forward_login", method = RequestMethod.GET)
     public void login(@RequestParam String username, @RequestParam String password, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try{
+            userServiceImp.setWxLogin(username,true);
             Authentication token = new UsernamePasswordAuthenticationToken(username, password);
             Authentication result =daoAuthenticationProvider.authenticate(token);
             SecurityContextHolder.getContext().setAuthentication(result);
+            userServiceImp.setWxLogin(username,false);
         } catch (Exception ex) {
             System.out.println("认证失败");
         }

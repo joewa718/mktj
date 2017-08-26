@@ -29,19 +29,22 @@ public class CustomUserDetailsServiceImp implements UserDetailsService {
         User user = userRepository.findByPhone(username);
         if (user == null) {
             user = userRepository.findByAppId(username);
-            if(user == null){
-                throw new UsernameNotFoundException("username not found");
+            if (user != null) {
+                if(user.getIs_wxLogin()){
+                    List<GrantedAuthority> authorities = new ArrayList<>();
+                    authorities.add(new SimpleGrantedAuthority(ROLE_USER));
+                    return new UserSecurityDTO(user.getAppId(), user.getWxPassword(), authorities, user);
+                }else{
+                    throw new UsernameNotFoundException("username not found");
+                }
             }else{
-                List<GrantedAuthority> authorities = new ArrayList<>();
-                authorities.add(new SimpleGrantedAuthority(ROLE_USER));
-                return new UserSecurityDTO(user.getAppId(), user.getWxPassword(), authorities, user);
+                throw new UsernameNotFoundException("username not found");
             }
         }else{
             List<GrantedAuthority> authorities = new ArrayList<>();
             authorities.add(new SimpleGrantedAuthority(ROLE_USER));
             return new UserSecurityDTO(user.getPhone(), user.getPassword(), authorities, user);
         }
-
     }
 
 }

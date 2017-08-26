@@ -68,6 +68,9 @@ public class OrderServiceImp extends BaseService implements OrderService {
         if (recommend_man == null) {
             throw new RuntimeException("推荐人没有找到");
         }
+        if (recommend_man.getRoleType() == RoleType.普通) {
+            throw new RuntimeException("该推荐人不是合伙人");
+        }
         if(recommend_man.isWeUser() && !recommend_man.isVerificationPhone()){
             throw new RuntimeException("你的推荐人还未验证过手机，无法填写");
         }

@@ -202,6 +202,14 @@ public class UserController extends BaseController {
     }
 
 
+    @ApiOperation(value = "修改手机")
+    @RequestMapping(value = "/setPhone", method = RequestMethod.POST)
+    public ResponseEntity setPhone(@RequestParam("phone") String new_phone) {
+        String phone = super.getCurrentUser().getUsername();
+        userService.editPhone(phone,new_phone);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @ApiOperation(value = "修改用户昵称")
     @RequestMapping(value = "/setNickname", method = RequestMethod.POST)
     public ResponseEntity setNickname(@RequestParam("nickname") String nickname) {
