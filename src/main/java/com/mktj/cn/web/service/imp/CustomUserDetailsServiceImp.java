@@ -34,7 +34,7 @@ public class CustomUserDetailsServiceImp implements UserDetailsService {
             }else{
                 List<GrantedAuthority> authorities = new ArrayList<>();
                 authorities.add(new SimpleGrantedAuthority(ROLE_USER));
-                return new UserSecurityDTO(user.getAppId(), user.getPassword(), authorities, user);
+                return new UserSecurityDTO(user.getAppId(), user.getWxPassword(), authorities, user);
             }
         }else{
             List<GrantedAuthority> authorities = new ArrayList<>();

@@ -65,7 +65,9 @@ public class User implements Serializable,Comparable{
     @Column(name = "app_id", nullable = true)
     private String appId;
     @Column(name = "isVerificationPhone", nullable = true)
-    private boolean isVerificationPhone = false;
+    private Boolean isVerificationPhone = false;
+    @Column(name = "wx_password", nullable = true)
+    private String wxPassword;
     @Formula("datediff(now(),reg_time)")
     private int diffDate;
 
@@ -275,12 +277,23 @@ public class User implements Serializable,Comparable{
     public void setAppId(String appId) {
         this.appId = appId;
     }
-    
-    public boolean isVerificationPhone() {
+
+    public Boolean isVerificationPhone() {
         return isVerificationPhone;
     }
 
-    public void setVerificationPhone(boolean verificationPhone) {
+    public void setVerificationPhone(Boolean verificationPhone) {
         isVerificationPhone = verificationPhone;
+    }
+
+    public String getWxPassword() {
+        return wxPassword;
+    }
+
+    public void setWxPassword(String wxPassword) {
+        this.wxPassword = wxPassword;
+    }
+    public Boolean getVerificationPhone() {
+        return isVerificationPhone;
     }
 }
