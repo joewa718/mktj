@@ -42,7 +42,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
     public OrderDTO applyOrder(String phone, OrderVo orderVo) {
         User user = userRepository.findByPhone(phone);
         if(user.isWeUser() && !user.isVerificationPhone()){
-            throw new RuntimeException("您是微信用户还未验证过手机，请先验证手机");
+            throw new RuntimeException("您是微信用户还未验证过手机，请先设置手机");
         }
         Product product = productRepository.findOne(orderVo.getProductId());
         if (product == null) {
