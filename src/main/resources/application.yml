@@ -1,7 +1,7 @@
 spring:
   #resources.static-locations: classpath:/dist/
   profiles:
-    active: dev
+    active: prd
   data:
     jpa:
       repositories:
@@ -44,7 +44,7 @@ wechat:
     mchKey: 134fafasdfqwerqwersv12231fqqer1a
     subAppId:
     subMchId:
-    keyPath: resources/cert/apiclient_cert.p12
+    keyPath: C:/Users/zhanwa01/nielsen_space/mktj/src/main/resources/cert/apiclient_cert.p12
 sms:
   appId: 1400038379
   appKey: 1b9e33d5acd98689763038c5c347db41
@@ -72,7 +72,7 @@ spring:
   datasource:
       type: com.alibaba.druid.pool.DruidDataSource
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://598af1f083b62.sh.cdb.myqcloud.com:5428/mktj?useUnicode=true&characterEncoding=utf-8&useSSL=false
+      url: jdbc:mysql://598af1f083b62.sh.cdb.myqcloud.com:5428/mktj_st?useUnicode=true&characterEncoding=utf-8&useSSL=false
       #url: jdbc:mysql://localhost:3306/mktj?useUnicode=true&characterEncoding=utf-8&useSSL=false
       username: root
       password: wz718718
@@ -198,3 +198,6 @@ photo:
   payCentPath: /sdb1/projects/mktj/photo/
 flush:
   path: http://www.jinhuishengwu.cn/api/user/flushUserRoleType
+wechat:
+  pay:
+    keyPath: /sdb1/projects/mktj/apiclient_cert.p12

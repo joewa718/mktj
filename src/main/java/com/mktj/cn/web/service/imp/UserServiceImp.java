@@ -6,9 +6,11 @@ import com.mktj.cn.web.dto.UserDTO;
 import com.mktj.cn.web.enumerate.RoleType;
 import com.mktj.cn.web.exception.DuplicateAccountException;
 import com.mktj.cn.web.mapper.DeliveryAddressMapper;
+import com.mktj.cn.web.mapper.OauthInfoMapper;
 import com.mktj.cn.web.mapper.RealInfoMapper;
 import com.mktj.cn.web.mapper.UserMapper;
 import com.mktj.cn.web.po.DeliveryAddress;
+import com.mktj.cn.web.po.OAuthInfo;
 import com.mktj.cn.web.po.RealInfo;
 import com.mktj.cn.web.po.User;
 import com.mktj.cn.web.repositories.DeliveryAddressRepository;
@@ -22,6 +24,7 @@ import com.mktj.cn.web.util.encrypt.AESCryptUtil;
 import com.mktj.cn.web.vo.DeliveryAddressVo;
 import com.mktj.cn.web.vo.RealInfoVo;
 import com.mktj.cn.web.vo.UserVo;
+import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,6 +66,8 @@ public class UserServiceImp extends BaseService implements UserService {
     DeliveryAddressMapper deliveryAddressMapper;
     @Autowired
     SmsSender smsSender;
+    @Autowired
+    OauthInfoMapper oauthInfoMapper;
 
     public String updateFile(MultipartFile file, String filePath) throws Exception {
         if (!file.isEmpty()) {
@@ -81,7 +86,7 @@ public class UserServiceImp extends BaseService implements UserService {
     }
 
     @Override
-    public User regWxUser(WxMpUser wxMpUser) {
+    public User regWxUser(WxMpOAuth2AccessToken auth2AccessToken, WxMpUser wxMpUser) {
         User user = userRepository.findByAppId(wxMpUser.getOpenId());
         if (user == null) {
             user = new User();
@@ -102,10 +107,24 @@ public class UserServiceImp extends BaseService implements UserService {
             user.setRegTime(new Date());
             user.setVerificationPhone(false);
             user.setWeUser(true);
-            user = userRepository.save(user);
         }
+        OAuthInfo oAuthInfo = oauthInfoMapper.WxMpOAuth2AccessTokenToOAuthInfo(auth2AccessToken);
+        user.setoAuthInfo(oAuthInfo);
+        oAuthInfo.setUser(user);
+        user = userRepository.save(user);
         return user;
     }
+
+    @Override
+    public User updateToken(WxMpOAuth2AccessToken auth2AccessToken, WxMpUser wxMpUser) {
+        User user = userRepository.findByAppId(wxMpUser.getOpenId());
+        OAuthInfo oAuthInfo = oauthInfoMapper.WxMpOAuth2AccessTokenToOAuthInfo(auth2AccessToken);
+        user.setoAuthInfo(oAuthInfo);
+        oAuthInfo.setUser(user);
+        user = userRepository.save(user);
+        return user;
+    }
+
 
     public static void download(String urlString, String filename, String savePath) throws Exception {
         URL url = new URL(urlString);

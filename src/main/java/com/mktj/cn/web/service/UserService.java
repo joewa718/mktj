@@ -9,6 +9,7 @@ import com.mktj.cn.web.po.User;
 import com.mktj.cn.web.vo.DeliveryAddressVo;
 import com.mktj.cn.web.vo.RealInfoVo;
 import com.mktj.cn.web.vo.UserVo;
+import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,7 +25,7 @@ public interface UserService {
 
     String updateFile(MultipartFile file, String filePath) throws Exception;
 
-    User regWxUser(WxMpUser user);
+    User regWxUser(WxMpOAuth2AccessToken auth2AccessToken, WxMpUser user);
 
     UserDTO regUser(UserVo userVo, HttpSession session) throws DuplicateAccountException, OperationNotSupportedException;
 
@@ -75,4 +76,6 @@ public interface UserService {
     void upgradeUerRoleType();
 
     void setWxLogin(String appId,boolean isWxLogin);
+
+    User updateToken(WxMpOAuth2AccessToken auth2AccessToken, WxMpUser wxMpUser);
 }

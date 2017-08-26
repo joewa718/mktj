@@ -5,10 +5,12 @@ import com.mktj.cn.web.converter.OrderTypeConverter;
 import com.mktj.cn.web.converter.PayTypeConverter;
 import com.mktj.cn.web.enumerate.OrderStatus;
 import com.mktj.cn.web.enumerate.PayType;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Formula;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -76,9 +78,20 @@ public class Order {
     private User user;
     @ManyToMany(mappedBy = "serviceOrderList",fetch = FetchType.LAZY)
     private Set<User> higherUserList = new TreeSet<>();
-
     @Formula("MONTH(order_time)")
     private String month;
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private WxPayOrderNotify wxPayOrderNotify;
+
+    public WxPayOrderNotify getWxPayOrderNotify() {
+        return wxPayOrderNotify;
+    }
+
+    public void setWxPayOrderNotify(WxPayOrderNotify wxPayOrderNotify) {
+        this.wxPayOrderNotify = wxPayOrderNotify;
+    }
+
     public String getProductName() {
         return productName;
     }

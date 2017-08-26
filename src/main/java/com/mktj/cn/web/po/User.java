@@ -48,6 +48,9 @@ public class User implements Serializable,Comparable{
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private RealInfo realInfo;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private OAuthInfo oAuthInfo;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<DeliveryAddress> deliveryAddressList;
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
@@ -72,7 +75,6 @@ public class User implements Serializable,Comparable{
     private Boolean is_wxLogin;
     @Formula("datediff(now(),reg_time)")
     private int diffDate;
-
     public long getId() {
         return id;
     }
@@ -306,5 +308,13 @@ public class User implements Serializable,Comparable{
 
     public Boolean getVerificationPhone() {
         return isVerificationPhone;
+    }
+
+    public OAuthInfo getoAuthInfo() {
+        return oAuthInfo;
+    }
+
+    public void setoAuthInfo(OAuthInfo oAuthInfo) {
+        this.oAuthInfo = oAuthInfo;
     }
 }

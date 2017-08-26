@@ -14,7 +14,6 @@ import javax.persistence.*;
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE, region = "entityCache")
 public class DeliveryAddress {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;

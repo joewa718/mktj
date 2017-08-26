@@ -93,7 +93,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/css/**", "/js/**", "/tpl/**", "/plugin/**", "/imageupload/**", "/images/**","/extend/**","/image/**", "/vendor/**",
                         "/*.html", "/","/*.txt","/fonts/**", "/l10n/**", "/**/favicon.ico", "/webjars/springfox-swagger-ui/**", "/swagger-resources/**", "/v2/**",
                         "/api/user/login", "/api/user/regUser","/api/user/getUserByAuthorizationCode",  "/api/user/sendRegCode", "/api/user/captcha","/api/user/sendPwFoundCode",
-                        "/api/user/passwordFoundNext","/api/user/passwordFound","/api/user/flushUserRoleType", "/api/wechat/portal/**", "/api/wechat/user/**","/druid/**").permitAll()
+                        "/api/user/passwordFoundNext","/api/user/passwordFound","/api/user/flushUserRoleType", "/api/wechat/portal/**", "/api/wechat/user/**","/api/wechat/pay/**","/druid/**").permitAll()
                 .antMatchers("/api/user/**", "/api/product/**", "/api/order/**").hasAnyRole("USER")
                 .anyRequest().authenticated()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()

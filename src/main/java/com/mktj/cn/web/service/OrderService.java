@@ -1,6 +1,7 @@
 package com.mktj.cn.web.service;
 
 import com.mktj.cn.web.dto.OrderDTO;
+import com.mktj.cn.web.po.Order;
 import com.mktj.cn.web.po.Product;
 import com.mktj.cn.web.enumerate.OrderStatus;
 import com.mktj.cn.web.enumerate.OrderType;
@@ -31,12 +32,11 @@ public interface OrderService {
     /**
      * 支付订单
      *
-     * @param phone
-     * @param orderId
+     * @param orderCode
      * @return
      * @throws OperationNotSupportedException
      */
-    OrderDTO payOrder(String phone, long orderId);
+    void payOrder(String orderCode);
 
     /**
      * 提交凭证信息
@@ -91,4 +91,6 @@ public interface OrderService {
 
 
     BigDecimal getProductPrice(RoleType roleType, Product product);
+
+    void wePay(long orderId);
 }

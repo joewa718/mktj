@@ -41,18 +41,6 @@ public class OrderController extends BaseController {
         }
     }
 
-    @ApiOperation(value = "支付订单")
-    @RequestMapping(value = "/payOrder", method = RequestMethod.POST)
-    public ResponseEntity<Object> payOrder(@RequestParam long orderId) {
-        String phone = super.getCurrentUser().getUsername();
-        try {
-            OrderDTO orderDTO = orderService.payOrder(phone,orderId);
-            return new ResponseEntity<>(orderDTO, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
     @ApiOperation(value = "线下订单提交给推荐人")
     @RequestMapping(value = "/savePayCert", method = RequestMethod.POST)
     public ResponseEntity<Object> submitOrder(@ModelAttribute PayCertificateVo payCertificateVo) {

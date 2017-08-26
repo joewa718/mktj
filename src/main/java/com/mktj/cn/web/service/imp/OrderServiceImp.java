@@ -1,5 +1,10 @@
 package com.mktj.cn.web.service.imp;
 
+import com.github.binarywang.wxpay.bean.request.WxPayBaseRequest;
+import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
+import com.github.binarywang.wxpay.bean.result.WxPayUnifiedOrderResult;
+import com.github.binarywang.wxpay.service.WxPayService;
+import com.mktj.cn.web.configuration.WxPayProperties;
 import com.mktj.cn.web.dto.OrderDTO;
 import com.mktj.cn.web.enumerate.*;
 import com.mktj.cn.web.mapper.OrderMapper;
@@ -10,12 +15,18 @@ import com.mktj.cn.web.service.OrderService;
 import com.mktj.cn.web.util.DateUtil;
 import com.mktj.cn.web.vo.OrderVo;
 import com.mktj.cn.web.vo.PayCertificateVo;
+import me.chanjar.weixin.mp.api.WxMpService;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -26,6 +37,15 @@ import java.util.stream.Collectors;
  **/
 @Service
 public class OrderServiceImp extends BaseService implements OrderService {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    @Resource(name = "wxPayService")
+    private WxPayService wxPayService;
+    @Autowired
+    private WxMpService wxMpService;
+    @Autowired
+    private OrderService orderService;
+    @Autowired
+    WxPayProperties wxPayProperties;
     @Autowired
     ProductRepository productRepository;
     @Autowired
@@ -41,7 +61,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
     @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
     public OrderDTO applyOrder(String phone, OrderVo orderVo) {
         User user = userRepository.findByPhone(phone);
-        if(user.isWeUser() && !user.isVerificationPhone()){
+        if (user.isWeUser() && !user.isVerificationPhone()) {
             throw new RuntimeException("您是微信用户还未验证过手机，请先设置手机");
         }
         Product product = productRepository.findOne(orderVo.getProductId());
@@ -71,7 +91,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
         if (recommend_man.getRoleType() == RoleType.普通) {
             throw new RuntimeException("该推荐人不是合伙人");
         }
-        if(recommend_man.isWeUser() && !recommend_man.isVerificationPhone()){
+        if (recommend_man.isWeUser() && !recommend_man.isVerificationPhone()) {
             throw new RuntimeException("你的推荐人还未验证过手机，无法填写");
         }
         int piece;
@@ -84,13 +104,14 @@ public class OrderServiceImp extends BaseService implements OrderService {
             price = getProductPrice(user.getRoleType(), product);
         }
         BigDecimal totalCost = price.multiply(BigDecimal.valueOf(piece));
-        //新增订单信息
         Order order = saveOrder(orderVo, user, product, deliveryAddress, piece, price, totalCost);
         order.getHigherUserList().add(recommend_man);
         recommend_man.getServiceOrderList().add(order);
         userRepository.save(recommend_man);
+        if (order.getPayWay() == PayType.余额支付) {
+            this.wePay(order.getId());
+        }
         return orderMapper.orderToOrderDTO(order);
-
     }
 
     @Override
@@ -130,32 +151,59 @@ public class OrderServiceImp extends BaseService implements OrderService {
 
     @Override
     @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
-    public OrderDTO payOrder(String phone, long orderId) {
-        User user = userRepository.findByPhone(phone);
-        Order order = orderRepository.findOne(orderId);
+    public void payOrder(String orderCode) {
+        Order order = orderRepository.findOneByOrderCode(orderCode);
         if (order == null) {
             throw new RuntimeException("订单不存在");
         }
         if (order.getPayWay() != PayType.余额支付) {
             throw new RuntimeException("支付订单,必须是余额支付类型");
         }
-        int piece = order.getProductNum();
-        BigDecimal price = order.getProductPrice();
-        BigDecimal totalCost = price.multiply(BigDecimal.valueOf(piece));
-        if (totalCost.compareTo(user.getScore()) == 1) {
-            throw new RuntimeException("对不起，您的积分不足，无法购买");
-        }
-        user.setScore(user.getScore().subtract(totalCost));
-        orderRepository.updateOrderStatusByIdAndUser(OrderStatus.已支付, orderId, user);
+        User user = order.getUser();
+        User recommendMan = userRepository.findByPhone(order.getRecommendPhone());
+        orderRepository.updateOrderStatusByIdAndUser(OrderStatus.已支付, order.getId(), user);
         Product product = productRepository.getProductByproductCode(order.getProductCode());
-        order.setOrderStatus(OrderStatus.已支付);
         setPayRoleType(user, product);
-        User recommend_man = userRepository.findByPhone(order.getRecommendPhone());
-        recommend_man.getLower().add(user);
-        user.setHigher(recommend_man);
-        user.setOrgPath(bindOffSpringOrgPath(recommend_man,user));
-        userRepository.save(user);
-        return orderMapper.orderToOrderDTO(order);
+        if (user.getHigher() == null && user.getRoleType().getCode() > RoleType.普通.getCode()) {
+            List<User> offspringUser = userRepository.findByLikeOrgPath(getLikeStr(user));
+            if (offspringUser != null && offspringUser.size() > 0) {
+                offspringUser.forEach(lower -> {
+                    lower.setOrgPath(bindOffSpringOrgPath(recommendMan, lower));
+                    userRepository.save(lower);
+                });
+            }
+            recommendMan.getLower().add(user);
+            user.setHigher(user);
+            user.setOrgPath(bindOffSpringOrgPath(recommendMan, user));
+        }
+        userRepository.save(order.getUser());
+    }
+
+    @Override
+    public void wePay(long orderId) {
+        Order order = orderRepository.findOne(orderId);
+        try {
+            String assessToken=null;
+            if(order.getUser().getoAuthInfo() == null && order.getUser().getoAuthInfo().getAccessToken() != null){
+                assessToken = order.getUser().getoAuthInfo().getAccessToken();
+            }
+            String openId = wxPayService.authcode2Openid(assessToken);
+            WxPayUnifiedOrderRequest orderRequest = new WxPayUnifiedOrderRequest();
+            orderRequest.setOpenid(openId);
+            orderRequest.setBody(order.getProductName() + "订单支付");
+            orderRequest.setOutTradeNo(order.getOrderCode());
+            orderRequest.setAppid(wxPayProperties.getAppId());
+            orderRequest.setMchId(wxPayProperties.getMchId());
+            orderRequest.setTotalFee(WxPayBaseRequest.yuanToFee("0.01"));//元转成分
+            orderRequest.setSpbillCreateIp("122.152.208.113");
+            orderRequest.setTradeType("JSAPI");
+            orderRequest.setNotifyURL("http://www.jinhuishengwu.cn/api/wechat/pay/payNotice");
+            wxPayService.unifiedOrder(orderRequest);
+        } catch (Exception e) {
+            String error = "微信支付失败！订单号：{" + order.getOrderCode() + "},原因:{" + e.getMessage() + "}";
+            logger.error(error);
+            throw new RuntimeException(error);
+        }
     }
 
     private void setPayRoleType(User user, Product product) {
@@ -189,17 +237,17 @@ public class OrderServiceImp extends BaseService implements OrderService {
         order.setOrderStatus(OrderStatus.已支付);
         Product product = productRepository.getProductByproductCode(order.getProductCode());
         setPayRoleType(order.getUser(), product);
-        if(order.getUser().getHigher() == null && order.getUser().getRoleType().getCode() > RoleType.普通.getCode()){
+        if (order.getUser().getHigher() == null && order.getUser().getRoleType().getCode() > RoleType.普通.getCode()) {
             List<User> offspringUser = userRepository.findByLikeOrgPath(getLikeStr(order.getUser()));
             if (offspringUser != null && offspringUser.size() > 0) {
                 offspringUser.forEach(lower -> {
-                    lower.setOrgPath(bindOffSpringOrgPath(user,lower));
+                    lower.setOrgPath(bindOffSpringOrgPath(user, lower));
                     userRepository.save(lower);
                 });
             }
             user.getLower().add(order.getUser());
             order.getUser().setHigher(user);
-            order.getUser().setOrgPath(bindOffSpringOrgPath(user,order.getUser()));
+            order.getUser().setOrgPath(bindOffSpringOrgPath(user, order.getUser()));
         }
         userRepository.save(order.getUser());
         return orderMapper.orderToOrderDTO(order);

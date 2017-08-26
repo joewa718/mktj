@@ -38,11 +38,12 @@ import java.io.IOException;
 @Controller
 @RequestMapping("/api/wechat/user/")
 public class WeLoginController extends WxMpUserQuery {
+    private static final String DEFAULT_PWD="~!@Wz718718";
+    private static final String LOGIN_CALLBACK="http://www.jinhuishengwu.cn/api/wechat/user/weLoginCallback";
+    private static final String LOGIN_SUCCESS="http://www.jinhuishengwu.cn/u.html";
     @Autowired
     private DaoAuthenticationProvider daoAuthenticationProvider;
     private final static Logger log = LoggerFactory.getLogger(WeLoginController.class);
-    @Autowired
-    private WechatMpProperties wechatMpProperties;
     @Autowired
     private WxMpService wxService;
     @Autowired
@@ -52,7 +53,7 @@ public class WeLoginController extends WxMpUserQuery {
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public void login(HttpServletRequest request, HttpServletResponse response) throws IOException {
         GenerateRandomCode generateRandomCode =new GenerateRandomCode();
-        String connectUrl = wxService.oauth2buildAuthorizationUrl( "http://www.jinhuishengwu.cn/api/wechat/user/weLoginCallback", "snsapi_userinfo", generateRandomCode.generate(5));
+        String connectUrl = wxService.oauth2buildAuthorizationUrl( LOGIN_CALLBACK, "snsapi_userinfo", generateRandomCode.generate(5));
         response.sendRedirect(connectUrl);
     }
 
@@ -62,29 +63,15 @@ public class WeLoginController extends WxMpUserQuery {
         try {
             WxMpOAuth2AccessToken wxMpOAuth2AccessToken = wxService.oauth2getAccessToken(code);
             WxMpUser wxMpUser = wxService.oauth2getUserInfo(wxMpOAuth2AccessToken, "zh_CN");
-            User user = userServiceImp.regWxUser(wxMpUser);
+            User user = userServiceImp.regWxUser(wxMpOAuth2AccessToken,wxMpUser);
             userServiceImp.setWxLogin(user.getAppId(),true);
-            Authentication token = new UsernamePasswordAuthenticationToken(user.getAppId(), "~!@Wz718718");
+            Authentication token = new UsernamePasswordAuthenticationToken(user.getAppId(), DEFAULT_PWD);
             Authentication result =daoAuthenticationProvider.authenticate(token);
             SecurityContextHolder.getContext().setAuthentication(result);
             userServiceImp.setWxLogin(user.getAppId(),false);
-            response.sendRedirect("http://www.jinhuishengwu.cn/u.html");
+            response.sendRedirect(LOGIN_SUCCESS);
         } catch (WxErrorException e) {
             log.error(e.getMessage(), e);
-        }
-    }
-
-    @ApiOperation(value = "用户登录")
-    @RequestMapping(value = "/forward_login", method = RequestMethod.GET)
-    public void login(@RequestParam String username, @RequestParam String password, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try{
-            userServiceImp.setWxLogin(username,true);
-            Authentication token = new UsernamePasswordAuthenticationToken(username, password);
-            Authentication result =daoAuthenticationProvider.authenticate(token);
-            SecurityContextHolder.getContext().setAuthentication(result);
-            userServiceImp.setWxLogin(username,false);
-        } catch (Exception ex) {
-            System.out.println("认证失败");
         }
     }
 
