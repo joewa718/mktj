@@ -26,13 +26,16 @@ public class WePayController{
     @Autowired
     private OrderService orderService;
     @ResponseBody
-    @RequestMapping(value = "/payNotice",method = RequestMethod.GET)
+    @RequestMapping(value = "/payNotice",method = RequestMethod.POST)
     public String payNotify(HttpServletRequest request, HttpServletResponse response) {
         try {
+            logger.debug("weixin callback");
             String xmlResult = IOUtils.toString(request.getInputStream(), request.getCharacterEncoding());
             WxPayOrderNotifyResult result = wxPayService.getOrderNotifyResult(xmlResult);
+            logger.debug("weixin orderCode:"+result.getOutTradeNo());
             String orderCode = result.getOutTradeNo();
             orderService.payWsSuccess(orderCode);
+            logger.debug("weixin success");
             return WxPayOrderNotifyResponse.success("处理成功!");
         } catch (Exception e) {
             logger.error("微信回调结果异常,异常原因{}", e.getMessage());
