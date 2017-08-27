@@ -38,7 +38,6 @@ public class CustomUserDetailsServiceImp implements UserDetailsService {
                     }else{
                         return new UserSecurityDTO(user.getPhone(), user.getWxPassword(), authorities, user);
                     }
-
                 }else{
                     throw new UsernameNotFoundException("username not found");
                 }
@@ -46,9 +45,19 @@ public class CustomUserDetailsServiceImp implements UserDetailsService {
                 throw new UsernameNotFoundException("username not found");
             }
         }else{
-            List<GrantedAuthority> authorities = new ArrayList<>();
-            authorities.add(new SimpleGrantedAuthority(ROLE_USER));
-            return new UserSecurityDTO(user.getPhone(), user.getPassword(), authorities, user);
+            if(user.getIs_wxLogin() != null && user.getIs_wxLogin() == true){
+                List<GrantedAuthority> authorities = new ArrayList<>();
+                authorities.add(new SimpleGrantedAuthority(ROLE_USER));
+                if(user.getAppId().equals(user.getPhone())){
+                    return new UserSecurityDTO(user.getAppId(), user.getWxPassword(), authorities, user);
+                }else{
+                    return new UserSecurityDTO(user.getPhone(), user.getPassword(), authorities, user);
+                }
+            }else{
+                List<GrantedAuthority> authorities = new ArrayList<>();
+                authorities.add(new SimpleGrantedAuthority(ROLE_USER));
+                return new UserSecurityDTO(user.getPhone(), user.getPassword(), authorities, user);
+            }
         }
     }
 

@@ -6,7 +6,7 @@ import com.mktj.cn.web.util.GenerateRandomCode;
 import org.apache.commons.lang3.StringUtils;
 
 public abstract class BaseService {
-
+    protected static final String DEFAULT_PWD="~!@Wz718718";
     protected String generateOrderCode(String userId) {
         GenerateRandomCode grc = new GenerateRandomCode();
         return grc.generateOrderCode(20, userId).toUpperCase();

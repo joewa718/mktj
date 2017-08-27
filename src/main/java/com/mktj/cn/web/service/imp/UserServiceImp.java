@@ -33,6 +33,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import javax.naming.OperationNotSupportedException;
@@ -69,6 +73,8 @@ public class UserServiceImp extends BaseService implements UserService {
     SmsSender smsSender;
     @Autowired
     OauthInfoMapper oauthInfoMapper;
+    @Autowired
+    DaoAuthenticationProvider daoAuthenticationProvider;
 
     public String updateFile(MultipartFile file, String filePath) throws Exception {
         if (!file.isEmpty()) {
@@ -101,7 +107,7 @@ public class UserServiceImp extends BaseService implements UserService {
             }
             user.setAppId(wxMpUser.getOpenId());
             user.setNickname(wxMpUser.getNickname());
-            user.setWxPassword(AESCryptUtil.encrypt("~!@Wz718718"));
+            user.setWxPassword(AESCryptUtil.encrypt(super.DEFAULT_PWD));
             user.setDisable(false);
             user.setPhone(wxMpUser.getOpenId());
             user.setRoleType(RoleType.普通);
@@ -178,10 +184,14 @@ public class UserServiceImp extends BaseService implements UserService {
         }
         user = userRepository.findByPhone(phone);
         user.setPhone(phoneVo.getPhone());
+        user.setPassword(AESCryptUtil.encrypt(DEFAULT_PWD));
         user.setVerificationPhone(true);
         user = userRepository.save(user);
         session.removeAttribute("regCode");
         session.removeAttribute("regCodeTime");
+        Authentication token = new UsernamePasswordAuthenticationToken(user.getPhone(), super.DEFAULT_PWD);
+        Authentication result =daoAuthenticationProvider.authenticate(token);
+        SecurityContextHolder.getContext().setAuthentication(result);
         return userMapper.userToUserDTO(user);
     }
 
@@ -211,9 +221,6 @@ public class UserServiceImp extends BaseService implements UserService {
     @Override
     public void editPassword(String phone, String oldPassword, String password) {
         User user = userRepository.findByPhone(phone);
-        if (!AESCryptUtil.encrypt(oldPassword).equals(user.getPassword())) {
-            throw new RuntimeException("原密码不正确");
-        }
         user.setPassword(AESCryptUtil.encrypt(password));
         userRepository.save(user);
     }
