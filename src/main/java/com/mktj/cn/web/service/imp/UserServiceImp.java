@@ -39,6 +39,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
 import javax.naming.OperationNotSupportedException;
 import javax.servlet.http.HttpSession;
 import java.io.File;
@@ -99,11 +100,11 @@ public class UserServiceImp extends BaseService implements UserService {
             user = new User();
             try {
                 UUID uuid = UUID.randomUUID();
-                log.debug("wxMpUser.getHeadImgUrl():"+wxMpUser.getHeadImgUrl());
-                download(wxMpUser.getHeadImgUrl(),uuid+".jpg",filePath);
-                user.setHeadPortrait(uuid+".jpg");
+                log.debug("wxMpUser.getHeadImgUrl():" + wxMpUser.getHeadImgUrl());
+                download(wxMpUser.getHeadImgUrl(), uuid + ".jpg", filePath);
+                user.setHeadPortrait(uuid + ".jpg");
             } catch (Exception e) {
-                log.error(e.getMessage(),e);
+                log.error(e.getMessage(), e);
             }
             user.setAppId(wxMpUser.getOpenId());
             user.setNickname(wxMpUser.getNickname());
@@ -170,7 +171,7 @@ public class UserServiceImp extends BaseService implements UserService {
     @Override
     public UserDTO editPhone(PhoneVo phoneVo, String phone, HttpSession session) throws OperationNotSupportedException {
         User user = userRepository.findByPhone(phoneVo.getPhone());
-        if(user != null){
+        if (user != null) {
             throw new OperationNotSupportedException("您修改的手机号码已存在");
         }
         String regCode = (String) session.getAttribute("regCode");
@@ -184,13 +185,15 @@ public class UserServiceImp extends BaseService implements UserService {
         }
         user = userRepository.findByPhone(phone);
         user.setPhone(phoneVo.getPhone());
-        user.setPassword(AESCryptUtil.encrypt(DEFAULT_PWD));
+        if (user.getVerificationPhone() == false) {
+            user.setPassword(AESCryptUtil.encrypt(DEFAULT_PWD));
+        }
         user.setVerificationPhone(true);
         user = userRepository.save(user);
         session.removeAttribute("regCode");
         session.removeAttribute("regCodeTime");
         Authentication token = new UsernamePasswordAuthenticationToken(user.getPhone(), super.DEFAULT_PWD);
-        Authentication result =daoAuthenticationProvider.authenticate(token);
+        Authentication result = daoAuthenticationProvider.authenticate(token);
         SecurityContextHolder.getContext().setAuthentication(result);
         return userMapper.userToUserDTO(user);
     }
@@ -219,7 +222,7 @@ public class UserServiceImp extends BaseService implements UserService {
     }
 
     @Override
-    public void editPassword(String phone, String oldPassword, String password) {
+    public void editPassword(String phone,String password) {
         User user = userRepository.findByPhone(phone);
         user.setPassword(AESCryptUtil.encrypt(password));
         userRepository.save(user);
@@ -278,8 +281,10 @@ public class UserServiceImp extends BaseService implements UserService {
         deliveryAddress.setUser(user);
         deliveryAddressList.get().add(deliveryAddress);
         userRepository.save(user);
-        Optional<DeliveryAddress> optional = user.getDeliveryAddressList().stream().filter(address ->{return address.getIsDefault();}).findFirst();
-        if(optional.isPresent()){
+        Optional<DeliveryAddress> optional = user.getDeliveryAddressList().stream().filter(address -> {
+            return address.getIsDefault();
+        }).findFirst();
+        if (optional.isPresent()) {
             return deliveryAddressMapper.deliveryAddressToDeliveryAddressDTO(optional.get());
         }
         throw new RuntimeException("未找到默认地址");

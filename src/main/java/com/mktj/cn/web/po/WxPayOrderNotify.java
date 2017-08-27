@@ -93,7 +93,7 @@ public class WxPayOrderNotify {
      * JSA描述：PI、NATIVE、APP
      * </pre>
      */
-    @Column(name = "trade_type",length = 1,nullable = true)
+    @Column(name = "trade_type",length = 16,nullable = true)
     private String tradeType;
 
 
@@ -144,7 +144,7 @@ public class WxPayOrderNotify {
      * 描述：货币类型，符合ISO4217标准的三位字母代码，默认人民币：CNY，其他值列表详见货币类型
      * </pre>
      */
-    @Column(name = "fee_type",nullable = true)
+    @Column(name = "fee_type",length = 8,nullable = true)
     private String feeType;
     /**
      * <pre>
@@ -168,7 +168,7 @@ public class WxPayOrderNotify {
      * 描述：货币类型，符合ISO4217标准的三位字母代码，默认人民币：CNY，其他值列表详见货币类型
      * </pre>
      */
-    @Column(name = "cash_fee_type",nullable = true)
+    @Column(name = "cash_fee_type",length = 16,nullable = true)
     private String cashFeeType;
     /**
      * <pre>
@@ -206,7 +206,7 @@ public class WxPayOrderNotify {
      * 描述：微信支付订单号
      * </pre>
      */
-    @Column(name = "transaction_id",nullable = true)
+    @Column(name = "transaction_id",length = 32,nullable = true)
     private String transactionId;
 
     /**
@@ -219,7 +219,7 @@ public class WxPayOrderNotify {
      * 描述：商户系统的订单号，与请求一致。
      * </pre>
      */
-    @Column(name = "out_tradeNo",nullable = true)
+    @Column(name = "out_tradeNo",length = 32,nullable = true)
     private String outTradeNo;
     /**
      * <pre>
@@ -231,7 +231,7 @@ public class WxPayOrderNotify {
      * 描述：商家数据包，原样返回
      * </pre>
      */
-    @Column(name = "attach",nullable = true)
+    @Column(name = "attach",length = 128,nullable = true)
     private String attach;
     /**
      * <pre>
@@ -243,7 +243,7 @@ public class WxPayOrderNotify {
      * 描述：支付完成时间，格式为yyyyMMddHHmmss，如2009年12月25日9点10分10秒表示为20091225091010。其他详见时间规则
      * </pre>
      */
-    @Column(name = "time_end",nullable = true)
+    @Column(name = "time_end",length = 14,nullable = true)
     private String timeEnd;
 
     @OneToOne(fetch = FetchType.LAZY)

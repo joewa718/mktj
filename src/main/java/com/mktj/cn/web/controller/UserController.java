@@ -191,10 +191,10 @@ public class UserController extends BaseController {
 
     @ApiOperation(value = "改动:增加原密码校验，如果原密码不正确提供500,并且给出 原密码不正确的提示!")
     @RequestMapping(value = "/updatePassword", method = RequestMethod.POST)
-    public ResponseEntity<String> updatePassword(@RequestParam("oldPassword") String oldPassword, @RequestParam("password") String password) {
+    public ResponseEntity<String> updatePassword(@RequestParam("password") String password) {
         String phone = super.getCurrentUser().getUsername();
         try {
-            userService.editPassword(phone, oldPassword, password);
+            userService.editPassword(phone,password);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }

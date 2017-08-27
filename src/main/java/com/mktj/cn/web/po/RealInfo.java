@@ -14,7 +14,7 @@ public class RealInfo implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    @Column(name = "idCard", unique = true)
+    @Column(name = "idCard")
     private String idCard;
     @Column(name = "real_name")
     private String realName;

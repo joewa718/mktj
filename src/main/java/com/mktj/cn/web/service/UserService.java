@@ -44,7 +44,7 @@ public interface UserService {
 
     void setDeliveryAddressDefault(String phone, long deliveryAddressId, boolean isDefault);
 
-    void editPassword(String phone, String oldPassword, String password);
+    void editPassword(String phone,String password);
 
     void editPhoto(String phone, String photo);
 
