@@ -7,6 +7,7 @@ import com.mktj.cn.web.enumerate.RoleType;
 import com.mktj.cn.web.exception.DuplicateAccountException;
 import com.mktj.cn.web.po.User;
 import com.mktj.cn.web.vo.DeliveryAddressVo;
+import com.mktj.cn.web.vo.PhoneVo;
 import com.mktj.cn.web.vo.RealInfoVo;
 import com.mktj.cn.web.vo.UserVo;
 import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
@@ -77,5 +78,5 @@ public interface UserService {
 
     User findUserByPhone(String phone);
 
-    UserDTO editPhone(UserVo userVo,String phone, HttpSession session) throws OperationNotSupportedException;
+    UserDTO editPhone(PhoneVo phoneVo, String phone, HttpSession session) throws OperationNotSupportedException;
 }

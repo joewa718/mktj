@@ -9,6 +9,7 @@ import com.mktj.cn.web.service.UserService;
 import com.mktj.cn.web.util.DateUtil;
 import com.mktj.cn.web.util.ImageCode;
 import com.mktj.cn.web.vo.DeliveryAddressVo;
+import com.mktj.cn.web.vo.PhoneVo;
 import com.mktj.cn.web.vo.RealInfoVo;
 import com.mktj.cn.web.vo.UserVo;
 import io.swagger.annotations.ApiOperation;
@@ -112,12 +113,12 @@ public class UserController extends BaseController {
 
     @ApiOperation(value = "修改手机号码")
     @RequestMapping(value = "/editPhone", method = RequestMethod.POST)
-    public ResponseEntity<Object> editPhone(@ModelAttribute UserVo user, HttpServletRequest request) throws ServletException, IOException {
+    public ResponseEntity<Object> editPhone(@ModelAttribute PhoneVo phoneVo, HttpServletRequest request) throws ServletException, IOException {
         String phone = super.getCurrentUser().getUsername();
         UserDTO userDTO;
         try {
             HttpSession session = request.getSession();
-            userDTO = userService.editPhone(user,phone, session);
+            userDTO = userService.editPhone(phoneVo,phone, session);
         } catch (OperationNotSupportedException e) {
             log.error(e.getMessage(), e);
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

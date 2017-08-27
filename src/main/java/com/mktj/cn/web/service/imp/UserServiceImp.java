@@ -22,6 +22,7 @@ import com.mktj.cn.web.util.GenerateRandomCode;
 import com.mktj.cn.web.util.SmsSender;
 import com.mktj.cn.web.util.encrypt.AESCryptUtil;
 import com.mktj.cn.web.vo.DeliveryAddressVo;
+import com.mktj.cn.web.vo.PhoneVo;
 import com.mktj.cn.web.vo.RealInfoVo;
 import com.mktj.cn.web.vo.UserVo;
 import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
@@ -161,13 +162,13 @@ public class UserServiceImp extends BaseService implements UserService {
     }
 
     @Override
-    public UserDTO editPhone(UserVo userVo,String phone, HttpSession session) throws OperationNotSupportedException {
-        User user = userRepository.findByPhone(userVo.getPhone());
+    public UserDTO editPhone(PhoneVo phoneVo, String phone, HttpSession session) throws OperationNotSupportedException {
+        User user = userRepository.findByPhone(phoneVo.getPhone());
         if(user != null){
             throw new OperationNotSupportedException("您修改的手机号码已存在");
         }
         String regCode = (String) session.getAttribute("regCode");
-        if (userVo.getRegCode() == null || !userVo.getRegCode().equals(regCode)) {
+        if (phoneVo.getRegCode() == null || !phoneVo.getRegCode().equals(regCode)) {
             throw new OperationNotSupportedException("手机验证码不正确");
         }
         Long regCodeTime = (Long) session.getAttribute("regCodeTime");
@@ -176,7 +177,7 @@ public class UserServiceImp extends BaseService implements UserService {
             throw new OperationNotSupportedException("手机验证码已经过期");
         }
         user = userRepository.findByPhone(phone);
-        user.setPhone(userVo.getPhone());
+        user.setPhone(phoneVo.getPhone());
         user = userRepository.save(user);
         session.removeAttribute("regCode");
         session.removeAttribute("regCodeTime");
