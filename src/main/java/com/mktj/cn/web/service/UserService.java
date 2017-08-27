@@ -53,8 +53,6 @@ public interface UserService {
 
     void editNickname(String phone, String nickname);
 
-    void editPhone(String phone,String new_phone);
-
     DeliveryAddressDTO getDefaultAddressByUser(String phone);
 
     String sendRegCode(String phone, String captcha, HttpSession session) throws Exception;
@@ -78,4 +76,6 @@ public interface UserService {
     void setWxLogin(String appId,boolean isWxLogin);
 
     User findUserByPhone(String phone);
+
+    UserDTO editPhone(UserVo userVo,String phone, HttpSession session) throws OperationNotSupportedException;
 }

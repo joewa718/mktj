@@ -110,6 +110,21 @@ public class UserController extends BaseController {
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 
+    @ApiOperation(value = "修改手机号码")
+    @RequestMapping(value = "/editPhone", method = RequestMethod.POST)
+    public ResponseEntity<Object> editPhone(@ModelAttribute UserVo user, HttpServletRequest request) throws ServletException, IOException {
+        String phone = super.getCurrentUser().getUsername();
+        UserDTO userDTO;
+        try {
+            HttpSession session = request.getSession();
+            userDTO = userService.editPhone(user,phone, session);
+        } catch (OperationNotSupportedException e) {
+            log.error(e.getMessage(), e);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(userDTO, HttpStatus.OK);
+    }
+
     @ApiOperation(value = "注册实名认证,支持新增和修改")
     @RequestMapping(value = "/regRealInfo", method = RequestMethod.POST)
     public ResponseEntity<Object> regRealInfo(@ModelAttribute RealInfoVo realInfoVo) throws ServletException, IOException {
@@ -195,15 +210,6 @@ public class UserController extends BaseController {
     public ResponseEntity setReceiveMessage(@RequestParam("isReceiveMessage") boolean isReceiveMessage) {
         String phone = super.getCurrentUser().getUsername();
         userService.editReceiveMessage(phone, isReceiveMessage);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-
-    @ApiOperation(value = "修改手机")
-    @RequestMapping(value = "/setPhone", method = RequestMethod.POST)
-    public ResponseEntity setPhone(@RequestParam("phone") String new_phone) {
-        String phone = super.getCurrentUser().getUsername();
-        userService.editPhone(phone,new_phone);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

@@ -161,6 +161,29 @@ public class UserServiceImp extends BaseService implements UserService {
     }
 
     @Override
+    public UserDTO editPhone(UserVo userVo,String phone, HttpSession session) throws OperationNotSupportedException {
+        User user = userRepository.findByPhone(userVo.getPhone());
+        if(user != null){
+            throw new OperationNotSupportedException("您修改的手机号码已存在");
+        }
+        String regCode = (String) session.getAttribute("regCode");
+        if (userVo.getRegCode() == null || !userVo.getRegCode().equals(regCode)) {
+            throw new OperationNotSupportedException("手机验证码不正确");
+        }
+        Long regCodeTime = (Long) session.getAttribute("regCodeTime");
+        long cur_time = DateUtil.getCurrentDate().getTime();
+        if ((cur_time - regCodeTime) / 1000 > 600) {//10分钟
+            throw new OperationNotSupportedException("手机验证码已经过期");
+        }
+        user = userRepository.findByPhone(phone);
+        user.setPhone(userVo.getPhone());
+        user = userRepository.save(user);
+        session.removeAttribute("regCode");
+        session.removeAttribute("regCodeTime");
+        return userMapper.userToUserDTO(user);
+    }
+
+    @Override
     public void regRealInfo(String phone, RealInfoVo realInfoVo) {
         User user = userRepository.findByPhone(phone);
         RealInfo realInfo = realInfoMapper.realInfoToVoRealInfo(realInfoVo);
@@ -452,12 +475,6 @@ public class UserServiceImp extends BaseService implements UserService {
             }
         });
         return result;
-    }
-    @Override
-    public void editPhone(String phone,String new_phone){
-        User user = userRepository.findByPhone(phone);
-        user.setPhone(new_phone);
-        userRepository.save(user);
     }
 
     @Override
