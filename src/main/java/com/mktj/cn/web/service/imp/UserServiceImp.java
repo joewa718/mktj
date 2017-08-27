@@ -178,6 +178,7 @@ public class UserServiceImp extends BaseService implements UserService {
         }
         user = userRepository.findByPhone(phone);
         user.setPhone(phoneVo.getPhone());
+        user.setVerificationPhone(true);
         user = userRepository.save(user);
         session.removeAttribute("regCode");
         session.removeAttribute("regCodeTime");

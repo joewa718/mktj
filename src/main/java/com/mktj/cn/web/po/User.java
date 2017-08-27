@@ -54,7 +54,7 @@ public class User implements Serializable,Comparable{
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<DeliveryAddress> deliveryAddressList;
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private Set<Order> orderList;
+    private Set<Order> orderList = new TreeSet<>();;
     @OneToMany(mappedBy = "higher", cascade = { CascadeType.REFRESH, CascadeType.PERSIST }, fetch = FetchType.LAZY)
     private Set<User> lower;
     @ManyToOne(cascade = { CascadeType.REFRESH, CascadeType.PERSIST })
