@@ -25,7 +25,7 @@ public interface UserService {
 
     String updateFile(MultipartFile file, String filePath) throws Exception;
 
-    User regWxUser(WxMpOAuth2AccessToken auth2AccessToken, WxMpUser user);
+    User regWxUser(WxMpOAuth2AccessToken auth2AccessToken, WxMpUser user,String state);
 
     UserDTO regUser(UserVo userVo, HttpSession session) throws DuplicateAccountException, OperationNotSupportedException;
 
@@ -76,6 +76,4 @@ public interface UserService {
     void upgradeUerRoleType();
 
     void setWxLogin(String appId,boolean isWxLogin);
-
-    User updateToken(WxMpOAuth2AccessToken auth2AccessToken, WxMpUser wxMpUser);
 }

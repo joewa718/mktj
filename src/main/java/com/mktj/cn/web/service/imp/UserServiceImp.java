@@ -26,6 +26,7 @@ import com.mktj.cn.web.vo.RealInfoVo;
 import com.mktj.cn.web.vo.UserVo;
 import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.naming.OperationNotSupportedException;
 import javax.servlet.http.HttpSession;
 import java.io.File;
@@ -86,38 +86,13 @@ public class UserServiceImp extends BaseService implements UserService {
     }
 
     @Override
-    public User regWxUser(WxMpOAuth2AccessToken auth2AccessToken, WxMpUser wxMpUser) {
-        User user = userRepository.findByAppId(wxMpUser.getOpenId());
-        if (user == null) {
-            user = new User();
-            try {
-                UUID uuid = UUID.randomUUID();
-                log.debug("wxMpUser.getHeadImgUrl():"+wxMpUser.getHeadImgUrl());
-                download(wxMpUser.getHeadImgUrl(),uuid+".jpg",filePath);
-                user.setHeadPortrait(uuid+".jpg");
-            } catch (Exception e) {
-                log.error(e.getMessage(),e);
-            }
-            user.setAppId(wxMpUser.getOpenId());
-            user.setNickname(wxMpUser.getNickname());
-            user.setWxPassword(AESCryptUtil.encrypt("~!@Wz718718"));
-            user.setDisable(false);
-            user.setPhone(wxMpUser.getOpenId());
-            user.setRoleType(RoleType.普通);
-            user.setRegTime(new Date());
-            user.setVerificationPhone(false);
-            user.setWeUser(true);
+    public User regWxUser(WxMpOAuth2AccessToken auth2AccessToken, WxMpUser wxMpUser,String state) {
+        User user = null;
+        if(!StringUtils.isBlank(state) && state.length() == 11){
+            user = userRepository.findByPhone(state);
+        }else{
+            user = userRepository.findByAppId(wxMpUser.getOpenId());
         }
-        OAuthInfo oAuthInfo = oauthInfoMapper.WxMpOAuth2AccessTokenToOAuthInfo(auth2AccessToken);
-        user.setoAuthInfo(oAuthInfo);
-        oAuthInfo.setUser(user);
-        user = userRepository.save(user);
-        return user;
-    }
-
-    @Override
-    public User updateToken(WxMpOAuth2AccessToken auth2AccessToken, WxMpUser wxMpUser) {
-        User user = userRepository.findByAppId(wxMpUser.getOpenId());
         if (user == null) {
             user = new User();
             try {
