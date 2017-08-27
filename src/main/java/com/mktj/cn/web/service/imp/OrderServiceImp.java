@@ -173,7 +173,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
                 });
             }
             recommendMan.getLower().add(user);
-            user.setHigher(user);
+            user.setHigher(recommendMan);
             user.setOrgPath(bindOffSpringOrgPath(recommendMan, user));
         }
         userRepository.save(order.getUser());
