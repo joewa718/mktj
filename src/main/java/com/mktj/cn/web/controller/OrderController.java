@@ -15,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.naming.OperationNotSupportedException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
@@ -43,9 +45,9 @@ public class OrderController extends BaseController {
 
     @ApiOperation(value = "支付订单")
     @RequestMapping(value = "/payOrder", method = RequestMethod.POST)
-    public ResponseEntity<Object> payOrder(@RequestParam long orderId) {
+    public ResponseEntity<Object> payOrder(@RequestParam long orderId, HttpServletRequest request, HttpServletResponse response) {
         try {
-            Object order = orderService.payOrder(orderId);
+            Object order = orderService.payOrder(orderId,request,response);
             return new ResponseEntity<>(order,HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

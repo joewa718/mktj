@@ -27,6 +27,9 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -177,8 +180,11 @@ public class OrderServiceImp extends BaseService implements OrderService {
     }
 
     @Override
-    public WxPayUnifiedOrderResult payOrder(long orderId) {
+    public WxPayUnifiedOrderResult payOrder(long orderId, HttpServletRequest request, HttpServletResponse response) throws IOException {
         Order order = orderRepository.findOne(orderId);
+        if(order.getUser() != null && (order.getUser().getWeUser() == null || !order.getUser().getWeUser())){
+            response.sendRedirect(request.getContextPath()+"/api/wechat/user/login"+order.getUser().getPhone());
+        }
         try {
             WxPayUnifiedOrderRequest orderRequest = new WxPayUnifiedOrderRequest();
             orderRequest.setOpenid(order.getUser().getoAuthInfo().getOpenId());
