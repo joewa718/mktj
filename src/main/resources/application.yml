@@ -1,7 +1,7 @@
 spring:
   #resources.static-locations: classpath:/dist/
   profiles:
-    active: prd
+    active: dev
   data:
     jpa:
       repositories:

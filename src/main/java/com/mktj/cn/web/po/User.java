@@ -54,6 +54,7 @@ public class User implements Serializable,Comparable{
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<DeliveryAddress> deliveryAddressList;
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OrderBy("id DESC")
     private Set<Order> orderList = new TreeSet<>();;
     @OneToMany(mappedBy = "higher", cascade = { CascadeType.REFRESH, CascadeType.PERSIST }, fetch = FetchType.LAZY)
     private Set<User> lower;
@@ -62,6 +63,7 @@ public class User implements Serializable,Comparable{
     private User higher;
     @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinTable(name = "t_user_service_order",joinColumns = {@JoinColumn(name = "user_id")},inverseJoinColumns = {@JoinColumn(name = "order_id")})
+    @OrderBy("id DESC")
     private Set<Order> serviceOrderList = new TreeSet<>();
     @Column(name = "org_path", nullable = true)
     private String orgPath;

@@ -10,6 +10,7 @@ import org.hibernate.annotations.*;
 import javax.persistence.*;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.*;
@@ -22,7 +23,7 @@ import java.util.*;
 @Table(name = "t_order")
 @Cacheable
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE, region = "entityCache")
-public class Order {
+public class Order{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -63,7 +64,7 @@ public class Order {
     private String orderComment;
     @Column(name = "order_time")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date orderTime;
+    protected Date orderTime;
     @Column(name = "pay_cert_photo")
     private String payCertPhoto;
     @Column(name = "pay_cert_info")
