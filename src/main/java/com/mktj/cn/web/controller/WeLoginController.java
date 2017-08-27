@@ -10,6 +10,7 @@ import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.WxMpUserQuery;
 import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,9 +39,9 @@ import java.io.IOException;
 @Controller
 @RequestMapping("/api/wechat/user/")
 public class WeLoginController extends WxMpUserQuery {
-    private static final String DEFAULT_PWD="~!@Wz718718";
-    private static final String LOGIN_CALLBACK="http://www.jinhuishengwu.cn/api/wechat/user/weLoginCallback";
-    private static final String LOGIN_SUCCESS="http://www.jinhuishengwu.cn/u.html";
+    private static final String DEFAULT_PWD = "~!@Wz718718";
+    private static final String LOGIN_CALLBACK = "http://www.jinhuishengwu.cn/api/wechat/user/weLoginCallback";
+    private static final String LOGIN_SUCCESS = "http://www.jinhuishengwu.cn/u.html";
     @Autowired
     private DaoAuthenticationProvider daoAuthenticationProvider;
     private final static Logger log = LoggerFactory.getLogger(WeLoginController.class);
@@ -51,9 +52,9 @@ public class WeLoginController extends WxMpUserQuery {
 
     @ApiOperation(value = "用户登录")
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public void login(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        GenerateRandomCode generateRandomCode =new GenerateRandomCode();
-        String connectUrl = wxService.oauth2buildAuthorizationUrl( LOGIN_CALLBACK, "snsapi_userinfo", generateRandomCode.generate(5));
+    public void login(HttpServletRequest request, HttpServletResponse response, @RequestParam(value = "phone", required = false) String phone) throws IOException {
+        GenerateRandomCode generateRandomCode = new GenerateRandomCode();
+        String connectUrl = wxService.oauth2buildAuthorizationUrl(LOGIN_CALLBACK, "snsapi_userinfo", StringUtils.isBlank(phone) ? generateRandomCode.generate(5) : phone);
         response.sendRedirect(connectUrl);
     }
 
@@ -63,12 +64,12 @@ public class WeLoginController extends WxMpUserQuery {
         try {
             WxMpOAuth2AccessToken wxMpOAuth2AccessToken = wxService.oauth2getAccessToken(code);
             WxMpUser wxMpUser = wxService.oauth2getUserInfo(wxMpOAuth2AccessToken, "zh_CN");
-            User user = userServiceImp.regWxUser(wxMpOAuth2AccessToken,wxMpUser);
-            userServiceImp.setWxLogin(user.getAppId(),true);
+            User user = userServiceImp.regWxUser(wxMpOAuth2AccessToken, wxMpUser, state);
+            userServiceImp.setWxLogin(user.getAppId(), true);
             Authentication token = new UsernamePasswordAuthenticationToken(user.getAppId(), DEFAULT_PWD);
-            Authentication result =daoAuthenticationProvider.authenticate(token);
+            Authentication result = daoAuthenticationProvider.authenticate(token);
             SecurityContextHolder.getContext().setAuthentication(result);
-            userServiceImp.setWxLogin(user.getAppId(),false);
+            userServiceImp.setWxLogin(user.getAppId(), false);
             response.sendRedirect(LOGIN_SUCCESS);
         } catch (WxErrorException e) {
             log.error(e.getMessage(), e);

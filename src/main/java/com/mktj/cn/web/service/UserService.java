@@ -26,7 +26,7 @@ public interface UserService {
 
     String updateFile(MultipartFile file, String filePath) throws Exception;
 
-    User regWxUser(WxMpOAuth2AccessToken auth2AccessToken, WxMpUser user);
+    User regWxUser(WxMpOAuth2AccessToken auth2AccessToken, WxMpUser user,String phone);
 
     UserDTO regUser(UserVo userVo, HttpSession session) throws DuplicateAccountException, OperationNotSupportedException;
 

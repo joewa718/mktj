@@ -87,27 +87,35 @@ public class UserServiceImp extends BaseService implements UserService {
     }
 
     @Override
-    public User regWxUser(WxMpOAuth2AccessToken auth2AccessToken, WxMpUser wxMpUser) {
-        User user = userRepository.findByAppId(wxMpUser.getOpenId());
-        if (user == null) {
-            user = new User();
-            try {
-                UUID uuid = UUID.randomUUID();
-                log.debug("wxMpUser.getHeadImgUrl():"+wxMpUser.getHeadImgUrl());
-                download(wxMpUser.getHeadImgUrl(),uuid+".jpg",filePath);
-                user.setHeadPortrait(uuid+".jpg");
-            } catch (Exception e) {
-                log.error(e.getMessage(),e);
+    public User regWxUser(WxMpOAuth2AccessToken auth2AccessToken, WxMpUser wxMpUser,String phone) {
+        User user = userRepository.findByPhone(phone);
+        if(user == null){
+            user = userRepository.findByAppId(wxMpUser.getOpenId());
+            if (user == null) {
+                user = new User();
+                try {
+                    UUID uuid = UUID.randomUUID();
+                    log.debug("wxMpUser.getHeadImgUrl():"+wxMpUser.getHeadImgUrl());
+                    download(wxMpUser.getHeadImgUrl(),uuid+".jpg",filePath);
+                    user.setHeadPortrait(uuid+".jpg");
+                } catch (Exception e) {
+                    log.error(e.getMessage(),e);
+                }
+                user.setAppId(wxMpUser.getOpenId());
+                user.setNickname(wxMpUser.getNickname());
+                user.setWxPassword(AESCryptUtil.encrypt("~!@Wz718718"));
+                user.setDisable(false);
+                user.setPhone(wxMpUser.getOpenId());
+                user.setRoleType(RoleType.普通);
+                user.setRegTime(new Date());
+                user.setVerificationPhone(false);
+                user.setWeUser(true);
             }
+        }else {
             user.setAppId(wxMpUser.getOpenId());
-            user.setNickname(wxMpUser.getNickname());
             user.setWxPassword(AESCryptUtil.encrypt("~!@Wz718718"));
-            user.setDisable(false);
-            user.setPhone(wxMpUser.getOpenId());
-            user.setRoleType(RoleType.普通);
-            user.setRegTime(new Date());
-            user.setVerificationPhone(false);
             user.setWeUser(true);
+            user.setVerificationPhone(true);
         }
         OAuthInfo oAuthInfo = oauthInfoMapper.WxMpOAuth2AccessTokenToOAuthInfo(auth2AccessToken);
         user.setoAuthInfo(oAuthInfo);
