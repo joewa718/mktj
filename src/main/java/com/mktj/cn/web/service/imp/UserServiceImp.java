@@ -118,6 +118,26 @@ public class UserServiceImp extends BaseService implements UserService {
     @Override
     public User updateToken(WxMpOAuth2AccessToken auth2AccessToken, WxMpUser wxMpUser) {
         User user = userRepository.findByAppId(wxMpUser.getOpenId());
+        if (user == null) {
+            user = new User();
+            try {
+                UUID uuid = UUID.randomUUID();
+                log.debug("wxMpUser.getHeadImgUrl():"+wxMpUser.getHeadImgUrl());
+                download(wxMpUser.getHeadImgUrl(),uuid+".jpg",filePath);
+                user.setHeadPortrait(uuid+".jpg");
+            } catch (Exception e) {
+                log.error(e.getMessage(),e);
+            }
+            user.setAppId(wxMpUser.getOpenId());
+            user.setNickname(wxMpUser.getNickname());
+            user.setWxPassword(AESCryptUtil.encrypt("~!@Wz718718"));
+            user.setDisable(false);
+            user.setPhone(wxMpUser.getOpenId());
+            user.setRoleType(RoleType.普通);
+            user.setRegTime(new Date());
+            user.setVerificationPhone(false);
+            user.setWeUser(true);
+        }
         OAuthInfo oAuthInfo = oauthInfoMapper.WxMpOAuth2AccessTokenToOAuthInfo(auth2AccessToken);
         user.setoAuthInfo(oAuthInfo);
         oAuthInfo.setUser(user);
@@ -237,7 +257,7 @@ public class UserServiceImp extends BaseService implements UserService {
     }
 
     @Override
-    public void saveDeliveryAddress(String phone, DeliveryAddressVo deliveryAddressVo) {
+    public DeliveryAddressDTO saveDeliveryAddress(String phone, DeliveryAddressVo deliveryAddressVo) {
         User user = userRepository.findByPhone(phone);
         Optional<Set<DeliveryAddress>> deliveryAddressList = Optional.ofNullable(user.getDeliveryAddressList());
         deliveryAddressList.orElse(new TreeSet<>());
@@ -250,6 +270,11 @@ public class UserServiceImp extends BaseService implements UserService {
         deliveryAddress.setUser(user);
         deliveryAddressList.get().add(deliveryAddress);
         userRepository.save(user);
+        Optional<DeliveryAddress> optional = user.getDeliveryAddressList().stream().filter(address ->{return address.getIsDefault();}).findFirst();
+        if(optional.isPresent()){
+            return deliveryAddressMapper.deliveryAddressToDeliveryAddressDTO(optional.get());
+        }
+        throw new RuntimeException("未找到默认地址");
     }
 
     @Override

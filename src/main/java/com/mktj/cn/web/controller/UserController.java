@@ -159,7 +159,7 @@ public class UserController extends BaseController {
 
     @ApiOperation(value = "保存收货地址")
     @RequestMapping(value = "/saveDeliverAddress", method = RequestMethod.POST)
-    public ResponseEntity saveDeliverAddress(@ModelAttribute DeliveryAddressVo deliverAddressVo) {
+    public ResponseEntity<DeliveryAddressDTO> saveDeliverAddress(@ModelAttribute DeliveryAddressVo deliverAddressVo) {
         String phone = super.getCurrentUser().getUsername();
         userService.saveDeliveryAddress(phone, deliverAddressVo);
         return new ResponseEntity<>(HttpStatus.OK);

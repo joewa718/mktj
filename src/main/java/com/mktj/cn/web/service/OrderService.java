@@ -1,5 +1,6 @@
 package com.mktj.cn.web.service;
 
+import com.github.binarywang.wxpay.bean.result.WxPayUnifiedOrderResult;
 import com.mktj.cn.web.dto.OrderDTO;
 import com.mktj.cn.web.po.Order;
 import com.mktj.cn.web.po.Product;
@@ -30,13 +31,13 @@ public interface OrderService {
     OrderDTO applyOrder(String phone, OrderVo orderVo);
 
     /**
-     * 支付订单
+     * 订单支付成功回调
      *
      * @param orderCode
      * @return
      * @throws OperationNotSupportedException
      */
-    void payOrder(String orderCode);
+    void payWsSuccess(String orderCode);
 
     /**
      * 提交凭证信息
@@ -92,5 +93,5 @@ public interface OrderService {
 
     BigDecimal getProductPrice(RoleType roleType, Product product);
 
-    void wePay(long orderId);
+    WxPayUnifiedOrderResult payOrder(long orderId);
 }

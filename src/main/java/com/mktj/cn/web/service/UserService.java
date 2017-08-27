@@ -37,7 +37,7 @@ public interface UserService {
 
     List<DeliveryAddressDTO> findDeliveryAddressByPhone(String phone);
 
-    void saveDeliveryAddress(String phone, DeliveryAddressVo deliveryAddressVo);
+    DeliveryAddressDTO saveDeliveryAddress(String phone, DeliveryAddressVo deliveryAddressVo);
 
     void editDeliveryAddress(String phone, DeliveryAddressVo deliveryAddressVo);
 

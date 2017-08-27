@@ -34,12 +34,24 @@ public class OrderController extends BaseController {
             if (product == null) {
                 throw new OperationNotSupportedException("无法找到对应的商品");
             }
-            OrderDTO order = orderService.applyOrder(phone, orderVo);
+            Object order = orderService.applyOrder(phone, orderVo);
             return new ResponseEntity<>(order,HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @ApiOperation(value = "支付订单")
+    @RequestMapping(value = "/payOrder", method = RequestMethod.POST)
+    public ResponseEntity<Object> payOrder(@RequestParam long orderId) {
+        try {
+            Object order = orderService.payOrder(orderId);
+            return new ResponseEntity<>(order,HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
     @ApiOperation(value = "线下订单提交给推荐人")
     @RequestMapping(value = "/savePayCert", method = RequestMethod.POST)

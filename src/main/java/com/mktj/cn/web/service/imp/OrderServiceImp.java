@@ -108,9 +108,6 @@ public class OrderServiceImp extends BaseService implements OrderService {
         order.getHigherUserList().add(recommend_man);
         recommend_man.getServiceOrderList().add(order);
         userRepository.save(recommend_man);
-        if (order.getPayWay() == PayType.余额支付) {
-            this.wePay(order.getId());
-        }
         return orderMapper.orderToOrderDTO(order);
     }
 
@@ -151,7 +148,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
 
     @Override
     @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
-    public void payOrder(String orderCode) {
+    public void payWsSuccess(String orderCode) {
         Order order = orderRepository.findOneByOrderCode(orderCode);
         if (order == null) {
             throw new RuntimeException("订单不存在");
@@ -180,16 +177,11 @@ public class OrderServiceImp extends BaseService implements OrderService {
     }
 
     @Override
-    public void wePay(long orderId) {
+    public WxPayUnifiedOrderResult payOrder(long orderId) {
         Order order = orderRepository.findOne(orderId);
         try {
-            String assessToken=null;
-            if(order.getUser().getoAuthInfo() == null && order.getUser().getoAuthInfo().getAccessToken() != null){
-                assessToken = order.getUser().getoAuthInfo().getAccessToken();
-            }
-            String openId = wxPayService.authcode2Openid(assessToken);
             WxPayUnifiedOrderRequest orderRequest = new WxPayUnifiedOrderRequest();
-            orderRequest.setOpenid(openId);
+            orderRequest.setOpenid(order.getUser().getoAuthInfo().getOpenId());
             orderRequest.setBody(order.getProductName() + "订单支付");
             orderRequest.setOutTradeNo(order.getOrderCode());
             orderRequest.setAppid(wxPayProperties.getAppId());
@@ -198,7 +190,9 @@ public class OrderServiceImp extends BaseService implements OrderService {
             orderRequest.setSpbillCreateIp("122.152.208.113");
             orderRequest.setTradeType("JSAPI");
             orderRequest.setNotifyURL("http://www.jinhuishengwu.cn/api/wechat/pay/payNotice");
-            wxPayService.unifiedOrder(orderRequest);
+            WxPayUnifiedOrderResult wxPayUnifiedOrderResult = wxPayService.unifiedOrder(orderRequest);
+            logger.debug(wxPayUnifiedOrderResult.toString());
+            return wxPayUnifiedOrderResult;
         } catch (Exception e) {
             String error = "微信支付失败！订单号：{" + order.getOrderCode() + "},原因:{" + e.getMessage() + "}";
             logger.error(error);
