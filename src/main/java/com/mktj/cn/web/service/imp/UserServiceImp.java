@@ -87,35 +87,27 @@ public class UserServiceImp extends BaseService implements UserService {
     }
 
     @Override
-    public User regWxUser(WxMpOAuth2AccessToken auth2AccessToken, WxMpUser wxMpUser,String phone) {
-        User user = userRepository.findByPhone(phone);
-        if(user == null){
-            user = userRepository.findByAppId(wxMpUser.getOpenId());
-            if (user == null) {
-                user = new User();
-                try {
-                    UUID uuid = UUID.randomUUID();
-                    log.debug("wxMpUser.getHeadImgUrl():"+wxMpUser.getHeadImgUrl());
-                    download(wxMpUser.getHeadImgUrl(),uuid+".jpg",filePath);
-                    user.setHeadPortrait(uuid+".jpg");
-                } catch (Exception e) {
-                    log.error(e.getMessage(),e);
-                }
-                user.setAppId(wxMpUser.getOpenId());
-                user.setNickname(wxMpUser.getNickname());
-                user.setWxPassword(AESCryptUtil.encrypt("~!@Wz718718"));
-                user.setDisable(false);
-                user.setPhone(wxMpUser.getOpenId());
-                user.setRoleType(RoleType.普通);
-                user.setRegTime(new Date());
-                user.setVerificationPhone(false);
-                user.setWeUser(true);
+    public User regWxUser(WxMpOAuth2AccessToken auth2AccessToken, WxMpUser wxMpUser) {
+        User user = userRepository.findByAppId(wxMpUser.getOpenId());
+        if (user == null) {
+            user = new User();
+            try {
+                UUID uuid = UUID.randomUUID();
+                log.debug("wxMpUser.getHeadImgUrl():"+wxMpUser.getHeadImgUrl());
+                download(wxMpUser.getHeadImgUrl(),uuid+".jpg",filePath);
+                user.setHeadPortrait(uuid+".jpg");
+            } catch (Exception e) {
+                log.error(e.getMessage(),e);
             }
-        }else {
             user.setAppId(wxMpUser.getOpenId());
+            user.setNickname(wxMpUser.getNickname());
             user.setWxPassword(AESCryptUtil.encrypt("~!@Wz718718"));
+            user.setDisable(false);
+            user.setPhone(wxMpUser.getOpenId());
+            user.setRoleType(RoleType.普通);
+            user.setRegTime(new Date());
+            user.setVerificationPhone(false);
             user.setWeUser(true);
-            user.setVerificationPhone(true);
         }
         OAuthInfo oAuthInfo = oauthInfoMapper.WxMpOAuth2AccessTokenToOAuthInfo(auth2AccessToken);
         user.setoAuthInfo(oAuthInfo);
@@ -487,12 +479,12 @@ public class UserServiceImp extends BaseService implements UserService {
     }
 
     @Override
-    public void setWxLogin(String appId,boolean isWxLogin) {
+    public void setWxLogin(String appId, boolean isWxLogin) {
         User user = userRepository.findByAppId(appId);
-        if(user!= null){
+        if (user != null) {
             user.setIs_wxLogin(isWxLogin);
             userRepository.save(user);
-        }else{
+        } else {
             throw new RuntimeException("not found appId");
         }
 
