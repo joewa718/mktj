@@ -64,6 +64,9 @@ public class OrderServiceImp extends BaseService implements OrderService {
     @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
     public OrderDTO applyOrder(String phone, OrderVo orderVo) {
         User user = userRepository.findByPhone(phone);
+        if (orderVo.getPayType() == PayType.余额支付 && (!user.getWeUser() || user.getoAuthInfo() == null)) {
+            throw new RuntimeException("您的账号尚未认证,正在为您认证..请稍后" + ":" + user.getPhone());
+        }
         if (user.isWeUser() && !user.isVerificationPhone()) {
             throw new RuntimeException("您是微信用户还未验证过手机，请先设置手机");
         }
