@@ -180,7 +180,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
     }
 
     @Override
-    public WxPayUnifiedOrderResult payOrder(long orderId) {
+    public Map payOrder(long orderId) {
         Order order = orderRepository.findOne(orderId);
         try {
             WxPayUnifiedOrderRequest orderRequest = new WxPayUnifiedOrderRequest();
@@ -193,7 +193,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
             orderRequest.setSpbillCreateIp("122.152.208.113");
             orderRequest.setTradeType("JSAPI");
             orderRequest.setNotifyURL("http://www.jinhuishengwu.cn/api/wechat/pay/payNotice");
-            WxPayUnifiedOrderResult wxPayUnifiedOrderResult = wxPayService.unifiedOrder(orderRequest);
+            Map wxPayUnifiedOrderResult = wxPayService.getPayInfo(orderRequest);
             logger.debug(wxPayUnifiedOrderResult.toString());
             return wxPayUnifiedOrderResult;
         } catch (Exception e) {

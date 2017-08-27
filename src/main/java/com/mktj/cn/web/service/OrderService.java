@@ -93,5 +93,5 @@ public interface OrderService {
 
     BigDecimal getProductPrice(RoleType roleType, Product product);
 
-    WxPayUnifiedOrderResult payOrder(long orderId);
+    Map payOrder(long orderId);
 }
