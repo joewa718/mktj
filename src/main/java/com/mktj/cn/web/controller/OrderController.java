@@ -1,11 +1,14 @@
 package com.mktj.cn.web.controller;
 
 import com.mktj.cn.web.dto.OrderDTO;
+import com.mktj.cn.web.dto.UserDTO;
 import com.mktj.cn.web.po.Product;
+import com.mktj.cn.web.po.User;
 import com.mktj.cn.web.service.OrderService;
 import com.mktj.cn.web.service.ProductService;
 import com.mktj.cn.web.enumerate.OrderStatus;
 import com.mktj.cn.web.enumerate.OrderType;
+import com.mktj.cn.web.service.UserService;
 import com.mktj.cn.web.vo.OrderVo;
 import com.mktj.cn.web.vo.PayCertificateVo;
 import io.swagger.annotations.ApiOperation;
@@ -25,6 +28,8 @@ import java.util.Map;
 public class OrderController extends BaseController {
     @Autowired
     OrderService orderService;
+    @Autowired
+    UserService userService;
     @Autowired
     ProductService productService;
     @ApiOperation(value = "下订单")
@@ -47,7 +52,12 @@ public class OrderController extends BaseController {
     @RequestMapping(value = "/payOrder", method = RequestMethod.POST)
     public ResponseEntity<Object> payOrder(@RequestParam long orderId, HttpServletRequest request, HttpServletResponse response) {
         try {
-            Object order = orderService.payOrder(orderId,request,response);
+            String phone = super.getCurrentUser().getUsername();
+            User user = userService.findUserByPhone(phone);
+            if(user.getAppId() == null){
+                response.sendRedirect(request.getContextPath()+"/api/wechat/user/login?state="+user.getPhone());
+            }
+            Object order = orderService.payOrder(orderId);
             return new ResponseEntity<>(order,HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

@@ -12,9 +12,6 @@ import com.mktj.cn.web.vo.OrderVo;
 import com.mktj.cn.web.vo.PayCertificateVo;
 
 import javax.naming.OperationNotSupportedException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -96,5 +93,5 @@ public interface OrderService {
 
     BigDecimal getProductPrice(RoleType roleType, Product product);
 
-    WxPayUnifiedOrderResult payOrder(long orderId, HttpServletRequest request, HttpServletResponse response) throws IOException;
+    WxPayUnifiedOrderResult payOrder(long orderId);
 }

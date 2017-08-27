@@ -218,9 +218,15 @@ public class UserServiceImp extends BaseService implements UserService {
 
 
     @Override
-    public UserDTO findUserByPhone(String phone) {
+    public UserDTO findUserDTOByPhone(String phone) {
         User user = userRepository.findByPhone(phone);
         return userMapper.userToUserDTO(user);
+    }
+
+    @Override
+    public User findUserByPhone(String phone) {
+        User user = userRepository.findByPhone(phone);
+        return user;
     }
 
     @Override

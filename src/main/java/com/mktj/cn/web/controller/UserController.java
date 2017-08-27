@@ -4,7 +4,6 @@ import com.mktj.cn.web.dto.DeliveryAddressDTO;
 import com.mktj.cn.web.dto.ImageDTO;
 import com.mktj.cn.web.dto.RealInfoDTO;
 import com.mktj.cn.web.dto.UserDTO;
-import com.mktj.cn.web.enumerate.FileType;
 import com.mktj.cn.web.exception.DuplicateAccountException;
 import com.mktj.cn.web.service.UserService;
 import com.mktj.cn.web.util.DateUtil;
@@ -19,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,7 +31,6 @@ import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -137,7 +134,7 @@ public class UserController extends BaseController {
     @RequestMapping(value = "/getLoginUser", method = RequestMethod.POST)
     public ResponseEntity<UserDTO> getLoginUser() {
         String phone = super.getCurrentUser().getUsername();
-        UserDTO user = userService.findUserByPhone(phone);
+        UserDTO user = userService.findUserDTOByPhone(phone);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 

@@ -180,11 +180,8 @@ public class OrderServiceImp extends BaseService implements OrderService {
     }
 
     @Override
-    public WxPayUnifiedOrderResult payOrder(long orderId, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public WxPayUnifiedOrderResult payOrder(long orderId) {
         Order order = orderRepository.findOne(orderId);
-        if(order.getUser() != null && (order.getUser().getWeUser() == null || !order.getUser().getWeUser())){
-            response.sendRedirect(request.getContextPath()+"/api/wechat/user/login"+order.getUser().getPhone());
-        }
         try {
             WxPayUnifiedOrderRequest orderRequest = new WxPayUnifiedOrderRequest();
             orderRequest.setOpenid(order.getUser().getoAuthInfo().getOpenId());

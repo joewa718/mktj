@@ -31,7 +31,7 @@ public interface UserService {
 
     void regRealInfo(String phone, RealInfoVo vo);
 
-    UserDTO findUserByPhone(String phone);
+    UserDTO findUserDTOByPhone(String phone);
 
     RealInfoDTO findRealInfoByPhone(String phone);
 
@@ -76,4 +76,6 @@ public interface UserService {
     void upgradeUerRoleType();
 
     void setWxLogin(String appId,boolean isWxLogin);
+
+    User findUserByPhone(String phone);
 }
