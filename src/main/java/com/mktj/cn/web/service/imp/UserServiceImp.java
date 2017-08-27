@@ -86,13 +86,8 @@ public class UserServiceImp extends BaseService implements UserService {
     }
 
     @Override
-    public User regWxUser(WxMpOAuth2AccessToken auth2AccessToken, WxMpUser wxMpUser,String state) {
-        User user = null;
-        if(!StringUtils.isBlank(state) && state.length() == 11){
-            user = userRepository.findByPhone(state);
-        }else{
-            user = userRepository.findByAppId(wxMpUser.getOpenId());
-        }
+    public User regWxUser(WxMpOAuth2AccessToken auth2AccessToken, WxMpUser wxMpUser) {
+        User user = userRepository.findByAppId(wxMpUser.getOpenId());
         if (user == null) {
             user = new User();
             try {
@@ -111,10 +106,6 @@ public class UserServiceImp extends BaseService implements UserService {
             user.setRoleType(RoleType.普通);
             user.setRegTime(new Date());
             user.setVerificationPhone(false);
-            user.setWeUser(true);
-        }else {
-            user.setAppId(wxMpUser.getOpenId());
-            user.setWxPassword(AESCryptUtil.encrypt("~!@Wz718718"));
             user.setWeUser(true);
         }
         OAuthInfo oAuthInfo = oauthInfoMapper.WxMpOAuth2AccessTokenToOAuthInfo(auth2AccessToken);

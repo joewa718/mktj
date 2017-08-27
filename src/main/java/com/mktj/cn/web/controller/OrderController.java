@@ -55,7 +55,7 @@ public class OrderController extends BaseController {
             String phone = super.getCurrentUser().getUsername();
             User user = userService.findUserByPhone(phone);
             if(user.getAppId() == null){
-                response.sendRedirect(request.getContextPath()+"/api/wechat/user/login?state="+user.getPhone());
+                throw new RuntimeException("线下用户无法，微信支付");
             }
             Object order = orderService.payOrder(orderId);
             return new ResponseEntity<>(order,HttpStatus.OK);
