@@ -2,12 +2,14 @@ package com.mktj.cn.web.service.imp;
 
 import com.github.binarywang.wxpay.bean.request.WxPayBaseRequest;
 import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
+import com.github.binarywang.wxpay.bean.result.WxPayOrderNotifyResult;
 import com.github.binarywang.wxpay.bean.result.WxPayUnifiedOrderResult;
 import com.github.binarywang.wxpay.service.WxPayService;
 import com.mktj.cn.web.configuration.WxPayProperties;
 import com.mktj.cn.web.dto.OrderDTO;
 import com.mktj.cn.web.enumerate.*;
 import com.mktj.cn.web.mapper.OrderMapper;
+import com.mktj.cn.web.mapper.WxPayOrderNotifyMapper;
 import com.mktj.cn.web.po.*;
 import com.mktj.cn.web.repositories.*;
 import com.mktj.cn.web.service.BaseService;
@@ -55,7 +57,8 @@ public class OrderServiceImp extends BaseService implements OrderService {
     OrderMapper orderMapper;
     @Autowired
     DeliveryAddressRepository deliveryAddressRepository;
-
+    @Autowired
+    WxPayOrderNotifyMapper notifyMapper;
     @Override
     @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
     public OrderDTO applyOrder(String phone, OrderVo orderVo) {
@@ -147,7 +150,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
 
     @Override
     @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
-    public void payWsSuccess(String orderCode) {
+    public void payWsSuccess(String orderCode, WxPayOrderNotifyResult result) {
         Order order = orderRepository.findOneByOrderCode(orderCode);
         if (order == null) {
             throw new RuntimeException("订单不存在");
@@ -155,6 +158,9 @@ public class OrderServiceImp extends BaseService implements OrderService {
         if (order.getPayWay() != PayType.余额支付) {
             throw new RuntimeException("支付订单,必须是余额支付类型");
         }
+        WxPayOrderNotify wxPayOrderNotify = notifyMapper.WxPayOrderNotifyResultToWxPayOrderNotify(result);
+        order.setWxPayOrderNotify(wxPayOrderNotify);
+        wxPayOrderNotify.setOrder(order);
         User user = order.getUser();
         User recommendMan = userRepository.findByPhone(order.getRecommendPhone());
         orderRepository.updateOrderStatusByIdAndUser(OrderStatus.已支付, order.getId(), user);

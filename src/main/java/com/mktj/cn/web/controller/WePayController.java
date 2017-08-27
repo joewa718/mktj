@@ -34,7 +34,7 @@ public class WePayController{
             WxPayOrderNotifyResult result = wxPayService.getOrderNotifyResult(xmlResult);
             logger.debug("weixin orderCode:"+result.getOutTradeNo());
             String orderCode = result.getOutTradeNo();
-            orderService.payWsSuccess(orderCode);
+            orderService.payWsSuccess(orderCode,result);
             logger.debug("weixin success");
             return WxPayOrderNotifyResponse.success("处理成功!");
         } catch (Exception e) {

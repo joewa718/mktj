@@ -1,5 +1,6 @@
 package com.mktj.cn.web.service;
 
+import com.github.binarywang.wxpay.bean.result.WxPayOrderNotifyResult;
 import com.github.binarywang.wxpay.bean.result.WxPayUnifiedOrderResult;
 import com.mktj.cn.web.dto.OrderDTO;
 import com.mktj.cn.web.po.Order;
@@ -37,7 +38,7 @@ public interface OrderService {
      * @return
      * @throws OperationNotSupportedException
      */
-    void payWsSuccess(String orderCode);
+    void payWsSuccess(String orderCode, WxPayOrderNotifyResult result);
 
     /**
      * 提交凭证信息
