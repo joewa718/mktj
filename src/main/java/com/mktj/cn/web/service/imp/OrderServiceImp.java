@@ -59,6 +59,22 @@ public class OrderServiceImp extends BaseService implements OrderService {
     DeliveryAddressRepository deliveryAddressRepository;
     @Autowired
     WxPayOrderNotifyMapper notifyMapper;
+
+    public String getIpAddr(HttpServletRequest request) {
+        String ip = request.getHeader("x-forwarded-for");
+        if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("Proxy-Client-IP");
+        }
+        if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("WL-Proxy-Client-IP");
+        }
+        if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getRemoteAddr();
+        }
+        return ip;
+    }
+
+
     @Override
     @Transactional(value = "transactionManager", propagation = Propagation.REQUIRED)
     public OrderDTO applyOrder(String phone, OrderVo orderVo) {
@@ -182,7 +198,7 @@ public class OrderServiceImp extends BaseService implements OrderService {
     }
 
     @Override
-    public Map payOrder(long orderId) {
+    public Map payOrder(long orderId,String ipAddress) {
         Order order = orderRepository.findOne(orderId);
         try {
             WxPayUnifiedOrderRequest orderRequest = new WxPayUnifiedOrderRequest();
@@ -191,8 +207,8 @@ public class OrderServiceImp extends BaseService implements OrderService {
             orderRequest.setOutTradeNo(order.getOrderCode());
             orderRequest.setAppid(wxPayProperties.getAppId());
             orderRequest.setMchId(wxPayProperties.getMchId());
-            orderRequest.setTotalFee(WxPayBaseRequest.yuanToFee("0.01"));//元转成分
-            orderRequest.setSpbillCreateIp("122.152.208.113");
+            orderRequest.setTotalFee(WxPayBaseRequest.yuanToFee(order.getProductCost().toString()));//元转成分
+            orderRequest.setSpbillCreateIp(ipAddress);
             orderRequest.setTradeType("JSAPI");
             orderRequest.setNotifyURL("http://www.jinhuishengwu.cn/api/wechat/pay/payNotice");
             Map wxPayUnifiedOrderResult = wxPayService.getPayInfo(orderRequest);
@@ -324,10 +340,13 @@ public class OrderServiceImp extends BaseService implements OrderService {
         } else {
             orderList = user.getServiceOrderList();
         }
+        List orderFilterList = null;
         if (status != OrderStatus.全部订单) {
-            orderList = orderList.stream().filter(order -> order.getOrderStatus() == status).collect(Collectors.toSet());
+            orderFilterList = orderList.stream().filter(order -> order.getOrderStatus() == status).collect(Collectors.toList());
+        }else{
+            orderFilterList = orderList.stream().collect(Collectors.toList());
         }
-        List<OrderDTO> orderDTOList = orderMapper.orderToOrderDTOList(orderList);
+        List<OrderDTO> orderDTOList = orderMapper.orderToOrderDTOList(orderFilterList);
         orderDTOList.forEach(orderDTO -> orderDTO.setOrderType(orderType.getName()));
         return orderDTOList;
     }

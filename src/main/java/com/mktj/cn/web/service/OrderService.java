@@ -13,6 +13,7 @@ import com.mktj.cn.web.vo.OrderVo;
 import com.mktj.cn.web.vo.PayCertificateVo;
 
 import javax.naming.OperationNotSupportedException;
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -94,5 +95,7 @@ public interface OrderService {
 
     BigDecimal getProductPrice(RoleType roleType, Product product);
 
-    Map payOrder(long orderId);
+    Map payOrder(long orderId,String ipAddress);
+
+    String getIpAddr(HttpServletRequest request);
 }
