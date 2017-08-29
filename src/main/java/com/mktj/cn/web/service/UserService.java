@@ -70,7 +70,11 @@ public interface UserService {
 
     Map<String, List<UserDTO>> findMyNewTeamUser(String phone, String search);
 
-    Map<String,List<UserDTO>> findMyZxTeamUser(String person, String search);
+    Map<String, List<UserDTO>> findMyZxTeamUser(String phone, String search);
+
+    Map<String,List<UserDTO>> findNewSeniorImmediateMemberList(String person, String search);
+
+    Map<String,List<UserDTO>> findSleepMemberList(String person, String search);
 
     void upgradeUerRoleType();
 

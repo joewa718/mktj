@@ -28,13 +28,16 @@ public interface UserRepository extends CrudRepository<User, Long>, JpaSpecifica
 
 
     @Query("select u from User u where u.orgPath like ?1 and phone = ?2 group by u.roleType")
-    User findOffspringCountByOrgPathAndPhone(String orgPath,String phone);
+    User findOffspringCountByOrgPathAndPhone(String orgPath, String phone);
 
 
     @Query("select u.roleType,count(u) from User u where u.orgPath = ?1 group by u.roleType")
     List<Object[]> analysisImmediateMemberDistribution(String orgPath);
 
-    @Query("select u.roleType,count(u) from User u where  u.orgPath like ?1 and diffDate > 30 group by u.roleType")
+    @Query("select u.roleType,count(u) from User u where  u.orgPath = ?1 and u.roleType = ?2 and diffDate <= 30 group by u.roleType")
+    List<Object[]> analysisNewSeniorImmediateMemberDistribution(String orgPath, RoleType roleType);
+
+    @Query("select u.roleType,count(u) from User u where  u.orgPath like ?1 and diffDate <= 30 group by u.roleType")
     List<Object[]> analysisNewMemberDistribution(String orgPath);
 
     @Query("select u from User u where u.roleType < ?1 and u.disable=0")
@@ -46,13 +49,23 @@ public interface UserRepository extends CrudRepository<User, Long>, JpaSpecifica
     @Query("select u from User u where u.orgPath = ?1 and u.disable=0")
     List<User> findByOneLevelOrgPath(String orgPath);
 
+    @Query("select u from User u where  u.orgPath = ?1 and u.roleType = ?2 and u.diffDate <= 30")
+    List<User> findNewSeniorImmediateMemberList(String orgPath, RoleType roleType);
+
+    @Query("select u from User u where  u.orgPath = ?1 and u not in (select o.user from Order o where o.diffDate <= 30)")
+    List<User> findSleepMemberList(String orgPath);
+
+    @Query("select u.roleType,count(u) from User u where  u.orgPath = ?1 and u.roleType = ?2 and u not in (select o.user from Order o where o.diffDate <= 30) group by u.roleType")
+    List<Object[]> analysisSleepMemberDistribution(String orgPath, RoleType roleType);
+
+
     @Modifying
     @Query("update User o set o.orgPath = ?1  where o.orgPath like ?1 ")
-    void updateOrgPathById(String orgPath,long id);
+    void updateOrgPathById(String orgPath, long id);
 
     @Modifying
     @Query("update User o set o.roleType = ?1 ,o.authorizationCode =?2 where o.id = ?3")
-    void updateRoleTypeById(RoleType type,String authorizationCode, long id);
+    void updateRoleTypeById(RoleType type, String authorizationCode, long id);
 
     @Query(value = "select ifnull(sum(if(u.role_type=4,4,1)),0) from t_user u where u.org_path like ?1 and u.role_type > 0 and u.disable=0", nativeQuery = true)
     Long findSumByLikeOrgPath(String orgPath);

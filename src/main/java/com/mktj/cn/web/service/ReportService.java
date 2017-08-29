@@ -43,4 +43,12 @@ public interface ReportService {
      * @return
      */
     Map<String, List<EntryDTO<String,Double>>> analysisOrderShare(String phone);
+
+    Map<String, Long> getNewSeniorImmediateMemberDistribution(String phone);
+
+    Map<String, Long> analysisSleepDistribution(String phone);
+
+    Map<String, List<EntryDTO<String, Long>>> analysisImmediateTeamOrderSaleVolume(String phone);
+
+    Map<String, List<EntryDTO<String, Double>>> analysisImmediateTeamOrderShare(String phone);
 }

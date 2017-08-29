@@ -81,6 +81,8 @@ public class Order{
     private Set<User> higherUserList = new TreeSet<>();
     @Formula("MONTH(order_time)")
     private String month;
+    @Formula("datediff(now(),reg_time)")
+    private int diffDate;
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private WxPayOrderNotify wxPayOrderNotify;
@@ -317,4 +319,12 @@ public class Order{
         result = 31 * result + orderCode.hashCode();
         return result;
     }
+    public int getDiffDate() {
+        return diffDate;
+    }
+
+    public void setDiffDate(int diffDate) {
+        this.diffDate = diffDate;
+    }
+
 }

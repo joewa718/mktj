@@ -53,6 +53,24 @@ public class ReportController extends BaseController {
 
     }
 
+    @ApiOperation(value = "获取睡眠成员分布")
+    @RequestMapping(value = "/analysisNewMemberDistribution", method = RequestMethod.POST)
+    public  ResponseEntity<Map<String,Long>> analysisSleepDistribution(){
+        String phone = super.getCurrentUser().getUsername();
+        Map<String,Long> map = reportService.analysisSleepDistribution(phone);
+        return new ResponseEntity<>(map,HttpStatus.OK);
+
+    }
+
+    @ApiOperation(value = "获取进晋高级成员分布")
+    @RequestMapping(value = "/analysisNewMemberDistribution", method = RequestMethod.POST)
+    public  ResponseEntity<Map<String,Long>> getNewSeniorImmediateMemberDistribution(){
+        String phone = super.getCurrentUser().getUsername();
+        Map<String,Long> map = reportService.getNewSeniorImmediateMemberDistribution(phone);
+        return new ResponseEntity<>(map,HttpStatus.OK);
+
+    }
+
     @ApiOperation(value = "获取个人进货和销售量")
     @RequestMapping(value = "/analysisOrderVolume", method = RequestMethod.POST)
     public  ResponseEntity<Map<String,List<EntryDTO<String,Long>>>> analysisOrderVolume(){
@@ -62,11 +80,20 @@ public class ReportController extends BaseController {
 
     }
 
-    @ApiOperation(value = "获取个人进货和销售量")
-    @RequestMapping(value = "/analysisOrderShare", method = RequestMethod.POST)
-    public  ResponseEntity<Map<String,List<EntryDTO<String,Double>>>> analysisOrderShare(){
+    @ApiOperation(value = "获取团队进货和销售量")
+    @RequestMapping(value = "/analysisOrderVolume", method = RequestMethod.POST)
+    public  ResponseEntity<Map<String,List<EntryDTO<String,Long>>>> analysisTeamOrderVolume(){
         String phone = super.getCurrentUser().getUsername();
-        Map<String,List<EntryDTO<String,Double>>> map = reportService.analysisOrderShare(phone);
+        Map<String,List<EntryDTO<String,Long>>> map = reportService.analysisImmediateTeamOrderSaleVolume(phone);
+        return new ResponseEntity<>(map,HttpStatus.OK);
+
+    }
+
+    @ApiOperation(value = "获取团队进货和销售量")
+    @RequestMapping(value = "/analysisOrderShare", method = RequestMethod.POST)
+    public  ResponseEntity<Map<String,List<EntryDTO<String,Double>>>> analysisTeamOrderShare(){
+        String phone = super.getCurrentUser().getUsername();
+        Map<String,List<EntryDTO<String,Double>>> map = reportService.analysisImmediateTeamOrderShare(phone);
         return new ResponseEntity<>(map,HttpStatus.OK);
 
     }
@@ -92,6 +119,33 @@ public class ReportController extends BaseController {
     @ApiOperation(value = "获取我的直系团队人员")
     @RequestMapping(value = "/findMyZxTeamUser", method = RequestMethod.POST)
     public  ResponseEntity<Map<String,List<UserDTO>>> findMyZxTeamUser(@RequestParam(value = "search",required = false) String search){
+        String phone = super.getCurrentUser().getUsername();
+        Map<String,List<UserDTO>> userDTOList = userService.findMyZxTeamUser(phone,search);
+        return new ResponseEntity<>(userDTOList,HttpStatus.OK);
+
+    }
+
+    @ApiOperation(value = "获取我的新晋级高级直系团队人员")
+    @RequestMapping(value = "/findMyZxTeamUser", method = RequestMethod.POST)
+    public  ResponseEntity<Map<String,List<UserDTO>>> findNewSeniorImmediateMemberList(@RequestParam(value = "search",required = false) String search){
+        String phone = super.getCurrentUser().getUsername();
+        Map<String,List<UserDTO>> userDTOList = userService.findNewSeniorImmediateMemberList(phone,search);
+        return new ResponseEntity<>(userDTOList,HttpStatus.OK);
+
+    }
+
+    @ApiOperation(value = "获取我的睡眠团队人员")
+    @RequestMapping(value = "/findMyZxTeamUser", method = RequestMethod.POST)
+    public  ResponseEntity<Map<String,List<UserDTO>>> findSleepMemberList(@RequestParam(value = "search",required = false) String search){
+        String phone = super.getCurrentUser().getUsername();
+        Map<String,List<UserDTO>> userDTOList = userService.findSleepMemberList(phone,search);
+        return new ResponseEntity<>(userDTOList,HttpStatus.OK);
+
+    }
+
+    @ApiOperation(value = "获取我的睡眠团队人员")
+    @RequestMapping(value = "/findMyZxTeamUser", method = RequestMethod.POST)
+    public  ResponseEntity<Map<String,List<UserDTO>>> findSleepTeamUser(@RequestParam(value = "search",required = false) String search){
         String phone = super.getCurrentUser().getUsername();
         Map<String,List<UserDTO>> userDTOList = userService.findMyZxTeamUser(phone,search);
         return new ResponseEntity<>(userDTOList,HttpStatus.OK);

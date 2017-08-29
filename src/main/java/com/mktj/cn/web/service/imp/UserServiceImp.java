@@ -468,6 +468,20 @@ public class UserServiceImp extends BaseService implements UserService {
     }
 
     @Override
+    public Map<String, List<UserDTO>> findNewSeniorImmediateMemberList(String phone, String search) {
+        User user = userRepository.findByPhone(phone);
+        List<User> userList = userRepository.findNewSeniorImmediateMemberList(getEqualStr(user),RoleType.高级合伙人);
+        return getMyTeamList(search, userList);
+    }
+
+    @Override
+    public Map<String, List<UserDTO>> findSleepMemberList(String phone, String search) {
+        User user = userRepository.findByPhone(phone);
+        List<User> userList = userRepository.findSleepMemberList(getEqualStr(user));
+        return getMyTeamList(search, userList);
+    }
+
+    @Override
     public Map<String, List<UserDTO>> findMyZxTeamUser(String phone, String search) {
         User user = userRepository.findByPhone(phone);
         List<User> userList = userRepository.findByOneLevelOrgPath(getEqualStr(user));

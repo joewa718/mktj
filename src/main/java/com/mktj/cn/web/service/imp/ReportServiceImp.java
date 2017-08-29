@@ -48,6 +48,70 @@ public class ReportServiceImp  extends BaseService implements ReportService {
     }
 
     @Override
+    public Map<String, Long> getNewSeniorImmediateMemberDistribution(String phone) {
+        User user = userRepository.findByPhone(phone);
+        List<Object[]> list = userRepository.analysisNewMemberDistribution(getLikeStr(user));
+        return fillResult(list);
+    }
+
+
+    @Override
+    public Map<String, Long> analysisSleepDistribution(String phone) {
+        User user = userRepository.findByPhone(phone);
+        List<Object[]> list = userRepository.analysisNewMemberDistribution(getLikeStr(user));
+        return fillResult(list);
+    }
+
+    @Override
+    public Map<String, List<EntryDTO<String, Long>>> analysisImmediateTeamOrderSaleVolume(String phone) {
+        User user = userRepository.findByPhone(phone);
+        Map<String, Long> ordinaryOrderSaleVolume = fillVolumeResult(orderRepository.analysisImmediateTeamOrdinaryOrderSaleVolume(getLikeStr(user), OrderStatus.已支付, DateUtil.getYearBeginDate(), DateUtil.getCurrentDate()));
+        Set<Order> orderList = user.getServiceOrderList();
+        List<Long> orderIds = new ArrayList<>();
+        if (orderList.size() > 0) {
+            orderList.forEach(order -> orderIds.add(order.getId()));
+        }
+        List<Object[]> result;
+        if(orderIds.size() > 0){
+            result = orderRepository.analysisServiceOrderSaleVolume(orderIds, OrderStatus.已支付, DateUtil.getYearBeginDate(), DateUtil.getCurrentDate());
+        }else{
+            result=new ArrayList<>();
+        }
+        Map<String, Long> serviceOrderSaleVolume = fillVolumeResult(result);
+        List<String> monthList = DateUtil.getYTDMonth();
+        Map<String, List<EntryDTO<String, Long>>> map = new HashMap<>();
+        map.put("个人进货量", fillAnalysisOrderVolume(ordinaryOrderSaleVolume, monthList));
+        map.put("个人销货量", fillAnalysisOrderVolume(serviceOrderSaleVolume, monthList));
+        return map;
+    }
+
+
+    @Override
+    public Map<String, List<EntryDTO<String, Double>>> analysisImmediateTeamOrderShare(String phone) {
+        User user = userRepository.findByPhone(phone);
+        Map<String, Long> ordinaryOrderSaleVolume = fillVolumeResult(orderRepository.analysisImmediateTeamOrdinaryOrderSaleVolume(getLikeStr(user), OrderStatus.已支付, DateUtil.getYearBeginDate(), DateUtil.getCurrentDate()));
+        Set<Order> orderList = user.getServiceOrderList();
+        List<Long> orderIds = new ArrayList<>();
+        if (orderList.size() > 0) {
+            orderList.forEach(order -> orderIds.add(order.getId()));
+        }
+        List<Object[]> result;
+        if(orderIds.size() > 0){
+            result = orderRepository.analysisImmediateTeamOrdinaryOrderSaleVolume(getLikeStr(user), OrderStatus.已支付, DateUtil.getYearBeginDate(), DateUtil.getCurrentDate());
+        }else{
+            result=new ArrayList<>();
+        }
+        Map<String, Long> serviceOrderSaleVolume = fillVolumeResult(result);
+        List<String> monthList = DateUtil.getYTDMonth();
+        Map<String, List<EntryDTO<String, Double>>> map = new HashMap<>();
+        map.put("个人进货量环比", fillAnalysisOrderShare(ordinaryOrderSaleVolume, monthList));
+        map.put("个人销货量环比", fillAnalysisOrderShare(serviceOrderSaleVolume, monthList));
+        return map;
+    }
+
+
+
+    @Override
     public Map<String, List<EntryDTO<String, Long>>> analysisOrderVolume(String phone) {
         User user = userRepository.findByPhone(phone);
         Map<String, Long> ordinaryOrderSaleVolume = fillVolumeResult(orderRepository.analysisOrdinaryOrderSaleVolume(user, OrderStatus.已支付, DateUtil.getYearBeginDate(), DateUtil.getCurrentDate()));
