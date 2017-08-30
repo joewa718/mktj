@@ -44,7 +44,7 @@ public interface ReportService {
      */
     Map<String, List<EntryDTO<String,Double>>> analysisOrderShare(String phone);
 
-    Map<String, Long> getNewSeniorImmediateMemberDistribution(String phone);
+    Map<String, Long> analysisNewSeniorImmediateMemberDistribution(String phone);
 
     Map<String, Long> analysisSleepDistribution(String phone);
 

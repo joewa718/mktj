@@ -35,8 +35,4 @@ public interface OrderRepository extends CrudRepository<Order, Long>, JpaSpecifi
 
     @Query("select t.month,sum (t.productNum) from Order t where t.user.orgPath =?1 and t.orderStatus >= ?2 and t.orderTime >= ?3 and t.orderTime <=?4 group by t.month")
     List<Object[]> analysisImmediateTeamOrdinaryOrderSaleVolume(String orgPath, OrderStatus orderStatus, Date begin, Date end);
-
-    @Query("select t.month,sum (t.productNum) from Order t where t.user.orgPath in ?1 and t.orderStatus >= ?2 and t.orderTime >= ?3 and t.orderTime <=?4  group by t.month")
-    List<Object[]> analysisImmediateTeamServiceOrderSaleVolume(String orgPath, OrderStatus orderStatus, Date begin, Date end);
-
 }

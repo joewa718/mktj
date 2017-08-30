@@ -2,6 +2,7 @@ package com.mktj.cn.web.service.imp;
 
 import com.mktj.cn.web.dto.EntryDTO;
 import com.mktj.cn.web.enumerate.OrderStatus;
+import com.mktj.cn.web.enumerate.OrderType;
 import com.mktj.cn.web.enumerate.RoleType;
 import com.mktj.cn.web.po.Order;
 import com.mktj.cn.web.po.User;
@@ -12,15 +13,18 @@ import com.mktj.cn.web.service.ReportService;
 import com.mktj.cn.web.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author zhanwang
  * @create 2017-08-19 1:18
  **/
 @Service
-public class ReportServiceImp  extends BaseService implements ReportService {
+public class ReportServiceImp extends BaseService implements ReportService {
     @Autowired
     OrderRepository orderRepository;
     @Autowired
@@ -48,9 +52,9 @@ public class ReportServiceImp  extends BaseService implements ReportService {
     }
 
     @Override
-    public Map<String, Long> getNewSeniorImmediateMemberDistribution(String phone) {
+    public Map<String, Long> analysisNewSeniorImmediateMemberDistribution(String phone) {
         User user = userRepository.findByPhone(phone);
-        List<Object[]> list = userRepository.analysisNewMemberDistribution(getLikeStr(user));
+        List<Object[]> list = userRepository.analysisNewSeniorImmediateMemberDistribution(getEqualStr(user), RoleType.高级合伙人);
         return fillResult(list);
     }
 
@@ -58,30 +62,22 @@ public class ReportServiceImp  extends BaseService implements ReportService {
     @Override
     public Map<String, Long> analysisSleepDistribution(String phone) {
         User user = userRepository.findByPhone(phone);
-        List<Object[]> list = userRepository.analysisNewMemberDistribution(getLikeStr(user));
+        List<Object[]> list = userRepository.analysisSleepMemberDistribution(getLikeStr(user), RoleType.高级合伙人);
         return fillResult(list);
     }
 
     @Override
     public Map<String, List<EntryDTO<String, Long>>> analysisImmediateTeamOrderSaleVolume(String phone) {
         User user = userRepository.findByPhone(phone);
-        Map<String, Long> ordinaryOrderSaleVolume = fillVolumeResult(orderRepository.analysisImmediateTeamOrdinaryOrderSaleVolume(getLikeStr(user), OrderStatus.已支付, DateUtil.getYearBeginDate(), DateUtil.getCurrentDate()));
-        Set<Order> orderList = user.getServiceOrderList();
-        List<Long> orderIds = new ArrayList<>();
-        if (orderList.size() > 0) {
-            orderList.forEach(order -> orderIds.add(order.getId()));
-        }
-        List<Object[]> result;
-        if(orderIds.size() > 0){
-            result = orderRepository.analysisServiceOrderSaleVolume(orderIds, OrderStatus.已支付, DateUtil.getYearBeginDate(), DateUtil.getCurrentDate());
-        }else{
-            result=new ArrayList<>();
-        }
-        Map<String, Long> serviceOrderSaleVolume = fillVolumeResult(result);
+        Map<String, Long> ordinaryOrderSaleVolume = fillVolumeResult(orderRepository.analysisImmediateTeamOrdinaryOrderSaleVolume(getEqualStr(user), OrderStatus.已支付, DateUtil.getYearBeginDate(), DateUtil.getCurrentDate()));
+        List<User> userList = userRepository.findByOneLevelOrgPath(getEqualStr(user));
+        Map<String, Long> serviceOrderSaleVolume = userList.stream().map(zxUser -> zxUser.getServiceOrderList()).flatMap(set -> set.stream())
+                .filter(order -> order.getOrderStatus().getCode() >= OrderStatus.已支付.getCode())
+                .collect(Collectors.groupingBy(order -> order.getMonth().length() == 1 ? "0" + order.getMonth() : order.getMonth(), Collectors.summingLong(Order::getProductNum)));
         List<String> monthList = DateUtil.getYTDMonth();
         Map<String, List<EntryDTO<String, Long>>> map = new HashMap<>();
-        map.put("个人进货量", fillAnalysisOrderVolume(ordinaryOrderSaleVolume, monthList));
-        map.put("个人销货量", fillAnalysisOrderVolume(serviceOrderSaleVolume, monthList));
+        map.put("直属团队进货量", fillAnalysisOrderVolume(ordinaryOrderSaleVolume, monthList));
+        map.put("直属团队销货量", fillAnalysisOrderVolume(serviceOrderSaleVolume, monthList));
         return map;
     }
 
@@ -89,26 +85,17 @@ public class ReportServiceImp  extends BaseService implements ReportService {
     @Override
     public Map<String, List<EntryDTO<String, Double>>> analysisImmediateTeamOrderShare(String phone) {
         User user = userRepository.findByPhone(phone);
-        Map<String, Long> ordinaryOrderSaleVolume = fillVolumeResult(orderRepository.analysisImmediateTeamOrdinaryOrderSaleVolume(getLikeStr(user), OrderStatus.已支付, DateUtil.getYearBeginDate(), DateUtil.getCurrentDate()));
-        Set<Order> orderList = user.getServiceOrderList();
-        List<Long> orderIds = new ArrayList<>();
-        if (orderList.size() > 0) {
-            orderList.forEach(order -> orderIds.add(order.getId()));
-        }
-        List<Object[]> result;
-        if(orderIds.size() > 0){
-            result = orderRepository.analysisImmediateTeamOrdinaryOrderSaleVolume(getLikeStr(user), OrderStatus.已支付, DateUtil.getYearBeginDate(), DateUtil.getCurrentDate());
-        }else{
-            result=new ArrayList<>();
-        }
-        Map<String, Long> serviceOrderSaleVolume = fillVolumeResult(result);
+        Map<String, Long> ordinaryOrderSaleVolume = fillVolumeResult(orderRepository.analysisImmediateTeamOrdinaryOrderSaleVolume(getEqualStr(user), OrderStatus.已支付, DateUtil.getYearBeginDate(), DateUtil.getCurrentDate()));
+        List<User> userList = userRepository.findByOneLevelOrgPath(getEqualStr(user));
+        Map<String, Long> serviceOrderSaleVolume = userList.stream().map(zxUser -> zxUser.getServiceOrderList()).flatMap(set -> set.stream())
+                .filter(order -> order.getOrderStatus().getCode() >= OrderStatus.已支付.getCode())
+                .collect(Collectors.groupingBy(order -> order.getMonth().length() == 1 ? "0" + order.getMonth() : order.getMonth(), Collectors.summingLong(Order::getProductNum)));
         List<String> monthList = DateUtil.getYTDMonth();
         Map<String, List<EntryDTO<String, Double>>> map = new HashMap<>();
-        map.put("个人进货量环比", fillAnalysisOrderShare(ordinaryOrderSaleVolume, monthList));
-        map.put("个人销货量环比", fillAnalysisOrderShare(serviceOrderSaleVolume, monthList));
+        map.put("直属团队进货量环比", fillAnalysisOrderShare(ordinaryOrderSaleVolume, monthList));
+        map.put("直属团队销货量环比", fillAnalysisOrderShare(serviceOrderSaleVolume, monthList));
         return map;
     }
-
 
 
     @Override
@@ -121,10 +108,10 @@ public class ReportServiceImp  extends BaseService implements ReportService {
             orderList.forEach(order -> orderIds.add(order.getId()));
         }
         List<Object[]> result;
-        if(orderIds.size() > 0){
+        if (orderIds.size() > 0) {
             result = orderRepository.analysisServiceOrderSaleVolume(orderIds, OrderStatus.已支付, DateUtil.getYearBeginDate(), DateUtil.getCurrentDate());
-        }else{
-            result=new ArrayList<>();
+        } else {
+            result = new ArrayList<>();
         }
         Map<String, Long> serviceOrderSaleVolume = fillVolumeResult(result);
         List<String> monthList = DateUtil.getYTDMonth();
@@ -144,10 +131,10 @@ public class ReportServiceImp  extends BaseService implements ReportService {
             orderList.forEach(order -> orderIds.add(order.getId()));
         }
         List<Object[]> result;
-        if(orderIds.size() > 0){
+        if (orderIds.size() > 0) {
             result = orderRepository.analysisServiceOrderSaleVolume(orderIds, OrderStatus.已支付, DateUtil.getYearBeginDate(), DateUtil.getCurrentDate());
-        }else{
-            result=new ArrayList<>();
+        } else {
+            result = new ArrayList<>();
         }
         Map<String, Long> serviceOrderSaleVolume = fillVolumeResult(result);
         List<String> monthList = DateUtil.getYTDMonth();
