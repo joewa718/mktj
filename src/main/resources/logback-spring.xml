@@ -25,7 +25,7 @@
         <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
             <File>/sdb1/projects/mktj/log/application.log</File>
             <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-                <FileNamePattern>/opt/projects/mktj/log/o2o_application.log_%d{yyyy-MM-dd}-%i.log
+                <FileNamePattern>/sdb1/projects/mktj/log/o2o_application.log_%d{yyyy-MM-dd}-%i.log
                 </FileNamePattern>
                 <MaxHistory>30</MaxHistory>
                 <TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
