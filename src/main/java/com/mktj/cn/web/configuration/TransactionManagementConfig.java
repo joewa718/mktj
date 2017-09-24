@@ -14,7 +14,7 @@ import javax.sql.DataSource;
 @Configuration
 public class TransactionManagementConfig {
 
-    @Bean
+    @Bean(value = "transactionManager")
     public PlatformTransactionManager transactionManager(@Qualifier("dataSource") @Autowired DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
     }
